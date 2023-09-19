@@ -54,7 +54,7 @@ a {
   white-space: nowrap;
   letter-spacing: .15em;
   animation:
-    typing 3.5s steps(30, end)
+    typing 2s steps(30, end)
 }
 
 @keyframes typing {

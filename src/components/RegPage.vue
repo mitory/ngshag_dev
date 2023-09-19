@@ -260,10 +260,6 @@ export default {
         userService.getUnivers().then(response => {
             this.univers = response;
         })
-        userService.getSkills().then(response => {
-
-            console.log(response)
-        })
     },
     methods: {
         emailChanged() {
