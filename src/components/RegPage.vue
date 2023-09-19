@@ -106,7 +106,7 @@
                                 <p class="mb-0">Где ты учишься?</p>
                             </div>
                             <div>
-                                <select @change="getFacults(); universityChanged()" class="form-select mb-3"
+                                <select @change="getFacults(); universityChanged(); getSpecialty();" class="form-select mb-3"
                                     v-model="userData.current_university"
                                     v-bind:class="{ 'border-danger': !(this.isCorrect.current_university) && university_changed }">
                                     <option value="-1" selected>Выберите ВУЗ</option>
@@ -399,4 +399,6 @@ export default {
 
 </script>
 
-<style scoped></style>
+<style scoped>
+
+</style>
