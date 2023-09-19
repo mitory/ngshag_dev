@@ -69,6 +69,6 @@ function register(user) {
         return { status: true, message: 'Регистрация прошла успешно' };
 
     }).catch(err => {
-        return { status: false, message: err.response.data.email }
+        return { status: false, message: err.response.data.error }
     });
 }
