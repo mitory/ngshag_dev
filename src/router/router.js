@@ -9,6 +9,7 @@ import InviteToTeamPage from '../components/InviteToTeamPage'
 import TeamPage from '../components/TeamPage'
 import LK from '../components/LK'
 import UserTeams from '../components/UserTeams'
+import SetUserSkills from '../components/SetUserSkills'
 
 const router = createRouter({
     routes: [
@@ -23,6 +24,10 @@ const router = createRouter({
         {
             path: '/reg',
             component: RegPage
+        },
+        {
+            path: '/set-user-skills',
+            component: SetUserSkills
         },
         {
             path: '/profile',
@@ -64,13 +69,13 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    const publicPages = ['/reg', '/login', '/', '/event/'];
-    const publicStartPath = ['/event/'];
+    const publicPages = ['/reg', '/login', '/set-user-skills'];
+    // const publicStartPath = ['/event/'];
     const authRequired = publicPages.includes(to.path);
     const loggedIn = localStorage.getItem('user');
-
-    if (!authRequired && !loggedIn && publicStartPath.filter(str => to.path.startsWith(str)).length == 0) {
-        next('/login');
+    // && publicStartPath.filter(str => to.path.startsWith(str)).length == 0
+    if (!authRequired && !loggedIn) {
+        next('/reg');
     } else {
         next();
     }

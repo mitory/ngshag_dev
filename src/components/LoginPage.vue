@@ -1,7 +1,7 @@
 <template>
-  <div class="container mt-4">
-    <div class="row">
-      <div class="col-sm-4 mx-auto">
+  <div class="container">
+    <div class="row" style="height: 100vh">
+      <div class="col-sm-4 m-auto">
         <form @change="formUpdated" @submit.prevent="loginUser" novalidate>
           <div class="mb-3">
             <label for="email" class="form-label">email</label>
@@ -22,6 +22,9 @@
             </div>
           </div>
 
+          <router-link class="btn mb-2" to="/reg">
+            Еще нет аккаунта? Тогда зарегестрируйся!
+          </router-link>
           <button type="submit" class="btn btn-primary">Войти</button>
         </form>
       </div>

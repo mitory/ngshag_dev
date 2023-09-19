@@ -6,7 +6,7 @@ import { authService } from './auth.service'
 const API_URL = config.apiURL;
 
 export const userService = {
-    getLkInfo, getUnivers, getFacults, getTeams, getTeam
+    getLkInfo, getUnivers, getFacults, getTeams, getTeam, getSpecialty, getSkills, postSkills
 };
 
 async function getTeams() {
@@ -59,7 +59,31 @@ async function getFacults(id) {
     const response = await axios.get(API_URL + `faculties/${id}/`, {
         headers: { 'ngrok-skip-browser-warning': '69420' }
     });
-    console.log(response.data);
+    return response.data;
+}
+
+async function getSpecialty(id_inst, id_facult) {
+    console.log(`specialty/${id_inst}/${id_facult}`)
+    const response = await axios.get(API_URL + `specialty/${id_inst}/${id_facult}/`, {
+        headers: { 'ngrok-skip-browser-warning': '69420' }
+    });
+    return response.data;
+}
+
+async function getSkills() {
+    console.log(`skill/`)
+    const response = await axios.get(API_URL + `skill/`, {
+        headers: { 'ngrok-skip-browser-warning': '69420' }
+    });
+    return response.data;
+}
+
+async function postSkills() {
+    console.log(`skill/`)
+    const response = await axios.post(API_URL + `skill/`, {
+        headers: authHeader(),
+    }
+    );
     return response.data;
 }
 

@@ -64,6 +64,9 @@ export default {
             console.log(data)
             this.user = data;
         })
+        // userService.postSkills().then(data => {
+        //     console.log(data)
+        // })
     },
     methods: {
         format_date(date) {

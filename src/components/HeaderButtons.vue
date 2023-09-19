@@ -1,5 +1,5 @@
 <template>
-    <div class="mb-5 mt-2 p-2 bg-primary bg-gradient">
+    <div v-if="!is_none" class="mb-5 mt-2 p-2 bg-primary bg-gradient">
         <div class="d-flex justify-content-end container">
 
             <router-link v-if="loggedIn && this.routes.isProfilePage" class="btn btn-light me-3" to="/LK">
@@ -30,7 +30,7 @@ export default {
     name: 'HeaderButtons',
     data() {
         return {
-            routes: {}
+            routes: {},
         }
     },
     created() {
@@ -41,6 +41,9 @@ export default {
     computed: {
         loggedIn() {
             return this.$store.state.auth.status.loggedIn
+        },
+        is_none() {
+            return !this.loggedIn
         }
     }
 }
