@@ -1,35 +1,39 @@
 <template>
     <div class="container">
-        <div
-            class="col-12 col-sm-12 col-md-11 col-lg-8 col-xl-6 col-xxl-5 mx-auto p-1 border border-dark bg-secondary mb-3">
-            <div v-if="step === 1" class="">
-                <div style="height: 100vh" class="row d-flex flex-column justify-content-center"></div>
-                <div class="typewriter my-auto">
-                    <p class="line m-0 pb-0 text-center fs-sm-5 text-mobile" v-for="(line, index) in textLines"
-                        :key="index">{{
-                            line }}
-                    </p>
+        <div class="row" style="height: 100vh">
+            <div class="m-auto">
+                <div v-if="step === 1" class="">
+                    <div class="col-md-10 col-lg-8 col-xl-8 col-xxl-8 mx-auto">
+                        <div class="typewriter p-1 border border-dark bg-secondary mb-3">
+                            <p class="line m-0 pb-0 text-center fs-sm-5 text-mobile" v-for="(line, index) in textLines"
+                                :key="index">
+                                {{ line }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button @click="nextStep" type="button" class="btn btn-primary">Продолжить</button>
+                    </div>
                 </div>
-            </div>
-            <div class="d-flex justify-content-center">
-                <button @click="nextStep" type="button" class="btn btn-primary">Продолжить</button>
-            </div>
-        </div>
-        <div v-if="step === 2">
-            <div class="col-12 col-sm-12 col-md-11 col-lg-8 col-xl-8 mx-auto mt-5 p-1 border border-dark bg-secondary">
-                <div class="typewriter my-auto">
-                    <p class="line m-0 text-center text-mobile">
-                        Выбери направления, в которых ты готов подтвердить свои компетенции:
-                    </p>
-                </div>
-            </div>
-            <div class="" v-for="category in categories_skills" :key="category.id">
-                <h2>{{ category.name }}</h2>
-                <div v-for="skill in category.skills" :key="skill.id" class="form-check mb-3">
-                    <input @change="add_skill(skill.id)" class="form-check-input" type="checkbox" v-bind:id="skill.id">
-                    <label class="form-check-label" v-bind:for="skill.id">
-                        {{ skill.name }}
-                    </label>
+
+                <div v-if="step === 2">
+                    <div class="col-12 col-md-10 col-lg-8 col-xl-9 col-xxl-9 mx-auto">
+                        <div class="typewriter p-1 border border-dark bg-secondary mb-3 mt-3">
+                            <p class="line m-0 text-center text-mobile">
+                                Выбери направления, в которых ты готов подтвердить свои компетенции:
+                            </p>
+                        </div>
+                    </div>
+                    <div class="mx-auto" v-for="category in categories_skills" :key="category.id">
+                        <h2>{{ category.name }}</h2>
+                        <div v-for="skill in category.skills" :key="skill.id" class="form-check mb-3">
+                            <input @change="add_skill(skill.id)" class="form-check-input" type="checkbox"
+                                v-bind:id="skill.id">
+                            <label class="form-check-label" v-bind:for="skill.id">
+                                {{ skill.name }}
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -53,7 +57,7 @@ export default {
             line: 1,
             categories_skills: [],
             set_skills_user: [],
-            step: 1
+            step: 2
         };
     },
     methods: {
@@ -81,7 +85,7 @@ export default {
             }, 2000)
         },
         changeTextForMobile: function () {
-            if (window.innerWidth <= 576) {
+            if (window.innerWidth <= 768) {
                 this.text = [
                     'Поздравляем с успешной регистрацией',
                     'на платформе для проведения цифровых',
@@ -132,7 +136,7 @@ export default {
     }
 }
 
-@media (max-width: 389px) {
+@media (max-width: 410px) {
     .text-mobile {
         font-size: 12px;
     }
