@@ -44,7 +44,6 @@ export default {
         },
         changeTextForMobile: function () {
             if (window.innerWidth <= 576) {
-                console.log(window.innerWidth)
                 this.text = [
                     'Поздравляем с успешной регистрацией',
                     'на платформе для проведения цифровых',
@@ -55,7 +54,6 @@ export default {
                 ]
             }
             if (window.innerWidth <= 510) {
-                console.log(window.innerWidth)
                 this.text = [
                     'Поздравляем с успешной регистрацией',
                     'на платформе для проведения цифровых',
