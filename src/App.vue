@@ -48,7 +48,7 @@ a {
 }
 
 .typewriter p {
-  color: black;
+  color: white;
   font-family: monospace;
   overflow: hidden;
   white-space: nowrap;
