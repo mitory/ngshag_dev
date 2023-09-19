@@ -8,8 +8,8 @@
                             <div class="d-flex typewriter mb-3 p-1 border border-dark bg-secondary">
                                 <p class="mb-0">Привет! Давай знакомиться:</p>
                             </div>
-                            <div class="d-flex justify-content-between mb-5">
-                                <div class="d-flex flex-column me-4">
+                            <div class="d-flex flex-column flex-lg-row justify-content-between mb-5">
+                                <div class="d-flex flex-column ">
                                     <div class="mb-3 col-ms-2">
                                         <label for="last_name" class="form-label">Фамилия <span
                                                 class="text-danger">*</span></label>
@@ -45,7 +45,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="me-4">
+                                <div class="">
                                     <p>Дата рождения:</p>
                                     <p v-bind:class="{ 'text-w text-danger': !isCorrect.birth_date }"
                                         v-if="!isCorrect.birth_date">Вам должно быть не меньше 14 <br> и не больше 100
@@ -74,23 +74,24 @@
 
                                     <div class="">
                                         <p>Пол</p>
-                                        <div class="form-check">
-                                            <input v-model="userData.sex" class="form-check-input" type="radio" name="sex"
-                                                id="M" value="M" checked>
-                                            <label class="form-check-label" for="M">
-                                                Мужской
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input v-model="userData.sex" class="form-check-input" type="radio" name="sex"
-                                                id="F" value="F">
-                                            <label class="form-check-label" for="F">
-                                                Женский
-                                            </label>
+                                        <div class="d-flex justify-content-lg-between justify-content-center">
+                                          <div class="form-check me-5 me-lg-0">
+                                              <input v-model="userData.sex" class="form-check-input" type="radio" name="sex"
+                                                  id="M" value="M" checked>
+                                              <label class="form-check-label" for="M">
+                                                  Мужской
+                                              </label>
+                                          </div>
+                                          <div class="form-check">
+                                              <input v-model="userData.sex" class="form-check-input" type="radio" name="sex"
+                                                  id="F" value="F">
+                                              <label class="form-check-label" for="F">
+                                                  Женский
+                                              </label>
+                                          </div>
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                             <div class="d-flex justify-content-center">
                                 <router-link class="btn" to="/login">

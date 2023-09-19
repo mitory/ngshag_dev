@@ -19,17 +19,17 @@
             <h5 class="mb-3">Информация об учебном заведении</h5>
             <div class="input-group mb-3">
                 <span class="input-group-text" id="inst">Название</span>
-                <input disabled type="text" class="form-control" :value="user.institution"
+                <input disabled type="text" class="form-control" :value="user.institution.institution_name"
                     aria-label="Название учебного заведения" aria-describedby="inst">
             </div>
             <div class="input-group mb-3">
                 <span class="input-group-text" id="birth_date">Факультет</span>
-                <input disabled type="text" class="form-control" :value="user.faculty"
+                <input disabled type="text" class="form-control" :value="user.faculty.faculty_name"
                     aria-label="Дата рождения" aria-describedby="birth_date">
             </div>
           <div class="input-group mb-3">
             <span class="input-group-text" id="birth_date">Направление</span>
-            <input disabled type="text" class="form-control" :value="user.specialty"
+            <input disabled type="text" class="form-control" :value="user.specialty.specialty_name"
                    aria-label="Дата рождения" aria-describedby="birth_date">
           </div>
         </div>
@@ -47,9 +47,9 @@ export default {
                 first_name: '',
                 last_name: '',
                 birth_date: '',
-                institution: '',
-                faculty: '',
-                specialty: '',
+                institution: [],
+                faculty: [],
+                specialty: [],
             },
         }
     },
