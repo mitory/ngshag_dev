@@ -11,19 +11,19 @@
                             <div class="d-flex justify-content-between mb-5">
                                 <div class="d-flex flex-column me-4">
                                     <div class="mb-3 col-ms-2">
-                                        <label for="last_name" class="form-label">Фамилия</label>
-                                        <input v-model="userData.last_name" type="text" class="form-control"
-                                            v-bind:class="{ 'border-danger': !isCorrect.last_name }" id="last_name">
-                                        <div v-if="!isCorrect.last_name" id="last_name" class="form-text text-danger">
+                                        <label for="last_name" class="form-label">Фамилия <span class="text-danger">*</span></label>
+                                        <input @change="lastNameChanged" v-model="userData.last_name" type="text" class="form-control"
+                                               v-bind:class="{ 'border-danger': !(isCorrect.last_name) && last_name_changed }" id="last_name">
+                                        <div v-if="!(isCorrect.last_name) && last_name_changed" id="last_name" class="form-text text-danger">
                                             Пожалуйста, введите вашу фамилию (Кириллица)
                                         </div>
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="first_name" class="form-label">Имя</label>
-                                        <input v-model="userData.first_name" type="text" class="form-control"
-                                            v-bind:class="{ 'border-danger': !isCorrect.first_name }" id="first_name">
-                                        <div v-if="!isCorrect.first_name" id="first_name" class="form-text text-danger">
+                                        <label for="first_name" class="form-label">Имя <span class="text-danger">*</span></label>
+                                        <input @change="firstNameChanged" v-model="userData.first_name" type="text" class="form-control"
+                                               v-bind:class="{ 'border-danger': !(isCorrect.first_name) && first_name_changed }" id="first_name">
+                                        <div v-if="!(isCorrect.first_name) && first_name_changed" id="first_name" class="form-text text-danger">
                                             Пожалуйста, введите ваше имя (Кириллица)
                                         </div>
                                     </div>
@@ -52,11 +52,11 @@
                                 </div>
                                 <div class="d-flex flex-column">
                                     <div class="mb-3">
-                                        <label for="phone_number" class="form-label">Телефон</label>
-                                        <input v-model="userData.phone_number" maxlength="12" type="text"
-                                            class="form-control" v-bind:class="{ 'border-danger': !isCorrect.phone_number }"
-                                            id="phone_number" placeholder="+7XXXXXXXXXX">
-                                        <div v-if="!isCorrect.phone_number" id="phone_number" class="form-text text-danger">
+                                        <label for="phone_number" class="form-label">Телефон <span class="text-danger">*</span></label>
+                                        <input @change="phoneChanged" v-model="userData.phone_number" maxlength="12" type="text"
+                                               class="form-control" v-bind:class="{ 'border-danger': !(isCorrect.phone_number) && phone_changed }"
+                                               id="phone_number" placeholder="+7XXXXXXXXXX">
+                                        <div v-if="!(isCorrect.phone_number) && phone_changed" id="phone_number" class="form-text text-danger">
                                             Пожалуйста, введите ваш телефон в формате +7XXXXXXXXXX
                                         </div>
                                     </div>
@@ -95,25 +95,25 @@
                                 <p class="">Где ты учишься?</p>
                             </div>
                             <div>
-                                <select @change="getFacults()" class="form-select mb-3" v-model="userData.current_univers"
-                                    v-bind:class="{ 'border-danger': !this.isCorrect.current_univers }">
-                                    <option value="-1" selected>Выберете ВУЗ</option>
+                                <select @change="getFacults(); universityChanged()" class="form-select mb-3" v-model="userData.current_university"
+                                        v-bind:class="{ 'border-danger': !(this.isCorrect.current_university) && university_changed }">
+                                    <option value="-1" selected>Выберите ВУЗ</option>
                                     <option v-for="uviver in univers" :value="uviver.id" :key="uviver.id">
                                         {{ uviver.institution_name }}
                                     </option>
                                 </select>
 
-                                <select @change="getSpecialty()" class="form-select mb-3" v-model="userData.current_facult"
-                                    v-bind:class="{ 'border-danger': !this.isCorrect.current_facult }">
-                                    <option value="-1" selected>Выберете Факультет</option>
+                                <select @change="getSpecialty(); facultyChanged()" class="form-select mb-3" v-model="userData.current_faculty"
+                                    v-bind:class="{ 'border-danger': !(this.isCorrect.current_faculty) && faculty_changed }">
+                                    <option value="-1" selected>Выберите Факультет</option>
                                     <option v-for="facult in facults" :value="facult.id" :key="facult.id">
                                         {{ facult.faculty_name }}
                                     </option>
                                 </select>
 
-                                <select class="form-select mb-3" v-model="userData.current_specialty"
-                                    v-bind:class="{ 'border-danger': !this.isCorrect.current_specialty }">
-                                    <option value="-1" selected>Выберете Специальность</option>
+                                <select @change="specialtyChanged" class="form-select mb-3" v-model="userData.current_specialty"
+                                    v-bind:class="{ 'border-danger': !(this.isCorrect.current_specialty) && specialty_changed }">
+                                    <option value="-1" selected>Выберите Специальность</option>
                                     <option v-for="specialty in specialties" :value="specialty.id" :key="specialty.id">
                                         {{ specialty.specialty_name }}
                                     </option>
@@ -132,31 +132,31 @@
                             </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
-                                <input v-model="userData.email" type="email" class="form-control" id="email"
+                                <input @change="emailChanged" v-model="userData.email" type="email" class="form-control" id="email"
                                     v-bind:class="{ 'border-danger': !this.isCorrect.email }">
-                                <div v-if="!isCorrect.email" id="email" class="form-text text-danger">
+                                <div v-if="!(isCorrect.email) && email_changed" id="email" class="form-text text-danger">
                                     Пожалуйста, введите корректный email. Например test@mail.ru
                                 </div>
                             </div>
 
                             <div class="mb-3">
                                 <label for="password" class="form-label">Пароль</label>
-                                <input v-model="userData.password" type="password" class="form-control" id="password"
+                                <input @change="passwordChanged" v-model="userData.password" type="password" class="form-control" id="password"
                                     v-bind:class="{ 'border-danger': !this.isCorrect.password }">
-                                <div v-if="!isCorrect.password" id="password" class="form-text text-danger">
-                                    Убедитесь, что вы правильно повторили пароль
+
+                            </div>
+                            <div class="mb-3">
+                                <label for="passwordConfirm" class="form-label">Повторите пароль</label>
+                                <input @change="passwordConfirmChanged" v-model="passwordConfirm" type="password" class="form-control" id="passwordConfirm"
+                                    v-bind:class="{ 'border-danger': !(this.isCorrect.password) && password_confirm_changed }">
+                                <div v-if="!(isCorrect.password) && password_changed" id="password" class="form-text text-danger">
+                                  Убедитесь, что вы правильно повторили пароль
                                 </div>
                             </div>
 
-                            <div class="mb-3">
-                                <label for="passwordConfirm" class="form-label">Повторите пароль</label>
-                                <input v-model="passwordConfirm" type="password" class="form-control" id="passwordConfirm"
-                                    v-bind:class="{ 'border-danger': !this.isCorrect.password }">
-                            </div>
-
                             <div class="form-check mb-3">
-                                <input v-model="this.confirm_personal_data"
-                                    v-bind:class="{ 'border-danger': !this.isCorrect.confirm_personal_data }"
+                                <input @change="confirmPersonalDataChanged" v-model="this.confirm_personal_data"
+                                    v-bind:class="{ 'border-danger': !(this.isCorrect.confirm_personal_data) && confirm_personal_data_changed }"
                                     class="form-check-input" type="checkbox" id="confirm_person_data">
                                 <label class="form-check-label" for="confirm_person_data">
                                     Согласен на обработку своих персональных данных в соответствии
@@ -197,8 +197,8 @@ export default {
                 phone_number: '',
                 birth_date: '2000-01-01',
                 sex: 'M',
-                current_univers: '-1',
-                current_facult: '-1',
+                current_university: '-1',
+                current_faculty: '-1',
                 current_specialty: '-1',
                 email: '',
                 password: ''
@@ -210,8 +210,8 @@ export default {
                 middle_name: true,
                 phone_number: true,
                 birth_date: true,
-                current_univers: true,
-                current_facult: true,
+                current_university: true,
+                current_faculty: true,
                 current_specialty: true,
                 email: true,
                 password: true,
@@ -223,7 +223,17 @@ export default {
             specialties: {},
             passwordConfirm: '',
             regStatus: '',
-            unlock: true
+            unlock: true,
+            last_name_changed: false,
+            first_name_changed: false,
+            phone_changed: false,
+            university_changed: false,
+            faculty_changed: false,
+            specialty_changed: false,
+            email_changed: false,
+            password_changed: false,
+            password_confirm_changed: false,
+            confirm_personal_data_changed: false,
         }
     },
     components: { VueDatePicker },
@@ -239,6 +249,46 @@ export default {
         })
     },
     methods: {
+        emailChanged(){
+            this.email_changed = true;
+            this.isCorrect.email = validateService.checkIsEmail(this.userData.email)
+        },
+        passwordChanged(){
+            this.password_changed = true;
+        },
+        passwordConfirmChanged(){
+            this.isCorrect.password = this.userData.password == this.passwordConfirm
+                && !validateService.checkIsEmptyStr(this.userData.password)
+            this.password_confirm_changed = true;
+        },
+        confirmPersonalDataChanged(){
+            this.isCorrect.confirm_personal_data = this.confirm_personal_data
+            this.confirm_personal_data_changed = true;
+        },
+        universityChanged(){
+            this.university_changed = true;
+            this.isCorrect.current_university = this.userData.current_university != '-1';
+        },
+        facultyChanged(){
+            this.faculty_changed = true;
+            this.isCorrect.current_faculty = this.userData.current_faculty != '-1';
+        },
+        specialtyChanged(){
+            this.specialty_changed = true;
+            this.isCorrect.current_specialty = this.userData.current_specialty != '-1';
+        },
+        lastNameChanged(){
+            this.last_name_changed = true;
+            this.isCorrect.last_name = validateService.checkNamesInput(this.userData.last_name)
+        },
+        firstNameChanged(){
+            this.first_name_changed = true;
+            this.isCorrect.first_name = validateService.checkNamesInput(this.userData.first_name)
+        },
+        phoneChanged(){
+            this.phone_changed = true;
+            this.isCorrect.phone_number = validateService.checkPhoneNumber(this.userData.phone_number)
+        },
         nextStep() {
             if (this.step === 1 && !this.checkFirstStep()) {
                 return false;
@@ -278,10 +328,7 @@ export default {
 
         checkFirstStep() {
 
-            this.isCorrect.last_name = validateService.checkNamesInput(this.userData.last_name)
-            this.isCorrect.first_name = validateService.checkNamesInput(this.userData.first_name)
-            this.isCorrect.middle_name = validateService.checkNamesInput(this.userData.middle_name)
-            this.isCorrect.phone_number = validateService.checkPhoneNumber(this.userData.phone_number)
+            this.isCorrect.middle_name = validateService.checkIsOnlyRussianLetter(this.userData.middle_name) || validateService.checkIsEmptyStr(this.userData.middle_name)
             this.isCorrect.birth_date = validateService.checkAgeBetween(this.userData.birth_date, 14, 100)
 
             return (this.isCorrect.last_name &&
@@ -292,38 +339,29 @@ export default {
         },
 
         checkSecondStep() {
-            this.isCorrect.current_univers = this.userData.current_univers != -1
-            this.isCorrect.current_facult = this.userData.current_facult != -1
-            this.isCorrect.current_specialty = this.userData.current_specialty != -1
-
-            return (this.isCorrect.current_univers &&
-                this.isCorrect.current_facult &&
+            return (this.isCorrect.current_university &&
+                this.isCorrect.current_faculty &&
                 this.isCorrect.current_specialty) || this.unlock
         },
 
         checkThirdStep() {
-            this.isCorrect.email = validateService.checkIsEmail(this.userData.email)
-            this.isCorrect.password = this.userData.password === this.passwordConfirm
-                && !validateService.checkIsEmptyStr(this.userData.password)
-            this.isCorrect.confirm_personal_data = this.confirm_personal_data
-
             return this.isCorrect.email && this.isCorrect.password && this.isCorrect.confirm_personal_data
         },
 
         getFacults: function () {
-            if (this.userData.current_univers != -1) {
-                userService.getFacults(this.userData.current_univers).then(response => {
+            if (this.userData.current_university != -1) {
+                userService.getFacults(this.userData.current_university).then(response => {
                     this.facults = response;
                 })
             } else {
                 this.facults = {};
             }
-            this.userData.current_facult = -1
+            this.userData.current_faculty = -1
 
         },
         getSpecialty: function () {
-            if (this.userData.current_facult != -1) {
-                userService.getSpecialty(this.userData.current_univers, this.userData.current_facult).then(response => {
+            if (this.userData.current_faculty != -1) {
+                userService.getSpecialty(this.userData.current_university, this.userData.current_faculty).then(response => {
                     this.specialties = response;
                 })
             } else {
