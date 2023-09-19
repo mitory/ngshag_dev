@@ -5,7 +5,7 @@
                 <div v-if="step === 1" class="">
                     <div class="col-md-10 col-lg-8 col-xl-8 col-xxl-8 mx-auto">
                         <div class="typewriter p-1 border border-dark bg-secondary mb-3">
-                            <p class="line m-0 pb-0 text-center fs-sm-5 text-mobile" v-for="(line, index) in textLines"
+                            <p class="line m-0 pb-0 text-center fs-sm-5 text-mobile" v-for="(line, index) in textLines1"
                                 :key="index">
                                 {{ line }}
                             </p>
@@ -17,22 +17,32 @@
                 </div>
 
                 <div v-if="step === 2">
-                    <div class="col-12 col-md-10 col-lg-8 col-xl-9 col-xxl-9 mx-auto">
+                    <div class="col-lg-10 col-xl-9 col-xxl-9 mx-auto">
                         <div class="typewriter p-1 border border-dark bg-secondary mb-3 mt-3">
-                            <p class="line m-0 text-center text-mobile">
-                                Выбери направления, в которых ты готов подтвердить свои компетенции:
+                            <p class="line m-0 pb-0 text-center text-mobile" v-for="(line, index) in textLines2"
+                                :key="index">
+                                {{ line }}
                             </p>
                         </div>
                     </div>
-                    <div class="mx-auto" v-for="category in categories_skills" :key="category.id">
-                        <h2>{{ category.name }}</h2>
-                        <div v-for="skill in category.skills" :key="skill.id" class="form-check mb-3">
-                            <input @change="add_skill(skill.id)" class="form-check-input" type="checkbox"
-                                v-bind:id="skill.id">
-                            <label class="form-check-label" v-bind:for="skill.id">
-                                {{ skill.name }}
-                            </label>
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="" v-for="category in categories_skills" :key="category.id"
+                            v-show="category_step === category.id">
+                            <h2>{{ category.name }}</h2>
+                            <div v-for="skill in category.skills" :key="skill.id" class="form-check mb-3">
+                                <input @change="add_skill(skill.id)" class="form-check-input" type="checkbox"
+                                    v-bind:id="skill.id">
+                                <label class="form-check-label" v-bind:for="skill.id">
+                                    {{ skill.name }}
+                                </label>
+                            </div>
                         </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button v-bind:disabled="category_step === 1" @click="backCategoryStep" type="button"
+                            class="me-2 btn btn-light">Назад</button>
+                        <button v-bind:disabled="category_step === categories_skills.length" @click="nextCategoryStep"
+                            type="button" class="btn btn-primary">Следующий шаг</button>
                     </div>
                 </div>
             </div>
@@ -46,18 +56,24 @@ import { userService } from '../services/user.service'
 export default {
     data() {
         return {
-            text: [
+            text1: [
                 'Поздравляем с успешной регистрацией на платформе',
                 'для проведения цифровых мероприятий! Это не только',
                 'действенный способ усилить свои компетенции, но и',
                 'возможность получить классные бонусы и предложение',
                 'на работу в крупную ИТ-компанию.'
             ],
-            textLines: [],
-            line: 1,
+            text2: [
+                'Выбери направления, в которых ты готов подтвердить свои компетенции:'
+            ],
+            textLines2: [],
+            textLines1: [],
+            line1: 1,
+            line2: 1,
             categories_skills: [],
             set_skills_user: [],
-            step: 2
+            step: 1,
+            category_step: 1
         };
     },
     methods: {
@@ -73,20 +89,36 @@ export default {
         },
         nextStep: function () {
             ++this.step;
+            if (this.step === 2) {
+                this.appendLine(this.line2, this.text2, this.textLines2);
+            }
         },
-        appendLine: function () {
+        nextCategoryStep: function () {
+            ++this.category_step;
+        },
+        backCategoryStep: function () {
+            --this.category_step;
+        },
+        appendLine: function (line, text, textLines) {
             const int = setInterval(() => {
-                if (this.line < this.text.length) {
-                    this.textLines.push(this.text[this.line])
-                    ++this.line;
+                if (line < text.length) {
+                    textLines.push(text[line])
+                    ++line;
+                    console.log(`${this.step} ${line}`)
                 } else {
                     clearInterval(int)
                 }
             }, 2000)
         },
         changeTextForMobile: function () {
+            if (window.innerWidth <= 992) {
+                this.text2 = [
+                    'Выбери направления, в которых ты готов',
+                    'подтвердить свои компетенции:'
+                ]
+            }
             if (window.innerWidth <= 768) {
-                this.text = [
+                this.text1 = [
                     'Поздравляем с успешной регистрацией',
                     'на платформе для проведения цифровых',
                     'мероприятий! Это не только действенный',
@@ -96,7 +128,7 @@ export default {
                 ]
             }
             if (window.innerWidth <= 510) {
-                this.text = [
+                this.text1 = [
                     'Поздравляем с успешной регистрацией',
                     'на платформе для проведения цифровых',
                     'мероприятий! Это не только действенный',
@@ -104,6 +136,13 @@ export default {
                     'возможность получить классные бонусы и',
                     'предложение на работу в крупную',
                     'ИТ-компанию.'
+                ]
+            }
+            if (window.innerWidth <= 360) {
+                this.text2 = [
+                    'Выбери направления,',
+                    'в которых ты готов',
+                    'подтвердить свои компетенции:'
                 ]
             }
         }
@@ -119,8 +158,12 @@ export default {
     },
     mounted() {
         window.addEventListener('resize', this.handleResize)
-        this.textLines.push(this.text[0])
-        this.appendLine();
+        this.textLines1.push(this.text1[0])
+        this.textLines2.push(this.text2[0])
+        if (this.step === 1) {
+            this.appendLine(this.line1, this.text1, this.textLines1);
+        }
+
 
     },
     unmounted() {
