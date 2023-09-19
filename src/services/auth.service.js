@@ -61,8 +61,8 @@ function register(user) {
         middle_name: user.middle_name,
         birth_date: user.birth_date,
         sex: user.sex,
-        institution: user.current_univers,
-        faculty: user.current_facult,
+        institution: user.current_university,
+        faculty: user.current_faculty,
         specialty: user.current_specialty,
         phone_number: user.phone_number
     }).then(() => {

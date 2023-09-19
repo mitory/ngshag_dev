@@ -39,7 +39,7 @@ export default {
   name: 'LoginPage',
   data() {
     return {
-      email: 'Ivanov@gmail.com',
+      email: 'admin@admin.com',
       password: '111',
       isCorrect: {
         email: true,

@@ -19,19 +19,19 @@
             <h5 class="mb-3">Информация об учебном заведении</h5>
             <div class="input-group mb-3">
                 <span class="input-group-text" id="inst">Название</span>
-                <input disabled type="text" class="form-control" :value="this.user.email"
+                <input disabled type="text" class="form-control" :value="user.institution"
                     aria-label="Название учебного заведения" aria-describedby="inst">
             </div>
             <div class="input-group mb-3">
                 <span class="input-group-text" id="birth_date">Факультет</span>
-                <input disabled type="text" class="form-control" :value="format_date(user.birth_date)"
+                <input disabled type="text" class="form-control" :value="user.faculty"
                     aria-label="Дата рождения" aria-describedby="birth_date">
             </div>
-            <div class="input-group mb-3">
-                <span class="input-group-text" id="birth_date">Направление</span>
-                <input disabled type="text" class="form-control" :value="format_date(user.birth_date)"
-                    aria-label="Дата рождения" aria-describedby="birth_date">
-            </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="birth_date">Направление</span>
+            <input disabled type="text" class="form-control" :value="user.specialty"
+                   aria-label="Дата рождения" aria-describedby="birth_date">
+          </div>
         </div>
     </div>
 </template>
@@ -46,14 +46,11 @@ export default {
                 email: '',
                 first_name: '',
                 last_name: '',
-                birth_date: ''
-            },
-            inst: {
-                name: '',
+                birth_date: '',
+                institution: '',
                 faculty: '',
-                spec: ''
-            }
-
+                specialty: '',
+            },
         }
     },
     components: {
