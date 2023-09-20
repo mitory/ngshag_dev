@@ -71,21 +71,39 @@ async function getSpecialty(id_inst, id_facult) {
 }
 
 async function getSkills() {
-    console.log(`skill/`)
     const response = await axios.get(API_URL + `skill/`, {
         headers: { 'ngrok-skip-browser-warning': '69420' }
     });
     return response.data;
 }
 
-async function postSkills() {
-    console.log(`skill/`)
-    const response = await axios.post(API_URL + `skill/`, {
+async function postSkills(skills) {
+    const response = await axios.post(API_URL + `skill/`, { skill: skills }, {
         headers: authHeader(),
-    }
-    );
+    });
     return response.data;
 }
+
+// async function invitingTeam(code) {
+//     try {
+//         await axios
+//             .post(API_URL + 'team_join/',
+//                 {
+//                     invitation_code: code
+//                 },
+//                 {
+//                     headers: authHeader(),
+//                 })
+//         return { message: 'Вы присоединились к команде!', status: true }
+//     } catch (err) {
+//         if (err.response.status == 401) {
+//             alert('Пользователь не авторизован')
+//             return { message: 'Пользователь не авторизован', status: false }
+//         } else {
+//             return { message: err.response.data.error, status: false }
+//         }
+//     }
+// }
 
 function getLkInfo() {
     return axios

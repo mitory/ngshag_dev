@@ -43,7 +43,8 @@ export default {
             return this.$store.state.auth.status.loggedIn
         },
         is_none() {
-            return !this.loggedIn
+            console.log(this.$route.path)
+            return !this.loggedIn || this.$route.path === '/set-user-skills'
         }
     }
 }

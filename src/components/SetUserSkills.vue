@@ -41,8 +41,10 @@
                     <div class="d-flex justify-content-center">
                         <button v-bind:disabled="category_step === 1" @click="backCategoryStep" type="button"
                             class="me-2 btn btn-light">Назад</button>
-                        <button v-bind:disabled="category_step === categories_skills.length" @click="nextCategoryStep"
-                            type="button" class="btn btn-primary">Следующий шаг</button>
+                        <button v-bind:class="{ 'd-none': category_step === categories_skills.length }"
+                            @click="nextCategoryStep" type="button" class="btn btn-primary">Следующий шаг</button>
+                        <button v-bind:class="{ 'd-none': category_step < categories_skills.length }"
+                            @click="addSkillToUser" type="button" class="btn btn-primary">Продолжить</button>
                     </div>
                 </div>
             </div>
@@ -77,6 +79,11 @@ export default {
         };
     },
     methods: {
+        addSkillToUser: function () {
+            userService.postSkills(this.set_skills_user).then(() => {
+                this.$router.push("/");
+            })
+        },
         add_skill: function (id) {
             if (!this.set_skills_user.includes(id)) {
                 this.set_skills_user.push(id)

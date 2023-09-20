@@ -62,8 +62,8 @@
                                     <div class="mb-3">
                                         <label for="phone_number" class="form-label">Телефон <span
                                                 class="text-danger">*</span></label>
-                                        <input @change="phoneChanged" v-model="userData.phone_number" maxlength="12"
-                                            type="text" class="form-control"
+                                        <input @input="checkFirstLetter" @change="phoneChanged"
+                                            v-model="userData.phone_number" maxlength="12" type="text" class="form-control"
                                             v-bind:class="{ 'border-danger': !(isCorrect.phone_number) && phone_changed }"
                                             id="phone_number" placeholder="+7XXXXXXXXXX">
                                         <div v-if="!(isCorrect.phone_number) && phone_changed" id="phone_number"
@@ -75,20 +75,20 @@
                                     <div class="">
                                         <p>Пол</p>
                                         <div class="d-flex justify-content-lg-between justify-content-center">
-                                          <div class="form-check me-5 me-lg-0">
-                                              <input v-model="userData.sex" class="form-check-input" type="radio" name="sex"
-                                                  id="M" value="M" checked>
-                                              <label class="form-check-label" for="M">
-                                                  Мужской
-                                              </label>
-                                          </div>
-                                          <div class="form-check">
-                                              <input v-model="userData.sex" class="form-check-input" type="radio" name="sex"
-                                                  id="F" value="F">
-                                              <label class="form-check-label" for="F">
-                                                  Женский
-                                              </label>
-                                          </div>
+                                            <div class="form-check me-5 me-lg-0">
+                                                <input v-model="userData.sex" class="form-check-input" type="radio"
+                                                    name="sex" id="M" value="M" checked>
+                                                <label class="form-check-label" for="M">
+                                                    Мужской
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input v-model="userData.sex" class="form-check-input" type="radio"
+                                                    name="sex" id="F" value="F">
+                                                <label class="form-check-label" for="F">
+                                                    Женский
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -107,8 +107,8 @@
                                 <p class="mb-0">Где ты учишься?</p>
                             </div>
                             <div>
-                                <select @change="getFacults(); universityChanged(); getSpecialty();" class="form-select mb-3"
-                                    v-model="userData.current_university"
+                                <select @change="getFacults(); universityChanged(); getSpecialty();"
+                                    class="form-select mb-3" v-model="userData.current_university"
                                     v-bind:class="{ 'border-danger': !(this.isCorrect.current_university) && university_changed }">
                                     <option value="-1" selected>Выберите ВУЗ</option>
                                     <option v-for="uviver in univers" :value="uviver.id" :key="uviver.id">
@@ -212,7 +212,7 @@ export default {
                 last_name: '',
                 first_name: '',
                 middle_name: '',
-                phone_number: '',
+                phone_number: '+7',
                 birth_date: '2000-01-01',
                 sex: 'M',
                 current_university: '-1',
@@ -241,7 +241,7 @@ export default {
             specialties: {},
             passwordConfirm: '',
             regStatus: '',
-            unlock: true,
+            unlock: false,
             last_name_changed: false,
             first_name_changed: false,
             phone_changed: false,
@@ -263,6 +263,11 @@ export default {
         })
     },
     methods: {
+        checkFirstLetter() {
+            if (this.userData.phone_number.length < 2) {
+                this.userData.phone_number = '+7'
+            }
+        },
         emailChanged() {
             this.email_changed = true;
             this.isCorrect.email = validateService.checkIsEmail(this.userData.email)
@@ -400,6 +405,4 @@ export default {
 
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
