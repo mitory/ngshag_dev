@@ -16,7 +16,7 @@
                     </div>
                 </div>
 
-                <div v-if="step === 2">
+                <div v-if="step === 2" class="mb-4">
                     <div class="col-lg-10 col-xl-9 col-xxl-9 mx-auto">
                         <div class="typewriter p-1 border border-dark bg-secondary mb-3 mt-3">
                             <p class="line m-0 pb-0 text-center text-mobile" v-for="(line, index) in textLines2"
@@ -25,17 +25,25 @@
                             </p>
                         </div>
                     </div>
-                    <carousel>
-                        <div class="item" v-for="category in categories_skills" :key="category.id">
-                            <h2>{{ category.name }}</h2>
-                            <div v-for="skill in category.skills" :key="skill.id" class="form-check mb-3">
-                                <input @change="add_skill(skill.id)" class="form-check-input" type="checkbox"
-                                    v-bind:id="skill.id">
-                                <label class="form-check-label" v-bind:for="skill.id">
-                                    {{ skill.name }}
-                                </label>
+                    <carousel :items-to-show="2.6" :wrap-around="true" class="mb-3">
+                        <Slide
+                            class="item d-flex flex-column justify-content-center align-items-start mb-4 bg-primary border mx-2 p-2 text-white"
+                            v-for="category in categories_skills" :key="category.id">
+                            <h2 class="mx-auto mb-3">{{ category.name }}</h2>
+                            <div class="mx-auto text-start">
+                                <div v-for="skill in category.skills" :key="skill.id" class="form-check mb-3">
+                                    <input @change="add_skill(skill.id)" class="form-check-input" type="checkbox"
+                                        v-bind:id="skill.id">
+                                    <label class="form-check-label" v-bind:for="skill.id">
+                                        {{ skill.name }}
+                                    </label>
+                                </div>
                             </div>
-                        </div>
+                        </Slide>
+                        <template #addons>
+                            <Navigation />
+                            <Pagination class="ps-0" />
+                        </template>
                     </carousel>
 
                     <!-- <div class="d-flex flex-column align-items-center">
@@ -53,13 +61,17 @@
                     </div> -->
 
 
-                    <div class="d-flex justify-content-center">
+                    <!-- <div class="d-none justify-content-center">
                         <button v-bind:disabled="category_step === 1" @click="backCategoryStep" type="button"
                             class="me-2 btn btn-light">Назад</button>
                         <button v-bind:class="{ 'd-none': category_step === categories_skills.length }"
                             @click="nextCategoryStep" type="button" class="btn btn-primary">Следующий шаг</button>
                         <button v-bind:class="{ 'd-none': category_step < categories_skills.length }"
                             @click="addSkillToUser" type="button" class="btn btn-primary">Продолжить</button>
+                    </div> -->
+
+                    <div class="d-flex justify-content-center">
+                        <button @click="addSkillToUser" type="button" class="btn btn-primary">Завершить настройку</button>
                     </div>
 
                 </div>
@@ -70,7 +82,8 @@
   
 <script>
 import { userService } from '../services/user.service'
-import carousel from 'vue-owl-carousel'
+import 'vue3-carousel/dist/carousel.css';
+import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
 
 export default {
     data() {
@@ -95,7 +108,12 @@ export default {
             category_step: 1
         };
     },
-    components: { carousel },
+    components: {
+        Carousel,
+        Slide,
+        Pagination,
+        Navigation
+    },
     methods: {
         addSkillToUser: function () {
             userService.postSkills(this.set_skills_user).then(() => {
@@ -117,12 +135,6 @@ export default {
             if (this.step === 2) {
                 this.appendLine(this.line2, this.text2, this.textLines2);
             }
-        },
-        nextCategoryStep: function () {
-            ++this.category_step;
-        },
-        backCategoryStep: function () {
-            --this.category_step;
         },
         appendLine: function (line, text, textLines) {
             const int = setInterval(() => {
@@ -175,8 +187,6 @@ export default {
     created() {
         this.changeTextForMobile()
         userService.getSkills().then(response => {
-
-            console.log(response)
             this.categories_skills = response
         })
 
@@ -184,7 +194,6 @@ export default {
 
     },
     mounted() {
-        window.addEventListener('resize', this.handleResize)
         this.textLines1.push(this.text1[0])
         this.textLines2.push(this.text2[0])
         if (this.step === 1) {
@@ -194,7 +203,7 @@ export default {
 
     },
     unmounted() {
-        window.removeEventListener('resize', this.handleResize)
+
     },
 };
 </script>

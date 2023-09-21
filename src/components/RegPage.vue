@@ -1,5 +1,8 @@
 <template>
     <div class="container">
+        <div>
+            <p>Значение атрибута "source" из URL: {{ $route.query.source }}</p>
+        </div>
         <div class="row" style="height: 100vh">
             <div class="col-sm-8 m-auto ">
                 <form @change="formUpdated" @submit.prevent="registration" novalidate>
@@ -201,6 +204,7 @@
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import { userService } from '../services/user.service'
+import { publicService } from '../services/public.service'
 import { validateService } from '../services/validate.service'
 
 export default {
@@ -256,6 +260,7 @@ export default {
     },
     components: { VueDatePicker },
     created() {
+        publicService.senSourse().then(response => console.log(response.status));
         this.$store.dispatch('auth/logout');
         this.$store.commit('routes/toRegPage')
         userService.getUnivers().then(response => {

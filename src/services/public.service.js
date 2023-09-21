@@ -4,7 +4,7 @@ import config from '../config'
 const API_URL = config.apiURL;
 
 export const publicService = {
-    getEventsList, getEvent
+    getEventsList, getEvent, senSourse
 };
 
 async function getEventsList() {
@@ -24,6 +24,17 @@ async function getEvent(id_event) {
             headers: { 'ngrok-skip-browser-warning': '69420' }
         });
         return response.data;
+    } catch (err) {
+        alert(err);
+    }
+}
+
+async function senSourse() {
+    try {
+        const response = await axios.get(API_URL + 'qr/?source=2', {
+            headers: { 'ngrok-skip-browser-warning': '69420' }
+        });
+        return response;
     } catch (err) {
         alert(err);
     }
