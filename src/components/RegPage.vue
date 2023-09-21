@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div>
-            <p>Значение атрибута "source" из URL: {{ $route.query.source }}</p>
+            <p>Значение атрибута "source" из URL: {{ source }}</p>
         </div>
         <div class="row" style="height: 100vh">
             <div class="col-sm-8 m-auto ">
@@ -257,6 +257,9 @@ export default {
             password_confirm_changed: false,
             confirm_personal_data_changed: false,
         }
+    },
+    props: {
+        source: String
     },
     components: { VueDatePicker },
     created() {
