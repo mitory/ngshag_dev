@@ -12,6 +12,17 @@ module.exports = {
   }
 }
 
+//const webpack = require('webpack');
+// configureWebpack: {
+//   plugins: [
+//     new webpack.ProvidePlugin({
+//       $: 'jquery',
+//       jQuery: 'jquery',
+//       'window.jQuery': 'jquery'
+//     }),
+//   ]
+// }
+
 // module.exports = {
 //   devServer: {
 //     proxy: {

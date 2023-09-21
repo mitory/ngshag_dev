@@ -25,7 +25,20 @@
                             </p>
                         </div>
                     </div>
-                    <div class="d-flex flex-column align-items-center">
+                    <carousel>
+                        <div class="item" v-for="category in categories_skills" :key="category.id">
+                            <h2>{{ category.name }}</h2>
+                            <div v-for="skill in category.skills" :key="skill.id" class="form-check mb-3">
+                                <input @change="add_skill(skill.id)" class="form-check-input" type="checkbox"
+                                    v-bind:id="skill.id">
+                                <label class="form-check-label" v-bind:for="skill.id">
+                                    {{ skill.name }}
+                                </label>
+                            </div>
+                        </div>
+                    </carousel>
+
+                    <!-- <div class="d-flex flex-column align-items-center">
                         <div class="" v-for="category in categories_skills" :key="category.id"
                             v-show="category_step === category.id">
                             <h2>{{ category.name }}</h2>
@@ -37,7 +50,9 @@
                                 </label>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
+
+
                     <div class="d-flex justify-content-center">
                         <button v-bind:disabled="category_step === 1" @click="backCategoryStep" type="button"
                             class="me-2 btn btn-light">Назад</button>
@@ -46,6 +61,7 @@
                         <button v-bind:class="{ 'd-none': category_step < categories_skills.length }"
                             @click="addSkillToUser" type="button" class="btn btn-primary">Продолжить</button>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -54,6 +70,7 @@
   
 <script>
 import { userService } from '../services/user.service'
+import carousel from 'vue-owl-carousel'
 
 export default {
     data() {
@@ -78,6 +95,7 @@ export default {
             category_step: 1
         };
     },
+    components: { carousel },
     methods: {
         addSkillToUser: function () {
             userService.postSkills(this.set_skills_user).then(() => {
@@ -161,6 +179,8 @@ export default {
             console.log(response)
             this.categories_skills = response
         })
+
+
 
     },
     mounted() {
