@@ -1,10 +1,16 @@
 <template>
-  <HeaderButtons></HeaderButtons>
-  <router-view></router-view>
+  <div class="d-flex flex-column justify-content-between" style="min-height: 100vh;">
+    <div>
+      <HeaderButtons></HeaderButtons>
+      <router-view></router-view>
+    </div>
+    <FooterInfo/>
+  </div>
 </template>
 
 <script>
 import HeaderButtons from '../src/components/HeaderButtons.vue'
+import FooterInfo from "@/components/FooterInfo";
 
 export default {
   data() {
@@ -12,6 +18,7 @@ export default {
     }
   },
   components: {
+    FooterInfo,
     HeaderButtons
   },
   computed: {
