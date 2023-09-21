@@ -23,7 +23,8 @@ const router = createRouter({
         },
         {
             path: '/reg',
-            component: RegPage
+            component: RegPage,
+            props: (route) => ({ source: route.query.source })
         },
         {
             path: '/set-user-skills',
