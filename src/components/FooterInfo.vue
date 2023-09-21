@@ -6,7 +6,7 @@
           <p class="text me-3 my-auto" >
             Ссылка на телеграм-канал проекта: @tvercham
           </p>
-          <img style="height: 50px;" src="../assets/img/img.png" alt="telegram qr-code">
+          <img style="height: 50px;" src="../assets/img/tg_qr_code.png" alt="telegram qr-code">
         </div>
       </div>
       </div>
