@@ -24,9 +24,6 @@ export default {
             sliderPosition: this.setPosition(this.value),
         };
     },
-    // created: {
-    //     this.sliderPosition = this.setPosition(this.value)
-    // },
     computed: {
         sliderValue() {
             // Рассчитываем значение ползунка на основе ширины контейнера и позиции
@@ -64,6 +61,9 @@ export default {
             this.setPosition(index)
             //this.sliderPosition = (index / 3) * this.scaleWidth + "px";
         },
+    },
+    created() {
+        this.setValue(this.value)
     },
 };
 </script>

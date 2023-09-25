@@ -41,7 +41,8 @@
                             </div>
                             <!-- <Slider class="mx-auto my-4" :format="format" :min="1" :max="4" v-model="level_now"
                                 style="width: 70%" /> -->
-                            <range-slider v-model="level_now" />
+                            <p class="text-start">Мой уровень относительно учебной программы:</p>
+                            <range-slider :value="level_now" />
                         </Slide>
                         <Slide class="item"></Slide>
                         <template #addons>
@@ -91,7 +92,7 @@ export default {
             category_step: 1,
             width: 0,
             count_slides: 3,
-            level_now: 3,
+            level_now: 0,
             format: function (level_now) {
                 if (level_now === 1) {
                     return 'Хуже учебной программы'
@@ -207,9 +208,6 @@ export default {
         userService.getSkills().then(response => {
             this.categories_skills = response
         })
-
-
-
     },
     mounted() {
         this.textLines1.push(this.text1[0])
