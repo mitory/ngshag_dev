@@ -134,6 +134,18 @@
                                         {{ specialty.specialty_name }}
                                     </option>
                                 </select>
+                                <div class="mb-3">
+                                  <label for="year" class="form-label">Курс<span
+                                      class="text-danger">*</span></label>
+                                  <input @change="yearChanged"
+                                         v-model="userData.year" inputmode="numeric" pattern="\d*" maxlength="2" type="number" class="form-control"
+                                         v-bind:class="{ 'border-danger': !(isCorrect.year) && year_changed}"
+                                         id="year" style="width: 5em;">
+                                  <div v-if="!(isCorrect.year) && year_changed" id="year"
+                                       class="form-text text-danger">
+                                    Пожалуйста, введите курс, на котором вы учитесь.
+                                  </div>
+                                </div>
                             </div>
                             <div class="d-flex justify-content-center">
                                 <button @click="backStep" type="button" class="me-2 btn btn-light">Назад</button>
@@ -221,7 +233,8 @@ export default {
                 current_faculty: '-1',
                 current_specialty: '-1',
                 email: '',
-                password: ''
+                password: '',
+                year: '',
             },
             confirm_personal_data: false,
             isCorrect: {
@@ -235,7 +248,8 @@ export default {
                 current_specialty: true,
                 email: true,
                 password: true,
-                confirm_personal_data: true
+                confirm_personal_data: true,
+                year: true,
             },
 
             univers: {},
@@ -254,6 +268,7 @@ export default {
             password_changed: false,
             password_confirm_changed: false,
             confirm_personal_data_changed: false,
+            year_changed:false,
         }
     },
     props: {
@@ -278,6 +293,11 @@ export default {
             if (this.userData.phone_number.length < 2 || !this.userData.phone_number.startsWith('+7')) {
                 this.userData.phone_number = '+7'
             }
+        },
+        yearChanged(){
+            this.year_changed = true;
+            this.isCorrect.year = validateService.checkIsOnlyNumbers(this.userData.year) && this.userData.year <=6 &&
+                this.userData.year >0;
         },
         emailChanged() {
             this.email_changed = true;
@@ -371,7 +391,8 @@ export default {
         checkSecondStep() {
             return (this.isCorrect.current_university &&
                 this.isCorrect.current_faculty &&
-                this.isCorrect.current_specialty) || this.unlock
+                this.isCorrect.current_specialty &&
+                this.isCorrect.year) || this.unlock
         },
 
         checkThirdStep() {

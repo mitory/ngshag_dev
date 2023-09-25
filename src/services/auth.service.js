@@ -64,7 +64,8 @@ function register(user) {
         institution: user.current_university,
         faculty: user.current_faculty,
         specialty: user.current_specialty,
-        phone_number: user.phone_number
+        phone_number: user.phone_number,
+        year: user.year,
     }).then(() => {
         return { status: true, message: 'Регистрация прошла успешно' };
 
