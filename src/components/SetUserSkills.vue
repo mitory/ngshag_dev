@@ -42,7 +42,7 @@
                             <!-- <Slider class="mx-auto my-4" :format="format" :min="1" :max="4" v-model="level_now"
                                 style="width: 70%" /> -->
                             <p class="text-start">Мой уровень относительно учебной программы:</p>
-                            <range-slider :value="level_now" />
+                            <range-slider v-model:value="level_now" />
                         </Slide>
                         <Slide class="item"></Slide>
                         <template #addons>

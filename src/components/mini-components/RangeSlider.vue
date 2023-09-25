@@ -2,7 +2,7 @@
     <div class="range-slider">
         <div class="scale">
             <div v-for="(label, index) in labels" :key="index"
-                class="p-2 border d-flex align-items-center justify-content-center scale-label"
+                class="me-1 d-flex align-items-center justify-content-center scale-label btn btn-light"
                 :class="{ active: value === index }" @click="setValue(index)">
                 {{ label }}
             </div>
@@ -18,6 +18,7 @@ export default {
     props: {
         value: Number,
     },
+    emits: ['update:value'],
     data() {
         return {
             labels: ["Хуже", "На уровне", "Лучше", "Гораздо лучше"],
@@ -57,13 +58,13 @@ export default {
         },
         setValue(index) {
             // Обновляем значение при нажатии на шкалу и сдвигаем ползунок
-            this.$emit("input", index);
+            this.$emit("update:value", index);
             this.setPosition(index)
             //this.sliderPosition = (index / 3) * this.scaleWidth + "px";
         },
     },
     created() {
-        this.setValue(this.value)
+        //this.setValue(this.value)
     },
 };
 </script>
