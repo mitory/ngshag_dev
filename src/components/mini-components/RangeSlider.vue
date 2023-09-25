@@ -2,7 +2,7 @@
     <div class="range-slider">
         <div class="scale">
             <div v-for="(label, index) in labels" :key="index"
-                class="me-1 d-flex align-items-center justify-content-center scale-label btn btn-light"
+                class="text-mobile me-1 d-flex align-items-center justify-content-center scale-label btn btn-light"
                 :class="{ active: value === index }" @click="setValue(index)">
                 {{ label }}
             </div>
@@ -70,6 +70,18 @@ export default {
 </script>
   
 <style scoped>
+@media (max-width: 367px) {
+    .text-mobile {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 340px) {
+    .text-mobile {
+        font-size: 12px;
+    }
+}
+
 .range-slider {
     display: inline-block;
     width: 100%;

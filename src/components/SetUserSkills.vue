@@ -32,21 +32,29 @@
                             <h2 class="mx-auto mb-3">{{ category.name }}</h2>
                             <div class="mx-auto text-start">
                                 <div v-for="skill in category.skills" :key="skill.id" class="form-check mb-3">
-                                    <input @change="add_skill(skill.id)" class="form-check-input" type="checkbox"
-                                        v-bind:id="skill.id">
+                                    <input @change="add_skill(category.id, skill.id)" class="form-check-input"
+                                        type="checkbox" v-bind:id="skill.id">
                                     <label class="form-check-label" v-bind:for="skill.id">
                                         {{ skill.name }}
                                     </label>
                                 </div>
                             </div>
-                            <!-- <Slider class="mx-auto my-4" :format="format" :min="1" :max="4" v-model="level_now"
-                                style="width: 70%" /> -->
-                            <p class="text-start">Мой уровень относительно учебной программы:</p>
-                            <range-slider v-model:value="level_now" />
+                            <div v-if="categories_levels && categories_levels[category.id] && categories_levels[category.id].status"
+                                class="mb-3 mx-auto">
+                                <p class="text-start">Мой уровень относительно учебной программы:</p>
+                                <range-slider v-model:value="categories_levels[category.id].level_now"
+                                    @update:value="onLevelNowChange(category.id)" />
+                            </div>
+                            <div v-if="categories_levels && categories_levels[category.id] && categories_levels[category.id].status"
+                                class="mx-auto">
+                                <p class="text-start">Желаемый уровень:</p>
+                                <range-slider v-model:value="categories_levels[category.id].prospective_level"
+                                    @update:value="onProspectiveNowChange(category.id)" />
+                            </div>
                         </Slide>
                         <Slide class="item"></Slide>
                         <template #addons>
-                            <Navigation class="d-none d-md-block" />
+                            <Navigation class="d-none d-md-block px-md-0" />
                             <Pagination class="ps-0" />
                         </template>
                     </carousel>
@@ -55,7 +63,6 @@
                     <div class="d-flex justify-content-center">
                         <button @click="addSkillToUser" type="button" class="btn btn-primary">Завершить настройку</button>
                     </div>
-                    <Slider v-model="level_now" />
                 </div>
             </div>
         </div>
@@ -67,7 +74,6 @@ import { userService } from '../services/user.service'
 import 'vue3-carousel/dist/carousel.css';
 import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
 import RangeSlider from "./mini-components/RangeSlider.vue";
-import Slider from '@vueform/slider'
 
 export default {
     data() {
@@ -91,23 +97,9 @@ export default {
             step: 2,
             category_step: 1,
             width: 0,
-            count_slides: 3,
+            count_slides: 2,
+            categories_levels: [],
             level_now: 0,
-            format: function (level_now) {
-                if (level_now === 1) {
-                    return 'Хуже учебной программы'
-                }
-                if (level_now === 2) {
-                    return 'Уровень учебной программы'
-                }
-                if (level_now === 3) {
-                    return 'Выше уровня учебной программы'
-                }
-                if (level_now === 4) {
-                    return 'Гораздо выше уровня учебной программы'
-                }
-                return ''
-            },
             prospective_level: 1
         };
     },
@@ -116,22 +108,57 @@ export default {
         Slide,
         Pagination,
         Navigation,
-        RangeSlider,
-        Slider
+        RangeSlider
     },
     methods: {
+        onLevelNowChange: function (id_cat) {
+            const index = this.set_skills_user.findIndex(obj => obj.id === id_cat)
+            if (this.categories_levels[id_cat].level_now > this.categories_levels[id_cat].prospective_level) {
+                this.categories_levels[id_cat].prospective_level = this.categories_levels[id_cat].level_now
+            }
+            this.set_skills_user[index].level_now = this.categories_levels[id_cat].level_now + 1
+        },
+        onProspectiveNowChange: function (id_cat) {
+            const index = this.set_skills_user.findIndex(obj => obj.id === id_cat)
+            if (this.categories_levels[id_cat].prospective_level < this.categories_levels[id_cat].level_now) {
+                this.categories_levels[id_cat].level_now = this.categories_levels[id_cat].prospective_level
+            }
+            this.set_skills_user[index].prospective_level = this.categories_levels[id_cat].prospective_level + 1
+        },
         addSkillToUser: function () {
-            userService.postSkills(this.set_skills_user).then(() => {
+            userService.postSkills(this.set_skills_user).then((res) => {
+                console.log(res)
                 this.$router.push("/");
             })
         },
-        add_skill: function (id) {
-            if (!this.set_skills_user.includes(id)) {
-                this.set_skills_user.push(id)
+        add_skill: function (id_cat, id_skill) {
+            const obj = this.set_skills_user.find(obj => obj.id === id_cat)
+            if (obj === undefined) {
+                console.log('id_cat = ' + id_cat)
+                console.log('Он не смог найти ' + this.set_skills_user.includes(obj => obj.id === id_cat))
+                this.categories_levels[id_cat].status = true
+                this.set_skills_user.push({
+                    id: id_cat,
+                    skills: [id_skill],
+                    level_now: this.categories_levels[id_cat].level_now + 1,
+                    prospective_level: this.categories_levels[id_cat].prospective_level + 1
+                })
             } else {
-                this.set_skills_user = this.set_skills_user.filter(function (val) {
-                    return val != id;
-                });
+                if (!obj.skills.includes(id_skill)) {
+                    obj.skills.push(id_skill)
+                } else {
+                    obj.skills = obj.skills.filter(function (val) {
+                        return val !== id_skill;
+                    })
+                    if (obj.skills.length === 0) {
+                        this.categories_levels[id_cat].status = false
+                        this.set_skills_user = this.set_skills_user.filter(function (val) {
+                            return val !== obj
+                        })
+                        this.categories_levels[id_cat].level_now = 0
+                        this.categories_levels[id_cat].prospective_level = 0
+                    }
+                }
             }
             console.log(this.set_skills_user)
         },
@@ -160,7 +187,7 @@ export default {
             if (window.innerWidth <= 992) {
                 this.count_slides = 1.5
             }
-            if (window.innerWidth <= 430) {
+            if (window.innerWidth <= 530) {
                 this.count_slides = 1
             }
         },
@@ -205,15 +232,32 @@ export default {
         this.changeTextForMobile()
         this.setWidth();
         this.setCountSlides();
-        userService.getSkills().then(response => {
-            this.categories_skills = response
-        })
+    },
+    async beforeCreate() {
+        try {
+            const response = await userService.getSkills();
+            this.categories_skills = response;
+            this.categories_levels = this.categories_skills.map(() => ({
+                level_now: 0,
+                prospective_level: 0,
+                status: false,
+            }));
+            this.categories_levels.push({ level_now: 0, prospective_level: 0, status: false })
+            console.log('Данные успешно получены и инициализированы.');
+            console.log(this.categories_levels);
+        } catch (error) {
+            console.error('Ошибка при получении данных из API:', error);
+        }
     },
     mounted() {
+
         this.textLines1.push(this.text1[0])
         this.textLines2.push(this.text2[0])
         if (this.step === 1) {
             this.appendLine(this.line1, this.text1, this.textLines1);
+        }
+        if (this.step === 2) {
+            this.appendLine(this.line2, this.text2, this.textLines2);
         }
 
 
@@ -224,7 +268,6 @@ export default {
 };
 </script>
  
-<style src="@vueform/slider/themes/default.css"></style>
 <style scoped>
 @media (max-width: 510px) {
     .text-mobile {

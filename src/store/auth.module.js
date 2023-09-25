@@ -44,6 +44,7 @@ export const auth = {
         },
         logout({ commit }) {
             authService.logout();
+            location.reload(true);
             commit('logout');
         },
         register({ commit }, user) {
