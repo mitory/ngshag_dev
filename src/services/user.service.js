@@ -111,17 +111,39 @@ function getLkInfo() {
             {
                 headers: authHeader()
             }).then(response => {
+                console.log('yes')
                 return response.data
             }, () => {
-                return authService.refresh().then(() => {
-                    return getLkInfo()
-                }).catch(() => {
-                    this.$store.dispatch('auth/logout')
-                    return false
-                })
-            }
-            ).catch(() => {
-                this.$store.dispatch('auth/logout')
-                return false
-            });
+                console.log('no')
+                authService.refresh().then((res) => {
+                    if (res) {
+                        getLkInfo().then(response => {
+                            console.log('yes')
+                            return response.data
+                        }).catch(() => {
+                            this.$store.dispatch('auth/logout')
+                            return false
+                        })
+                    } else {
+                        this.$store.dispatch('auth/logout')
+                        return false
+                    }
+                }
+                )
+            })
+    // , (err) => {
+    //     if (err.response.status === 401) {
+    //         this.$store.dispatch('auth/logout')
+    //         return false
+    //     }
+    // })
+    // // .catch(() => {
+    //     this.$store.dispatch('auth/logout')
+    //     return false
+    // })
+
+    // ).catch(() => {
+    //     this.$store.dispatch('auth/logout')
+    //     return false
+    // });
 }

@@ -25,9 +25,9 @@
                             </p>
                         </div>
                     </div>
-                    <carousel :items-to-show="2.6" :wrap-around="true" class="mb-3">
+                    <carousel :items-to-show="this.count_slides" class="mb-3">
                         <Slide
-                            class="item d-flex flex-column justify-content-center align-items-start mb-4 bg-primary border mx-2 p-2 text-white"
+                            class="item d-flex flex-column justify-content-center align-items-start mb-4 bg-primary bg-gradient border border-primary-subtle rounded mx-lg-2 p-2 text-white"
                             v-for="category in categories_skills" :key="category.id">
                             <h2 class="mx-auto mb-3">{{ category.name }}</h2>
                             <div class="mx-auto text-start">
@@ -39,41 +39,22 @@
                                     </label>
                                 </div>
                             </div>
+                            <!-- <Slider class="mx-auto my-4" :format="format" :min="1" :max="4" v-model="level_now"
+                                style="width: 70%" /> -->
+                            <range-slider v-model="level_now" />
                         </Slide>
+                        <Slide class="item"></Slide>
                         <template #addons>
-                            <Navigation />
+                            <Navigation class="d-none d-md-block" />
                             <Pagination class="ps-0" />
                         </template>
                     </carousel>
 
-                    <!-- <div class="d-flex flex-column align-items-center">
-                        <div class="" v-for="category in categories_skills" :key="category.id"
-                            v-show="category_step === category.id">
-                            <h2>{{ category.name }}</h2>
-                            <div v-for="skill in category.skills" :key="skill.id" class="form-check mb-3">
-                                <input @change="add_skill(skill.id)" class="form-check-input" type="checkbox"
-                                    v-bind:id="skill.id">
-                                <label class="form-check-label" v-bind:for="skill.id">
-                                    {{ skill.name }}
-                                </label>
-                            </div>
-                        </div>
-                    </div> -->
-
-
-                    <!-- <div class="d-none justify-content-center">
-                        <button v-bind:disabled="category_step === 1" @click="backCategoryStep" type="button"
-                            class="me-2 btn btn-light">Назад</button>
-                        <button v-bind:class="{ 'd-none': category_step === categories_skills.length }"
-                            @click="nextCategoryStep" type="button" class="btn btn-primary">Следующий шаг</button>
-                        <button v-bind:class="{ 'd-none': category_step < categories_skills.length }"
-                            @click="addSkillToUser" type="button" class="btn btn-primary">Продолжить</button>
-                    </div> -->
 
                     <div class="d-flex justify-content-center">
                         <button @click="addSkillToUser" type="button" class="btn btn-primary">Завершить настройку</button>
                     </div>
-
+                    <Slider v-model="level_now" />
                 </div>
             </div>
         </div>
@@ -84,6 +65,8 @@
 import { userService } from '../services/user.service'
 import 'vue3-carousel/dist/carousel.css';
 import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
+import RangeSlider from "./mini-components/RangeSlider.vue";
+import Slider from '@vueform/slider'
 
 export default {
     data() {
@@ -104,15 +87,36 @@ export default {
             line2: 1,
             categories_skills: [],
             set_skills_user: [],
-            step: 1,
-            category_step: 1
+            step: 2,
+            category_step: 1,
+            width: 0,
+            count_slides: 3,
+            level_now: 3,
+            format: function (level_now) {
+                if (level_now === 1) {
+                    return 'Хуже учебной программы'
+                }
+                if (level_now === 2) {
+                    return 'Уровень учебной программы'
+                }
+                if (level_now === 3) {
+                    return 'Выше уровня учебной программы'
+                }
+                if (level_now === 4) {
+                    return 'Гораздо выше уровня учебной программы'
+                }
+                return ''
+            },
+            prospective_level: 1
         };
     },
     components: {
         Carousel,
         Slide,
         Pagination,
-        Navigation
+        Navigation,
+        RangeSlider,
+        Slider
     },
     methods: {
         addSkillToUser: function () {
@@ -146,6 +150,18 @@ export default {
                     clearInterval(int)
                 }
             }, 2000)
+        },
+        setWidth: function () {
+            this.width = window.innerWidth;
+            console.log(this.width)
+        },
+        setCountSlides: function () {
+            if (window.innerWidth <= 992) {
+                this.count_slides = 1.5
+            }
+            if (window.innerWidth <= 430) {
+                this.count_slides = 1
+            }
         },
         changeTextForMobile: function () {
             if (window.innerWidth <= 992) {
@@ -186,6 +202,8 @@ export default {
     },
     created() {
         this.changeTextForMobile()
+        this.setWidth();
+        this.setCountSlides();
         userService.getSkills().then(response => {
             this.categories_skills = response
         })
@@ -207,7 +225,8 @@ export default {
     },
 };
 </script>
-  
+ 
+<style src="@vueform/slider/themes/default.css"></style>
 <style scoped>
 @media (max-width: 510px) {
     .text-mobile {

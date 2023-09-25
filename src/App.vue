@@ -4,13 +4,13 @@
       <HeaderButtons></HeaderButtons>
       <router-view></router-view>
     </div>
-    <FooterInfo/>
+    <FooterInfo />
   </div>
 </template>
 
 <script>
 import HeaderButtons from '../src/components/HeaderButtons.vue'
-import FooterInfo from "@/components/FooterInfo";
+import FooterInfo from "../src/components/FooterInfo.vue";
 
 export default {
   data() {
