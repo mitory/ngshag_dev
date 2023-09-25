@@ -11,6 +11,7 @@ import LK from '../components/LK'
 import UserTeams from '../components/UserTeams'
 import SetUserSkills from '../components/SetUserSkills'
 import AboutProject from '../components/AboutProject'
+import PoliciesAndProcedures from "../components/PoliciesAndProcedures";
 
 const router = createRouter({
     routes: [
@@ -65,6 +66,10 @@ const router = createRouter({
                     component: TeamPage
                 },
             ]
+        },
+        {
+            path:'/policies-and-procedures',
+            component: PoliciesAndProcedures
         },
         {
             path: '/:catchAll(.*)',
