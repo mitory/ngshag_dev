@@ -10,6 +10,7 @@ import TeamPage from '../components/TeamPage'
 import LK from '../components/LK'
 import UserTeams from '../components/UserTeams'
 import SetUserSkills from '../components/SetUserSkills'
+import AboutProject from '../components/AboutProject'
 
 const router = createRouter({
     routes: [
@@ -47,6 +48,10 @@ const router = createRouter({
         {
             path: '/invite-to-team',
             component: InviteToTeamPage
+        },
+        {
+            path: '/about-project',
+            component: AboutProject
         },
         {
             path: '/LK',

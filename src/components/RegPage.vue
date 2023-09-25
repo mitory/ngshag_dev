@@ -1,8 +1,5 @@
 <template>
     <div class="container">
-        <div>
-            <p>Значение атрибута "source" из URL: {{ source }}</p>
-        </div>
         <div class="row" style="height: 100vh">
             <div class="col-sm-8 m-auto ">
                 <form @change="formUpdated" @submit.prevent="registration" novalidate>
@@ -11,8 +8,8 @@
                             <div class="d-flex typewriter mb-3 p-1 border border-dark bg-secondary">
                                 <p class="mb-0">Привет! Давай знакомиться:</p>
                             </div>
-                            <div class="d-flex flex-column flex-lg-row justify-content-between mb-5">
-                                <div class="d-flex flex-column ">
+                            <div class="d-flex flex-column flex-lg-row justify-content-evenly mb-5">
+                                <div class="d-flex flex-column me-lg-4">
                                     <div class="mb-3 col-ms-2">
                                         <label for="last_name" class="form-label">Фамилия <span
                                                 class="text-danger">*</span></label>
@@ -48,20 +45,21 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="">
-                                    <p>Дата рождения:</p>
-                                    <p v-bind:class="{ 'text-w text-danger': !isCorrect.birth_date }"
-                                        v-if="!isCorrect.birth_date">Вам должно быть не меньше 14 <br> и не больше 100
-                                        лет
-                                    </p>
-
-
-                                    <VueDatePicker v-model="userData.birth_date" locale="ru" inline auto-apply
-                                        :enable-time-picker="false" :max-date="new Date()" model-type="yyyy-MM-dd">
-
-                                    </VueDatePicker>
-                                </div>
                                 <div class="d-flex flex-column">
+                                    <div class="">
+                                        <p>Дата рождения:</p>
+                                        <p v-bind:class="{ 'text-w text-danger': !isCorrect.birth_date }"
+                                            v-if="!isCorrect.birth_date">Вам должно быть не меньше 14 <br> и не больше 100
+                                            лет
+                                        </p>
+
+
+                                        <VueDatePicker v-model="userData.birth_date" locale="ru" auto-apply
+                                            :enable-time-picker="false" :max-date="new Date()" model-type="yyyy-MM-dd">
+
+                                        </VueDatePicker>
+                                    </div>
+
                                     <div class="mb-3">
                                         <label for="phone_number" class="form-label">Телефон <span
                                                 class="text-danger">*</span></label>
@@ -77,7 +75,7 @@
 
                                     <div class="">
                                         <p>Пол</p>
-                                        <div class="d-flex justify-content-lg-between justify-content-center">
+                                        <div class="d-flex justify-content-lg-evenly justify-content-center">
                                             <div class="form-check me-5 me-lg-0">
                                                 <input v-model="userData.sex" class="form-check-input" type="radio"
                                                     name="sex" id="M" value="M" checked>
@@ -263,7 +261,12 @@ export default {
     },
     components: { VueDatePicker },
     created() {
-        publicService.senSourse().then(response => console.log(response.status));
+
+        if (this.source !== undefined) {
+            publicService.senSourse(this.source);
+            this.$router.push("/reg");
+        }
+
         this.$store.dispatch('auth/logout');
         this.$store.commit('routes/toRegPage')
         userService.getUnivers().then(response => {
@@ -272,7 +275,7 @@ export default {
     },
     methods: {
         checkFirstLetter() {
-            if (this.userData.phone_number.length < 2) {
+            if (this.userData.phone_number.length < 2 || !this.userData.phone_number.startsWith('+7')) {
                 this.userData.phone_number = '+7'
             }
         },

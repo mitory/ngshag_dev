@@ -29,9 +29,9 @@ async function getEvent(id_event) {
     }
 }
 
-async function senSourse() {
+async function senSourse(source) {
     try {
-        const response = await axios.get(API_URL + 'qr/?source=2', {
+        const response = await axios.get(API_URL + 'qr/?source=' + source, {
             headers: { 'ngrok-skip-browser-warning': '69420' }
         });
         return response;
