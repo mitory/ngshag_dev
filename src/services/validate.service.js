@@ -1,5 +1,5 @@
 export const validateService = {
-    checkNamesInput, checkIsEmail, checkIsOnlyRussianLetter, checkIsEmptyStr, checkAgeBetween, checkPhoneNumber
+    checkNamesInput, checkIsEmail, checkIsOnlyRussianLetter, checkIsEmptyStr, checkAgeBetween, checkPhoneNumber, checkIsOnlyNumbers
 };
 
 function checkNamesInput(field) {
@@ -18,6 +18,10 @@ function checkIsEmail(str) {
 
 function checkIsOnlyRussianLetter(str) {
     return /^[а-яА-Я]+(?:-[а-яА-Я]+)*$/.test(str);
+}
+
+function checkIsOnlyNumbers(str){
+    return /[0-9]/.test(str)
 }
 
 function checkIsEmptyStr(str) {

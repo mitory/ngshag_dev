@@ -23,7 +23,7 @@ export default {
                 {
                     id: 2,
                     path: '/LK/my-teams',
-                    title: 'Мои соревнования'
+                    title: 'Мои мероприятия'
                 }
             ],
             page_select: 0

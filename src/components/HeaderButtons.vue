@@ -14,7 +14,6 @@
                         Личный кабинет
                     </router-link>
 
-
                     <router-link v-if="this.routes.isMainPage" class="btn btn-light me-3" to="/">
                         Главная
                     </router-link>

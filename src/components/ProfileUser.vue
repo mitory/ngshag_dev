@@ -5,33 +5,40 @@
             <h5 class="mb-3">Личная информация</h5>
             <div class="input-group mb-3">
                 <span class="input-group-text" id="email">Email</span>
-                <input disabled type="text" class="form-control" :value="this.user.email" aria-label="Имя пользователя"
-                    aria-describedby="email">
+<!--                <input disabled type="text" class="form-control" :value="this.user.email" aria-label="Имя пользователя"
+                    aria-describedby="email">-->
+                <div class="form-control text-break bootstrap-like-bg-color">{{ user.email }}</div>
             </div>
             <div class="input-group mb-3">
                 <span class="input-group-text" id="birth_date">Дата рождения</span>
-                <input disabled type="text" class="form-control" :value="format_date(user.birth_date)"
-                    aria-label="Дата рождения" aria-describedby="birth_date">
+                <div class="form-control text-break bootstrap-like-bg-color">{{ format_date(user.birth_date) }}</div>
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="phone_number">Телефон</span>
+              <div class="form-control text-break bootstrap-like-bg-color">{{ user.phone_number }}</div>
             </div>
         </div>
-
         <div class="mb-4">
             <h5 class="mb-3">Информация об учебном заведении</h5>
-            <div class="input-group mb-3">
-                <span class="input-group-text" id="inst">Название</span>
-                <input disabled type="text" class="form-control" :value="user.institution.institution_name"
-                    aria-label="Название учебного заведения" aria-describedby="inst">
+            <div class="input-group mb-3" >
+              <span class="input-group-text" id="inst">Название</span>
+              <div class="form-control text-break bootstrap-like-bg-color">{{ user.institution.institution_name }}</div>
             </div>
             <div class="input-group mb-3">
-                <span class="input-group-text" id="birth_date">Факультет</span>
-                <input disabled type="text" class="form-control" :value="user.faculty.faculty_name"
-                    aria-label="Дата рождения" aria-describedby="birth_date">
+              <span class="input-group-text" id="faculty">Факультет</span>
+              <div class="form-control text-break bootstrap-like-bg-color">{{ user.faculty.faculty_name }}</div>
             </div>
-          <div class="input-group mb-3">
-            <span class="input-group-text" id="birth_date">Направление</span>
-            <input disabled type="text" class="form-control" :value="user.specialty.specialty_name"
-                   aria-label="Дата рождения" aria-describedby="birth_date">
-          </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="specialty">Направление</span>
+<!--              <textarea disabled style="resize:none;" class="form-control"
+                        :value="user.specialty.specialty_name"
+                        aria-label="Название Специальности" aria-describedby="specialty"></textarea>-->
+              <div class="form-control text-break bootstrap-like-bg-color">{{ user.specialty.specialty_name }}</div>
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="year">Курс</span>
+              <div class="form-control text-break bootstrap-like-bg-color">{{ user.year }}</div>
+            </div>
         </div>
     </div>
 </template>
@@ -50,6 +57,8 @@ export default {
                 institution: [],
                 faculty: [],
                 specialty: [],
+                phone_number:'',
+                year:'',
             },
         }
     },
@@ -75,4 +84,8 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.bootstrap-like-bg-color{
+  background-color: #E9ECEF;
+}
+</style>
