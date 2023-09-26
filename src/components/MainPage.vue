@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row d-flex justify-content-between">
-      <div class="col-8">
+      <div class="col-lg-8">
         <h1 class="fs-3 text-center mb-4">Студенческий фестиваль ИТ-профессий<br>«Новый шаг-2023»</h1>
         <p class="fs-6 text-primary"><em>Проводится с 3 по 7 ноября 2023 года</em></p>
 
@@ -72,8 +72,8 @@
 
         </div>
       </div>
-      <div class="col-3">
-        <NewsBar class="mb-5"></NewsBar>
+      <div class="col-lg-3">
+        <NewsBar class="mb-2 mb-lg-5"></NewsBar>
         <EventsBar></EventsBar>
       </div>
     </div>
