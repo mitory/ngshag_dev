@@ -1,6 +1,6 @@
 
 const config = {
-    apiURL: 'https://824d-37-112-66-98.ngrok-free.app' + '/api/'
+    apiURL: 'http://localhost:8080' + '/api/'
 }
 
 export default config;
