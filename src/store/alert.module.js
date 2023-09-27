@@ -7,13 +7,11 @@ export const alert = {
     },
     mutations: {
         showMessage(state, { message, type }) {
-            console.log('Алерт появился')
             state.message = message
             state.type = type
             state.is_show = true
         },
         hiddenMessage(state) {
-            console.log('Алерт пропал')
             state.is_show = false
             state.type = ''
             state.message = ''
