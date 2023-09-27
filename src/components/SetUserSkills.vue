@@ -52,7 +52,7 @@
                                     @update:value="onProspectiveNowChange(category.id)" />
                             </div>
                         </Slide>
-                        <Slide class="item"></Slide>
+                        <Slide v-if="width >= 768" class="item"></Slide>
                         <template #addons>
                             <Navigation class="d-none d-md-block px-md-0" />
                             <Pagination class="ps-0" />
@@ -94,7 +94,7 @@ export default {
             line2: 1,
             categories_skills: [],
             set_skills_user: [],
-            step: 2,
+            step: 1,
             category_step: 1,
             width: 0,
             count_slides: 2,

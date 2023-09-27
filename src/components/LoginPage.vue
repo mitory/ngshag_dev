@@ -4,7 +4,7 @@
       <div class="col-sm-4 m-auto">
         <form @change="formUpdated" @submit.prevent="loginUser" novalidate>
           <div class="mb-3">
-            <label for="email" class="form-label">email</label>
+            <label for="email" class="form-label">Email</label>
             <input v-model="email" type="text" class="form-control" id="email"
               v-bind:class="{ 'border-danger': !this.isCorrect.email }">
             <div v-if="!isCorrect.email" id="email" class="form-text text-danger">
@@ -13,7 +13,7 @@
           </div>
 
           <div class="mb-3">
-            <label for="password" class="form-label">password</label>
+            <label for="password" class="form-label">Пароль</label>
             <input v-model="password" type="password" class="form-control" id="password"
               v-bind:class="{ 'border-danger': !this.isCorrect.password }">
 
