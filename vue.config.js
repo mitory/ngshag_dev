@@ -1,9 +1,4 @@
-// const { defineConfig } = require('@vue/cli-service')
-// module.exports = defineConfig({
-//   transpileDependencies: true
-// })
 
-// { devServer: { host: '127.0.0.1', port: 8080, public: 'localhost:8080', }, };
 
 module.exports = {
   devServer: {
@@ -12,24 +7,32 @@ module.exports = {
   }
 }
 
-//const webpack = require('webpack');
-// configureWebpack: {
-//   plugins: [
-//     new webpack.ProvidePlugin({
-//       $: 'jquery',
-//       jQuery: 'jquery',
-//       'window.jQuery': 'jquery'
-//     }),
-//   ]
-// }
-
+// const fs = require('fs');
+// const path = require('path');
+//
 // module.exports = {
-//   devServer: {
-//     proxy: {
-//       '/api': {
-//         target: 'https://152e-178-159-51-99.ngrok-free.app/', // Замените на адрес вашего Django-сервера
-//         changeOrigin: true,
+//   publicPath: '/',
+//   configureWebpack: {
+//     plugins: [
+//       {
+//         apply(compiler) {
+//           compiler.hooks.done.tap('GenerateHtaccess', () => {
+//             const distPath = path.resolve(__dirname, 'dist');
+//             const htaccessContent = `
+//               <IfModule mod_rewrite.c>
+//                 RewriteEngine On
+//                 RewriteBase /
+//                 RewriteRule ^index\\.html$ - [L]
+//                 RewriteCond %{REQUEST_FILENAME} !-f
+//                 RewriteCond %{REQUEST_FILENAME} !-d
+//                 RewriteRule . /index.html [L]
+//               </IfModule>
+//             `;
+
+//             fs.writeFileSync(path.join(distPath, '.htaccess'), htaccessContent);
+//           });
+//         },
 //       },
-//     },
-//   },
-// };
+//     ],
+//   }
+// }
