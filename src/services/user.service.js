@@ -2,11 +2,13 @@ import axios from 'axios';
 import authHeader from './auth-header';
 import config from '../config'
 import { authService } from './auth.service'
+// import store from '../store/store'
+// import router from '../router/router'
 
 const API_URL = config.apiURL;
 
 export const userService = {
-    getLkInfo, getUnivers, getFacults, getTeams, getTeam, getSpecialty, getSkills, postSkills
+    getLkInfo, getUnivers, getFacults, getTeams, getSpecialty, getSkills, postSkills
 };
 
 async function getTeams() {
@@ -14,33 +16,36 @@ async function getTeams() {
         headers: authHeader()
     }).then(response => {
         return { data: response.data, status: true };
-    }).catch(err => {
-        if (err.response.status == 401) {
-            alert('Пользователь не авторизован')
-            return { message: 'Пользователь не авторизован', status: false }
+    }).catch(error => {
+        if (error.response && error.response.status === 401) {
+            if (authService.refresh()) {
+                return getLkInfo();
+            } else {
+                this.$store.dispatch('auth/logout');
+            }
         } else {
-            return { message: err.response.data.error, status: false }
+            return { message: error.response.data.error, status: false }
         }
     });
 }
 
-async function getTeam(id_team) {
-    console.log(id_team)
-    return axios.get(API_URL + 'team_detail/' + id_team + '/',
-        {
-            headers: authHeader(),
-        }).then(response => {
-            return { data: response.data, status: true };
+// async function getTeam(id_team) {
+//     console.log(id_team)
+//     return axios.get(API_URL + 'team_detail/' + id_team + '/',
+//         {
+//             headers: authHeader(),
+//         }).then(response => {
+//             return { data: response.data, status: true };
 
-        }).catch(err => {
-            if (err.response.status == 401) {
-                alert('Пользователь не авторизован')
-                return { message: 'Пользователь не авторизован', status: false }
-            } else {
-                return { message: err.response.data.error, status: false }
-            }
-        })
-}
+//         }).catch(err => {
+//             if (err.response.status == 401) {
+//                 alert('Пользователь не авторизован')
+//                 return { message: 'Пользователь не авторизован', status: false }
+//             } else {
+//                 return { message: err.response.data.error, status: false }
+//             }
+//         })
+// }
 
 
 async function getUnivers() {
@@ -50,12 +55,11 @@ async function getUnivers() {
         });
         return response.data;
     } catch (err) {
-        alert(err);
+        this.$store.dispatch('alert/sendMessage', { message: 'Не удалось получить ответ от сервера', type: 'Danger' })
     }
 }
 
 async function getFacults(id) {
-    console.log(`faculties/${id}`)
     const response = await axios.get(API_URL + `faculties/${id}/`, {
         headers: { 'ngrok-skip-browser-warning': '69420' }
     });
@@ -63,7 +67,6 @@ async function getFacults(id) {
 }
 
 async function getSpecialty(id_inst, id_facult) {
-    console.log(`specialty/${id_inst}/${id_facult}`)
     const response = await axios.get(API_URL + `specialty/${id_inst}/${id_facult}/`, {
         headers: { 'ngrok-skip-browser-warning': '69420' }
     });
@@ -78,10 +81,22 @@ async function getSkills() {
 }
 
 async function postSkills(skills) {
-    const response = await axios.post(API_URL + `skill/`, { skill: skills }, {
-        headers: authHeader(),
-    });
-    return response.data;
+    try {
+        const response = await axios.post(API_URL + `skill/`, { skill: skills }, {
+            headers: authHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        if (error.response && error.response.status === 401) {
+            if (authService.refresh()) {
+                return postSkills(skills);
+            } else {
+                this.$store.dispatch('auth/logout');
+            }
+        } else {
+            throw error;
+        }
+    }
 }
 
 // async function invitingTeam(code) {
@@ -111,39 +126,16 @@ function getLkInfo() {
             {
                 headers: authHeader()
             }).then(response => {
-                console.log('yes')
                 return response.data
-            }, () => {
-                console.log('no')
-                authService.refresh().then((res) => {
-                    if (res) {
-                        getLkInfo().then(response => {
-                            console.log('yes')
-                            return response.data
-                        }).catch(() => {
-                            this.$store.dispatch('auth/logout')
-                            return false
-                        })
+            }).catch(error => {
+                if (error.response && error.response.status === 401) {
+                    if (authService.refresh()) {
+                        return getLkInfo();
                     } else {
-                        this.$store.dispatch('auth/logout')
-                        return false
+                        this.$store.dispatch('auth/logout');
                     }
+                } else {
+                    throw error;
                 }
-                )
-            })
-    // , (err) => {
-    //     if (err.response.status === 401) {
-    //         this.$store.dispatch('auth/logout')
-    //         return false
-    //     }
-    // })
-    // // .catch(() => {
-    //     this.$store.dispatch('auth/logout')
-    //     return false
-    // })
-
-    // ).catch(() => {
-    //     this.$store.dispatch('auth/logout')
-    //     return false
-    // });
+            });
 }

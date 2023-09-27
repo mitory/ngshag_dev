@@ -50,14 +50,10 @@ export const auth = {
             return authService.register(user).then(
                 response => {
                     commit('registerSuccess');
-                    console.log(response)
                     return response;
-                },
-                error => {
+                }).catch(() => {
                     commit('registerFailure');
-                    console.log(error)
-                }
-            );
+                })
         }
     }
 };

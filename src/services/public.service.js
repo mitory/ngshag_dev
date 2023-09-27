@@ -4,7 +4,7 @@ import config from '../config'
 const API_URL = config.apiURL;
 
 export const publicService = {
-    getEventsList, getEvent, senSourse
+    getEventsList, getEvent, sendSourse
 };
 
 async function getEventsList() {
@@ -14,7 +14,7 @@ async function getEventsList() {
         });
         return response.data;
     } catch (err) {
-        alert(err);
+        this.$store.dispatch('alert/sendMessage', { message: 'Не удалось получить мероприятия', type: 'Danger' });
     }
 }
 
@@ -25,17 +25,17 @@ async function getEvent(id_event) {
         });
         return response.data;
     } catch (err) {
-        alert(err);
+        this.$store.dispatch('alert/sendMessage', { message: 'Не удалось получить информацию по мероприятию', type: 'Danger' });
     }
 }
 
-async function senSourse(source) {
+async function sendSourse(source) {
     try {
         const response = await axios.get(API_URL + 'qr/?source=' + source, {
             headers: { 'ngrok-skip-browser-warning': '69420' }
         });
         return response;
     } catch (err) {
-        alert(err);
+        console.log(err)
     }
 }

@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row" style="height: 100vh">
             <div class="col-sm-8 m-auto ">
-                <form @change="formUpdated" @submit.prevent="registration" novalidate>
+                <form @submit.prevent="registration" novalidate>
                     <transition name="slide-fade">
                         <div v-show="step === 1" class="step">
                             <div class="d-flex typewriter mb-3 p-1 border border-dark bg-secondary">
@@ -275,12 +275,10 @@ export default {
     components: { VueDatePicker },
     created() {
         if (this.source !== undefined) {
-            publicService.senSourse(this.source);
+            publicService.sendSourse(this.source);
             this.$router.push("/reg");
         }
-
         this.$store.dispatch('auth/logout');
-        this.$store.commit('routes/toRegPage')
         userService.getUnivers().then(response => {
             this.univers = response;
         })
@@ -358,17 +356,14 @@ export default {
 
             this.$store.dispatch('auth/register', user).then(response => {
                 if (response.status) {
-                    //alert(response.message)
+                    this.$store.dispatch('alert/sendMessage', { message: response.message, type: 'Success' })
                     const { email, password } = user;
                     this.$store.dispatch("auth/login", { email, password }).then(
                         () => {
                             this.$router.push("/set-user-skills");
                         })
-                    //this.$router.push("/login");
                 } else {
-                    //this.$router.push("/set-user-skills");
-                    console.log(response)
-                    alert(response.message)
+                    this.$store.dispatch('alert/sendMessage', { messge: response.message, type: 'Danger' })
                 }
             })
         },
@@ -377,6 +372,9 @@ export default {
 
             this.isCorrect.middle_name = validateService.checkIsOnlyRussianLetter(this.userData.middle_name) || validateService.checkIsEmptyStr(this.userData.middle_name)
             this.isCorrect.birth_date = validateService.checkAgeBetween(this.userData.birth_date, 14, 100)
+            this.firstNameChanged()
+            this.lastNameChanged()
+            this.phoneChanged()
 
             return (this.isCorrect.last_name &&
                 this.isCorrect.first_name &&
@@ -386,6 +384,11 @@ export default {
         },
 
         checkSecondStep() {
+            this.universityChanged()
+            this.facultyChanged()
+            this.specialtyChanged()
+            this.yearChanged()
+
             return (this.isCorrect.current_university &&
                 this.isCorrect.current_faculty &&
                 this.isCorrect.current_specialty &&
@@ -393,6 +396,10 @@ export default {
         },
 
         checkThirdStep() {
+            this.emailChanged()
+            this.passwordConfirmChanged()
+            this.confirmPersonalDataChanged()
+
             return this.isCorrect.email && this.isCorrect.password && this.isCorrect.confirm_personal_data
         },
 
@@ -416,18 +423,6 @@ export default {
                 this.specialties = {};
             }
             this.userData.current_specialty = -1
-        },
-
-        formUpdated() {
-            if (this.step === 1) {
-                this.checkFirstStep()
-            }
-            if (this.step === 2) {
-                this.checkSecondStep()
-            }
-            if (this.step === 3) {
-                this.checkThirdStep()
-            }
         }
     }
 }

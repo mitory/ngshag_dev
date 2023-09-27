@@ -3,8 +3,8 @@
     <div class="mt-2 p-2 bg-dark bg-gradient">
       <div class="container">
         <div class="d-flex justify-content-end container">
-          <p class="text me-3 my-auto">
-            Ссылка на телеграм-канал проекта: @tvercham
+          <p class="text-white me-3 my-auto">
+            Телеграм-канал проекта: <a href="https://t.me/tverchamp" target="_blank">@tverchamp</a>
           </p>
           <img style="height: 50px;" src="../assets/img/tg_qr_code.png" alt="telegram qr-code">
         </div>
@@ -16,9 +16,6 @@
 <script>
 export default {
   methods: {
-  },
-  created() {
-    console.log(!this.loggedIn || this.$route.path === '/set-user-skills')
   },
   computed: {
     loggedIn() {
@@ -33,8 +30,4 @@ export default {
 
 </script>
 
-<style scoped>
-.text {
-  color: white;
-}
-</style>
+<style scoped></style>

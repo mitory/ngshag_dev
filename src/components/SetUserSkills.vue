@@ -126,16 +126,16 @@ export default {
             this.set_skills_user[index].prospective_level = this.categories_levels[id_cat].prospective_level + 1
         },
         addSkillToUser: function () {
-            userService.postSkills(this.set_skills_user).then((res) => {
-                console.log(res)
+            userService.postSkills(this.set_skills_user).then(() => {
+                this.$store.dispatch('alert/sendMessage', { message: 'Ваши навыки добавлены в список!', type: 'Success' })
                 this.$router.push("/");
+            }).catch(() => {
+                this.$store.dispatch('alert/sendMessage', { message: 'Что-то пошло не так...', type: 'Danger' })
             })
         },
         add_skill: function (id_cat, id_skill) {
             const obj = this.set_skills_user.find(obj => obj.id === id_cat)
             if (obj === undefined) {
-                console.log('id_cat = ' + id_cat)
-                console.log('Он не смог найти ' + this.set_skills_user.includes(obj => obj.id === id_cat))
                 this.categories_levels[id_cat].status = true
                 this.set_skills_user.push({
                     id: id_cat,
@@ -160,7 +160,6 @@ export default {
                     }
                 }
             }
-            console.log(this.set_skills_user)
         },
         nextStep: function () {
             ++this.step;
@@ -173,7 +172,6 @@ export default {
                 if (line < text.length) {
                     textLines.push(text[line])
                     ++line;
-                    console.log(`${this.step} ${line}`)
                 } else {
                     clearInterval(int)
                 }
@@ -181,7 +179,6 @@ export default {
         },
         setWidth: function () {
             this.width = window.innerWidth;
-            console.log(this.width)
         },
         setCountSlides: function () {
             if (window.innerWidth <= 992) {
@@ -243,10 +240,8 @@ export default {
                 status: false,
             }));
             this.categories_levels.push({ level_now: 0, prospective_level: 0, status: false })
-            console.log('Данные успешно получены и инициализированы.');
-            console.log(this.categories_levels);
         } catch (error) {
-            console.error('Ошибка при получении данных из API:', error);
+            this.$store.dispatch('alert/sendMessage', { message: 'Не получен ответ от сервера', type: 'Danger' })
         }
     },
     mounted() {
@@ -280,27 +275,5 @@ export default {
         font-size: 12px;
     }
 }
-
-/* .typewriter {
-    font-family: monospace;
-    white-space: pre;
-    overflow: hidden;
-}
-
-.line {
-    overflow: hidden;
-    white-space: nowrap;
-    animation: typing 5s steps(40) forwardsW;
-}
-
-@keyframes typing {
-    0% {
-        width: 0;
-    }
-
-    100% {
-        width: 100%;
-    }
-} */
 </style>
   

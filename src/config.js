@@ -1,6 +1,6 @@
 
 const config = {
-    apiURL: 'http://127.0.0.1:8000' + '/api/'
+    apiURL: 'https://824d-37-112-66-98.ngrok-free.app' + '/api/'
 }
 
 export default config;

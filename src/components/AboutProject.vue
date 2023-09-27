@@ -1,5 +1,5 @@
 <template>
-    <div class='container col-8'>
+    <div class='container col-sm-8'>
         <p>Платформа профессионального развития «Новый шаг» создана с целью формирования необходимых профессионалу навыков и
             реализации проектной деятельности.</p>
 
@@ -35,6 +35,9 @@ export default {
     },
     methods: {
 
+    },
+    created() {
+        this.$store.commit('routes/toMainPage')
     }
 }
 </script>

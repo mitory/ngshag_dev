@@ -20,7 +20,7 @@ function checkIsOnlyRussianLetter(str) {
     return /^[а-яА-Я]+(?:-[а-яА-Я]+)*$/.test(str);
 }
 
-function checkIsOnlyNumbers(str){
+function checkIsOnlyNumbers(str) {
     return /[0-9]/.test(str)
 }
 
@@ -36,6 +36,5 @@ function checkAgeBetween(field, start, end) {
         otherDate.getMonth() == birthDate.getMonth() && otherDate.getDate() < birthDate.getDate()) {
         years--;
     }
-    console.log('Лет: ' + years)
     return years >= start && years <= end
 }

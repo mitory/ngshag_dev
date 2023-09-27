@@ -39,8 +39,8 @@ export default {
   name: 'LoginPage',
   data() {
     return {
-      email: 'we@we.com',
-      password: '111',
+      email: '',
+      password: '',
       isCorrect: {
         email: true,
         password: true
@@ -49,7 +49,6 @@ export default {
   },
   created() {
     this.$store.dispatch('auth/logout');
-    this.$store.commit('routes/toLoginPage')
   },
   methods: {
     loginUser() {
@@ -61,7 +60,10 @@ export default {
 
       this.$store.dispatch("auth/login", { email, password }).then(
         () => {
+          this.$store.dispatch('alert/sendMessage', { message: 'Авторизация прошла успешно', type: 'Success' })
           this.$router.push("/LK");
+        }).catch(err => {
+          this.$store.dispatch('alert/sendMessage', { message: err, type: 'Danger' })
         })
     },
     checkData(data) {

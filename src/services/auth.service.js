@@ -6,7 +6,6 @@ export const authService = {
 }
 
 const API_URL = config.apiURL;
-console.log(API_URL)
 
 function login(user) {
     return axios
@@ -17,10 +16,9 @@ function login(user) {
         .then(response => {
             if (response.data.access) {
                 localStorage.setItem('user', JSON.stringify(response.data));
-                console.log(response.data)
                 return true
             } else {
-                throw "Токен не найден";
+                throw "Что-то пошло не так...";
             }
         },
             error => {
@@ -38,12 +36,11 @@ function refresh() {
                 localStorage.setItem('user', JSON.stringify(response.data));
                 return true;
             } else {
-                throw 'Ошибка авторизации'
+                return false
             }
-        },
-            error => {
-                throw error.response.data.detail;
-            });
+        }).catch(() => {
+            return false
+        });
     }
 
 }

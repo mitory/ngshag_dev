@@ -27,7 +27,6 @@ export default {
     },
     computed: {
         sliderValue() {
-            // Рассчитываем значение ползунка на основе ширины контейнера и позиции
             return Math.round((this.sliderPosition / this.scaleWidth));
         },
         scaleWidth() {
@@ -36,9 +35,7 @@ export default {
     },
     watch: {
         value(index) {
-            // Обновляем позицию ползунка при изменении значения извне
             this.setPosition(index)
-            //this.sliderPosition = (newValue / 3) * this.scaleWidth + "px";
         },
     },
     methods: {
@@ -57,15 +54,10 @@ export default {
             }
         },
         setValue(index) {
-            // Обновляем значение при нажатии на шкалу и сдвигаем ползунок
             this.$emit("update:value", index);
             this.setPosition(index)
-            //this.sliderPosition = (index / 3) * this.scaleWidth + "px";
         },
-    },
-    created() {
-        //this.setValue(this.value)
-    },
+    }
 };
 </script>
   
@@ -92,7 +84,6 @@ export default {
 .scale {
     display: flex;
     justify-content: space-between;
-    /* align-items: center; */
     width: 100%;
 }
 
@@ -125,8 +116,6 @@ export default {
     background-color: #044285;
     position: absolute;
     top: 0;
-    /* transform: translateX(-50%);
-    transition: left 0.3s; */
 }
 </style>
   

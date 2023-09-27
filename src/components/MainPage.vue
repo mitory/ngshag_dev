@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import { publicService } from '../services/public.service'
+// import { publicService } from '../services/public.service'
 import NewsBar from './NewsBar.vue'
 import EventsBar from './EventsBar.vue'
 
@@ -91,7 +91,6 @@ export default {
   data() {
     return {
       events: [],
-      tab_select: 0,
       pages: [
         { title: 'Мероприятия', id: 1 },
         { title: 'Новости', id: 2 }
@@ -103,9 +102,9 @@ export default {
   },
   created() {
     this.$store.commit('routes/toMainPage')
-    publicService.getEventsList().then(response => {
-      this.events = response;
-    })
+    // publicService.getEventsList().then(response => {
+    //   this.events = response;
+    // })
   },
   methods: {
   }

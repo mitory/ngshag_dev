@@ -1,32 +1,26 @@
 <template>
     <header v-if="!is_none" class="mb-5 p-2 bg-primary bg-gradient">
-        <div class="container d-flex justify-content-between">
-            <nav class="text-white d-flex justify-content-center align-items-center col-8">
-                <router-link :class="{ 'active': this.$route.path === '/' }" class="navbar__link text-decoration-none me-3"
-                    to="/">Главная</router-link>
+        <div class="container d-flex justify-content-between flex-sm-row"
+            :class="{ 'flex-column-reverse': this.$route.path !== '/LK' }">
+            <nav class="text-white d-flex justify-content-center align-items-center col-lg-8">
+                <router-link
+                    :class="{ 'active': this.$route.path === '/', 'me-1': width <= 350 && this.$route.path === '/LK', 'me-3': width > 350 || this.$route.path !== '/LK' }"
+                    class="navbar__link text-decoration-none" to="/">Главная</router-link>
+                <router-link
+                    :class="{ 'active': this.$route.path === '/procedures', 'me-1': width <= 350 && this.$route.path === '/LK', 'me-3': width > 350 || this.$route.path !== '/LK' }"
+                    class="navbar__link text-decoration-none" to="/policies-and-procedures">Правила</router-link>
                 <router-link :class="{ 'active': this.$route.path === '/about-project' }"
                     class="navbar__link text-decoration-none" to="/about-project">О проекте</router-link>
             </nav>
-            <div class="col-3">
-                <div class="d-flex justify-content-end">
+            <div class="col-lg-4 col-xl-3">
+                <div class="d-flex justify-content-sm-end justify-content-center mb-sm-0"
+                    :class="{ 'mb-4': this.$route.path !== '/LK' }">
 
                     <router-link v-if="loggedIn && this.routes.isProfilePage" class="btn btn-light me-3" to="/LK">
                         Личный кабинет
                     </router-link>
 
-                    <router-link v-if="this.routes.isMainPage" class="btn btn-light me-3" to="/">
-                        Главная
-                    </router-link>
-
-                    <router-link v-if="!loggedIn && this.routes.isLoginPage" class="btn btn-light me-3" to="/login">
-                        Войти
-                    </router-link>
-
-                    <router-link v-if="!loggedIn && this.routes.isRegPage" class="btn btn-light me-3" to="/reg">
-                        Зарегистрироваться
-                    </router-link>
-
-                    <router-link v-if="loggedIn" class="btn btn-light me-3" to="/login">Выйти</router-link>
+                    <router-link v-if="loggedIn" class="btn btn-light" to="/login">Выйти</router-link>
                 </div>
             </div>
         </div>
@@ -40,10 +34,12 @@ export default {
     data() {
         return {
             routes: {},
+            width: 0
         }
     },
     created() {
         this.routes = this.$store.state.routes
+        this.width = window.innerWidth;
     },
     methods: {
     },
