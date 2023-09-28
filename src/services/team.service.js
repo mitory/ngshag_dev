@@ -22,7 +22,6 @@ async function invitingTeam(code) {
         return { message: 'Вы присоединились к команде!', status: true }
     } catch (err) {
         if (err.response.status == 401) {
-            alert('Пользователь не авторизован')
             return { message: 'Пользователь не авторизован', status: false }
         } else {
             return { message: err.response.data.error, status: false }
@@ -46,7 +45,6 @@ async function registerTeam(team, event_id) {
         return { message: 'Регистрация команды прошла успешно', status: true }
     } catch (err) {
         if (err.response.status == 401) {
-            alert('Пользователь не авторизован')
             return { message: 'Пользователь не авторизован', status: false }
         } else {
             return { message: err.response.data.error, status: false }

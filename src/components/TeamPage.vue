@@ -30,10 +30,7 @@ export default {
             if (response.status) {
                 this.team = response.data.team;
                 this.team_members = response.data.team_members;
-                console.log(this.team)
-                console.log(this.team_members)
             } else {
-                alert(response.message)
                 this.$router.push("/login");
             }
         })
