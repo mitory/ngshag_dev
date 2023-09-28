@@ -1,6 +1,6 @@
 
 const config = {
-    apiURL: 'https://195.80.50.104:8000' + '/api/'
+    apiURL: 'http://127.0.0.1:8000' + '/api/'
 }
 
 export default config;
