@@ -46,19 +46,6 @@
                                     </div>
                                 </div>
                                 <div class="d-flex flex-column">
-                                    <div class="">
-                                        <p>Дата рождения:</p>
-                                        <p v-bind:class="{ 'text-w text-danger': !isCorrect.birth_date }"
-                                            v-if="!isCorrect.birth_date">Вам должно быть не меньше 14 <br> и не больше 100
-                                            лет
-                                        </p>
-
-
-                                        <VueDatePicker v-model="userData.birth_date" locale="ru" auto-apply
-                                            :enable-time-picker="false" :max-date="new Date()" model-type="yyyy-MM-dd">
-
-                                        </VueDatePicker>
-                                    </div>
 
                                     <div class="mb-3">
                                         <label for="phone_number" class="form-label">Телефон <span
@@ -209,7 +196,6 @@
 </template>
 
 <script>
-import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import { userService } from '../services/user.service'
 import { publicService } from '../services/public.service'
@@ -225,7 +211,6 @@ export default {
                 first_name: '',
                 middle_name: '',
                 phone_number: '+7',
-                birth_date: '2000-01-01',
                 sex: 'M',
                 current_university: '-1',
                 current_faculty: '-1',
@@ -240,7 +225,6 @@ export default {
                 first_name: true,
                 middle_name: true,
                 phone_number: true,
-                birth_date: true,
                 current_university: true,
                 current_faculty: true,
                 current_specialty: true,
@@ -272,7 +256,6 @@ export default {
     props: {
         source: String
     },
-    components: { VueDatePicker },
     created() {
         if (this.source !== undefined) {
             publicService.sendSourse(this.source);
@@ -371,7 +354,6 @@ export default {
         checkFirstStep() {
 
             this.isCorrect.middle_name = validateService.checkIsOnlyRussianLetter(this.userData.middle_name) || validateService.checkIsEmptyStr(this.userData.middle_name)
-            this.isCorrect.birth_date = validateService.checkAgeBetween(this.userData.birth_date, 14, 100)
             this.firstNameChanged()
             this.lastNameChanged()
             this.phoneChanged()
@@ -379,7 +361,6 @@ export default {
             return (this.isCorrect.last_name &&
                 this.isCorrect.first_name &&
                 this.isCorrect.middle_name &&
-                this.isCorrect.birth_date &&
                 this.isCorrect.phone_number) || this.unlock
         },
 

@@ -9,10 +9,10 @@
                     aria-describedby="email">-->
                 <div class="form-control text-break bootstrap-like-bg-color">{{ user.email }}</div>
             </div>
-            <div class="input-group mb-3">
+            <!-- <div class="input-group mb-3">
                 <span class="input-group-text" id="birth_date">Дата рождения</span>
                 <div class="form-control text-break bootstrap-like-bg-color">{{ format_date(user.birth_date) }}</div>
-            </div>
+            </div> -->
             <div class="input-group mb-3">
                 <span class="input-group-text" id="phone_number">Телефон</span>
                 <div class="form-control text-break bootstrap-like-bg-color">{{ user.phone_number }}</div>
@@ -53,7 +53,7 @@ export default {
                 email: '',
                 first_name: '',
                 last_name: '',
-                birth_date: '',
+                // birth_date: '',
                 institution: [],
                 faculty: [],
                 specialty: [],
@@ -71,13 +71,13 @@ export default {
         })
     },
     methods: {
-        format_date(date) {
-            if (date === '') {
-                return ''
-            }
-            const date_items = date.split('-')
-            return date_items[2] + '.' + date_items[1] + '.' + date_items[0]
-        }
+        // format_date(date) {
+        //     if (date === '') {
+        //         return ''
+        //     }
+        //     const date_items = date.split('-')
+        //     return date_items[2] + '.' + date_items[1] + '.' + date_items[0]
+        // }
     }
 }
 </script>

@@ -56,7 +56,6 @@ function register(user) {
         first_name: user.first_name,
         last_name: user.last_name,
         middle_name: user.middle_name,
-        birth_date: user.birth_date,
         sex: user.sex,
         institution: user.current_university,
         faculty: user.current_faculty,
