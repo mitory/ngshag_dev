@@ -50,11 +50,15 @@ async function getTeams() {
 
 async function getUnivers() {
     try {
+        console.log(API_URL + 'institutions/')
         const response = await axios.get(API_URL + 'institutions/', {
             headers: { 'ngrok-skip-browser-warning': '69420' }
         });
+        console.log('Овет получен: ' + response.data)
         return response.data;
     } catch (err) {
+        console.log('Произошла какая-то ошибка: ')
+        console.log(err)
         this.$store.dispatch('alert/sendMessage', { message: 'Не удалось получить ответ от сервера', type: 'Danger' })
     }
 }
