@@ -57,6 +57,7 @@ function register(user) {
         last_name: user.last_name,
         middle_name: user.middle_name,
         sex: user.sex,
+        birth_date: '1000-01-01',
         institution: user.current_university,
         faculty: user.current_faculty,
         specialty: user.current_specialty,
