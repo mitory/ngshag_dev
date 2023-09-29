@@ -5,8 +5,8 @@
         <h1 class="fs-3 text-center mb-4">Студенческий фестиваль ИТ-профессий<br>«Новый шаг-2023»</h1>
         <p class="fs-6 text-primary"><em>Проводится с 3 по 7 ноября 2023 года</em></p>
 
-        <h4 class="mb-3">Расписание проведения мероприятий:</h4>
-        <div class="mb-4">
+        <h4 class="mb-3 d-none">Расписание проведения мероприятий:</h4>
+        <div class="mb-4 d-none">
           <div class="mb-3 p-2 border border-primary rounded">
             <h5 class="text-center">3 ноября</h5>
             <ul>
