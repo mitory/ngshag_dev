@@ -64,7 +64,7 @@
           <ul>
             <li>Региональный оператор связи группа компаний «<a href="https://www.an-net.ru" target="_blank">Аннет</a>»
             </li>
-            Российский производитель электроники Научно-производственное объединение «<li><a href="https://npoavk.ru/"
+            <li>Российский производитель электроники Научно-производственное объединение «<a href="https://npoavk.ru/"
                 target="_blank">Автоматизированные вычислительные комплексы</a>»</li>
           </ul>
         </div>
@@ -116,4 +116,8 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+a {
+  color: black
+}
+</style>
