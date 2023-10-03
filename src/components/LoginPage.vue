@@ -2,22 +2,22 @@
   <div class="container">
     <div class="row" style="height: 100vh">
       <div class="col-sm-4 m-auto">
-        <form @change="formUpdated" @submit.prevent="loginUser" novalidate>
+        <form @submit.prevent="loginUser" novalidate>
           <div class="mb-3">
             <label for="email" class="form-label">Email</label>
-            <input v-model="email" type="text" class="form-control" id="email"
-              v-bind:class="{ 'border-danger': !this.isCorrect.email }">
-            <div v-if="!isCorrect.email" id="email" class="form-text text-danger">
+            <input @change="emailChanged" v-model="email" type="text" class="form-control" id="email"
+              v-bind:class="{ 'border-danger': !(isCorrect.email) && email_changed }">
+            <div v-if="!(isCorrect.email) && email_changed" id="email" class="form-text text-danger">
               Пожалуйста, введите корректный email. Например test@mail.ru
             </div>
           </div>
 
           <div class="mb-3">
             <label for="password" class="form-label">Пароль</label>
-            <input v-model="password" type="password" class="form-control" id="password"
-              v-bind:class="{ 'border-danger': !this.isCorrect.password }">
+            <input @change="passwordChanged" v-model="password" type="password" class="form-control" id="password"
+              v-bind:class="{ 'border-danger': !(isCorrect.password) && password_changed }">
 
-            <div v-if="!isCorrect.password" id="password" class="form-text text-danger">
+            <div v-if="!(isCorrect.password) && password_changed" id="password" class="form-text text-danger">
               Пароль не может быть пустым!
             </div>
           </div>
@@ -44,13 +44,23 @@ export default {
       isCorrect: {
         email: true,
         password: true
-      }
+      },
+      email_changed: false,
+      password_changed: false,
     }
   },
   created() {
     this.$store.dispatch('auth/logout');
   },
   methods: {
+    emailChanged(){
+      this.isCorrect.email = this.checkEmail(this.email);
+      this.email_changed = true;
+    },
+    passwordChanged(){
+      this.isCorrect.password = !validateService.checkIsEmptyStr(this.password);
+      this.password_changed = true;
+    },
     loginUser() {
       const { email, password } = this
 
@@ -63,7 +73,7 @@ export default {
           this.$store.dispatch('alert/sendMessage', { message: 'Авторизация прошла успешно', type: 'Success' })
           this.$router.push("/LK");
         }).catch(err => {
-          this.$store.dispatch('alert/sendMessage', { message: err, type: 'Danger' })
+          this.$store.dispatch('alert/sendMessage', { message: err, type: 'Danger' });
         })
     },
     checkData(data) {
@@ -75,10 +85,10 @@ export default {
     checkEmail(str) {
       return !validateService.checkIsEmptyStr(str) && validateService.checkIsEmail(str)
     },
-    formUpdated() {
+    /*formUpdated() {
       const { email, password } = this
       this.checkData({ email, password })
-    }
+    }*/
   }
 }
 </script>
