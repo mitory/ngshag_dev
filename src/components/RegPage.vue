@@ -23,8 +23,8 @@
                                             class="form-control"
                                             v-bind:class="{ 'border-danger': !(isCorrect.last_name) && utility.firstStep.last_name_changed }"
                                             id="last_name">
-                                        <div v-if="!(isCorrect.last_name) && last_name_changed" id="last_name"
-                                            class="form-text text-danger">
+                                        <div v-if="!(isCorrect.last_name) && utility.firstStep.last_name_changed"
+                                            id="last_name" class="form-text text-danger">
                                             Введите вашу фамилию <br class="d-none d-lg-inline">(Кириллица)
                                         </div>
                                     </div>

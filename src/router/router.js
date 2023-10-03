@@ -12,16 +12,22 @@ import UserTeams from '../components/UserTeams'
 import SetUserSkills from '../components/SetUserSkills'
 import AboutProject from '../components/AboutProject'
 import PoliciesAndProcedures from "../components/PoliciesAndProcedures";
+import SettingPage from '../components/SettingPage'
 
 const router = createRouter({
     routes: [
         {
             path: '/',
-            component: MainPage
+            component: MainPage,
         },
         {
             path: '/login',
             component: LoginPage
+        },
+        {
+            path: '/setting-page-verifice-acc',
+            component: SettingPage,
+            props: (route) => ({ id: route.query.id, key_link: route.query.key_link })
         },
         {
             path: '/reg',
@@ -76,7 +82,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    const publicPages = ['/reg', '/login'];
+    const publicPages = ['/reg', '/login', '/setting-page-verifice-acc'];
     // const publicStartPath = ['/event/'];
     const authRequired = publicPages.includes(to.path);
     const loggedIn = localStorage.getItem('user');
