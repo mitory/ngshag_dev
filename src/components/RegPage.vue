@@ -5,8 +5,13 @@
                 <form @submit.prevent="registration" novalidate>
                     <transition name="slide-fade">
                         <div v-show="step === 1" class="step">
-                            <div class="d-flex typewriter mb-3 p-1 border border-dark bg-secondary">
-                                <p class="mb-0">Привет! Давай знакомиться:</p>
+                            <h2 class="text-primary mb-3 text-center">НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ В ЦИФРОВЫХ ПРОФЕССИЯХ
+                            </h2>
+                            <div class="typewriter mb-3 p-1 border border-dark bg-secondary">
+                                <p class="line m-0 pb-0 text-center text-mobile"
+                                    v-for="(line, index) in textData.textLines1" :key="index">
+                                    {{ line }}
+                                </p>
                             </div>
                             <div class="d-flex flex-column flex-lg-row justify-content-evenly mb-5">
                                 <div class="d-flex flex-column me-lg-4">
@@ -15,9 +20,9 @@
                                                 class="text-danger">*</span></label>
                                         <input @change="lastNameChanged" v-model="userData.last_name" type="text"
                                             class="form-control"
-                                            v-bind:class="{ 'border-danger': !(isCorrect.last_name) && utility.firstStep.last_name_changed }"
+                                            v-bind:class="{ 'border-danger': !(isCorrect.last_name) && last_name_changed }"
                                             id="last_name">
-                                        <div v-if="!(isCorrect.last_name) && utility.firstStep.last_name_changed" id="last_name"
+                                        <div v-if="!(isCorrect.last_name) && last_name_changed" id="last_name"
                                             class="form-text text-danger">
                                             Пожалуйста, введите вашу фамилию (Кириллица)
                                         </div>
@@ -28,9 +33,9 @@
                                                 class="text-danger">*</span></label>
                                         <input @change="firstNameChanged" v-model="userData.first_name" type="text"
                                             class="form-control"
-                                            v-bind:class="{ 'border-danger': !(isCorrect.first_name) && utility.firstStep.first_name_changed }"
+                                            v-bind:class="{ 'border-danger': !(isCorrect.first_name) && first_name_changed }"
                                             id="first_name">
-                                        <div v-if="!(isCorrect.first_name) && utility.firstStep.first_name_changed" id="first_name"
+                                        <div v-if="!(isCorrect.first_name) && first_name_changed" id="first_name"
                                             class="form-text text-danger">
                                             Пожалуйста, введите ваше имя (Кириллица)
                                         </div>
@@ -38,9 +43,9 @@
 
                                     <div class="mb-3">
                                         <label for="middle_name" class="form-label">Отчество</label>
-                                        <input @change="middleNameChanged" v-model="userData.middle_name" type="text" class="form-control"
-                                            v-bind:class="{ 'border-danger': !(isCorrect.middle_name) && utility.firstStep.middle_name_chaged }" id="middle_name">
-                                        <div v-if="!(isCorrect.middle_name) && utility.firstStep.middle_name_chaged" id="middle_name" class="form-text text-danger">
+                                        <input v-model="userData.middle_name" type="text" class="form-control"
+                                            v-bind:class="{ 'border-danger': !isCorrect.middle_name }" id="middle_name">
+                                        <div v-if="!isCorrect.middle_name" id="middle_name" class="form-text text-danger">
                                             Пожалуйста, введите ваше отчество (Кириллица)
                                         </div>
                                     </div>
@@ -52,9 +57,9 @@
                                                 class="text-danger">*</span></label>
                                         <input @input="checkFirstLetter" @change="phoneChanged"
                                             v-model="userData.phone_number" maxlength="12" type="text" class="form-control"
-                                            v-bind:class="{ 'border-danger': !(isCorrect.phone_number) && utility.firstStep.phone_changed }"
+                                            v-bind:class="{ 'border-danger': !(isCorrect.phone_number) && phone_changed }"
                                             id="phone_number" placeholder="+7XXXXXXXXXX">
-                                        <div v-if="!(isCorrect.phone_number) && utility.firstStep.phone_changed" id="phone_number"
+                                        <div v-if="!(isCorrect.phone_number) && phone_changed" id="phone_number"
                                             class="form-text text-danger">
                                             Пожалуйста, введите ваш телефон в формате +7XXXXXXXXXX
                                         </div>
@@ -97,27 +102,27 @@
                             <div>
                                 <select @change="getFacults(); universityChanged(); getSpecialty();"
                                     class="form-select mb-3" v-model="userData.current_university"
-                                    v-bind:class="{ 'border-danger': !(this.isCorrect.current_university) && utility.secondStep.university_changed }">
+                                    v-bind:class="{ 'border-danger': !(this.isCorrect.current_university) && university_changed }">
                                     <option value="-1" selected>Выберите ВУЗ</option>
-                                    <option v-for="uviver in utility.secondStep.univers" :value="uviver.id" :key="uviver.id">
+                                    <option v-for="uviver in univers" :value="uviver.id" :key="uviver.id">
                                         {{ uviver.institution_name }}
                                     </option>
                                 </select>
 
                                 <select @change="getSpecialty(); facultyChanged()" class="form-select mb-3"
                                     v-model="userData.current_faculty"
-                                    v-bind:class="{ 'border-danger': !(this.isCorrect.current_faculty) && utility.secondStep.faculty_changed }">
+                                    v-bind:class="{ 'border-danger': !(this.isCorrect.current_faculty) && faculty_changed }">
                                     <option value="-1" selected>Выберите Факультет</option>
-                                    <option v-for="facult in utility.secondStep.facults" :value="facult.id" :key="facult.id">
+                                    <option v-for="facult in facults" :value="facult.id" :key="facult.id">
                                         {{ facult.faculty_name }}
                                     </option>
                                 </select>
 
                                 <select @change="specialtyChanged" class="form-select mb-3"
                                     v-model="userData.current_specialty"
-                                    v-bind:class="{ 'border-danger': !(this.isCorrect.current_specialty) && utility.secondStep.specialty_changed }">
+                                    v-bind:class="{ 'border-danger': !(this.isCorrect.current_specialty) && specialty_changed }">
                                     <option value="-1" selected>Выберите Специальность</option>
-                                    <option v-for="specialty in utility.secondStep.specialties" :value="specialty.id" :key="specialty.id">
+                                    <option v-for="specialty in specialties" :value="specialty.id" :key="specialty.id">
                                         {{ specialty.specialty_name }}
                                     </option>
                                 </select>
@@ -125,9 +130,9 @@
                                     <label for="year" class="form-label">Курс<span class="text-danger">*</span></label>
                                     <input @change="yearChanged" v-model="userData.year" inputmode="numeric" pattern="\d*"
                                         maxlength="2" type="number" class="form-control"
-                                        v-bind:class="{ 'border-danger': !(isCorrect.year) && utility.secondStep.year_changed }" id="year"
+                                        v-bind:class="{ 'border-danger': !(isCorrect.year) && year_changed }" id="year"
                                         style="width: 5em;">
-                                    <div v-if="!(isCorrect.year) && utility.secondStep.year_changed" id="year" class="form-text text-danger">
+                                    <div v-if="!(isCorrect.year) && year_changed" id="year" class="form-text text-danger">
                                         Пожалуйста, введите курс, на котором вы учитесь.
                                     </div>
                                 </div>
@@ -141,13 +146,13 @@
                     <transition name="slide-fade">
                         <div v-show="step === 3" class="step col-sm-8 mx-auto">
                             <div class="d-flex typewriter mb-3 p-1 border border-dark bg-secondary">
-                                <p class="mb-0">Осталось еще немого...</p>
+                                <p class="mb-0">Осталось еще немного...</p>
                             </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
                                 <input @change="emailChanged" v-model="userData.email" type="email" class="form-control"
-                                    id="email" v-bind:class="{ 'border-danger': !(isCorrect.email) && utility.thirdStep.email_changed }">
-                                <div v-if="!(isCorrect.email) && utility.thirdStep.email_changed" id="email" class="form-text text-danger">
+                                    id="email" v-bind:class="{ 'border-danger': !this.isCorrect.email }">
+                                <div v-if="!(isCorrect.email) && email_changed" id="email" class="form-text text-danger">
                                     Пожалуйста, введите корректный email. Например test@mail.ru
                                 </div>
                             </div>
@@ -161,10 +166,10 @@
                             </div>
                             <div class="mb-3">
                                 <label for="passwordConfirm" class="form-label">Повторите пароль</label>
-                                <input @change="passwordConfirmChanged" v-model="utility.thirdStep.passwordConfirm" type="password"
+                                <input @change="passwordConfirmChanged" v-model="passwordConfirm" type="password"
                                     class="form-control" id="passwordConfirm"
-                                    v-bind:class="{ 'border-danger': !(isCorrect.password) && utility.thirdStep.password_confirm_changed }">
-                                <div v-if="!(isCorrect.password) && utility.thirdStep.password_confirm_changed" id="password"
+                                    v-bind:class="{ 'border-danger': !(this.isCorrect.password) && password_confirm_changed }">
+                                <div v-if="!(isCorrect.password) && password_changed" id="password"
                                     class="form-text text-danger">
                                     Убедитесь, что вы правильно повторили пароль
                                 </div>
@@ -172,7 +177,7 @@
 
                             <div class="form-check mb-3">
                                 <input @change="confirmPersonalDataChanged" v-model="this.confirm_personal_data"
-                                    v-bind:class="{ 'border-danger': !(this.isCorrect.confirm_personal_data) && utility.thirdStep.confirm_personal_data_changed }"
+                                    v-bind:class="{ 'border-danger': !(this.isCorrect.confirm_personal_data) && confirm_personal_data_changed }"
                                     class="form-check-input" type="checkbox" id="confirm_person_data">
                                 <label class="form-check-label" for="confirm_person_data">
                                     Согласен на обработку своих персональных данных в соответствии
@@ -200,6 +205,7 @@ import '@vuepic/vue-datepicker/dist/main.css'
 import { userService } from '../services/user.service'
 import { publicService } from '../services/public.service'
 import { validateService } from '../services/validate.service'
+import { textService } from '../services/text.service'
 
 export default {
     name: 'RegPage',
@@ -232,104 +238,140 @@ export default {
                 password: true,
                 confirm_personal_data: true,
                 year: true,
-                unlock: false,
             },
-            utility:{
-              firstStep:{
-                last_name_changed: false,
-                first_name_changed: false,
-                phone_changed: false,
-                middle_name_chaged: false,
-              },
-              secondStep:{
-                univers: {},
-                facults: {},
-                specialties: {},
-                university_changed: false,
-                faculty_changed: false,
-                specialty_changed: false,
-                year_changed: false,
-              },
-              thirdStep:{
-                passwordConfirm: '',
-                regStatus: '',
-                email_changed: false,
-                password_changed: false,
-                password_confirm_changed: false,
-                confirm_personal_data_changed: false,
-              },
-            },
+
+            univers: {},
+            facults: {},
+            specialties: {},
+            passwordConfirm: '',
+            regStatus: '',
+            unlock: false,
+            last_name_changed: false,
+            first_name_changed: false,
+            phone_changed: false,
+            university_changed: false,
+            faculty_changed: false,
+            specialty_changed: false,
+            email_changed: false,
+            password_changed: false,
+            password_confirm_changed: false,
+            confirm_personal_data_changed: false,
+            year_changed: false,
+
+            textData: {
+                text1: [
+                    'Привет! Это верный адрес, отсюда начинается твой путь',
+                    'в профессиональных информационных технологиях.',
+                    'Давай знакомиться:'
+                ],
+                line1: 1,
+                textLines1: []
+            }
         }
     },
     props: {
         source: String
     },
+
     created() {
         if (this.source !== undefined) {
             publicService.sendSourse(this.source);
             this.$router.push("/reg");
         }
         this.$store.dispatch('auth/logout');
+        this.changeTextForMobile()
         userService.getUnivers().then(response => {
-            this.utility.secondStep.univers = response;
+            this.univers = response;
         })
     },
+    mounted() {
+        this.textData.textLines1.push(this.textData.text1[0])
+        if (this.step === 1) {
+            textService.appendLine(this.textData.line1, this.textData.text1, this.textData.textLines1);
+        }
+    },
     methods: {
+        changeTextForMobile: function () {
+            if (window.innerWidth <= 992) {
+                this.textData.text1 = [
+                    'Привет! Это верный адрес.',
+                    'Отсюда начинается твой путь в',
+                    'профессиональных информационных',
+                    'технологиях.',
+                    'Давай знакомиться:'
+                ]
+            }
+            if (window.innerWidth <= 380) {
+                this.textData.text1 = [
+                    'Привет! Это верный адрес.',
+                    'Отсюда начинается твой путь',
+                    'в профессиональных',
+                    'информационных',
+                    'технологиях.',
+                    'Давай знакомиться:'
+                ]
+            }
+            if (window.innerWidth <= 339) {
+                this.textData.text1 = [
+                    'Привет! Это верный адрес.',
+                    'Отсюда начинается',
+                    'твой путь',
+                    'в профессиональных',
+                    'информационных',
+                    'технологиях.',
+                    'Давай знакомиться:'
+                ]
+            }
+        },
         checkFirstLetter() {
             if (this.userData.phone_number.length < 2 || !this.userData.phone_number.startsWith('+7')) {
                 this.userData.phone_number = '+7'
             }
         },
         yearChanged() {
-            this.utility.secondStep.year_changed = true;
+            this.year_changed = true;
             this.isCorrect.year = validateService.checkIsOnlyNumbers(this.userData.year) && this.userData.year <= 6 &&
                 this.userData.year > 0;
         },
         emailChanged() {
-            this.utility.thirdStep.email_changed = true;
+            this.email_changed = true;
             this.isCorrect.email = validateService.checkIsEmail(this.userData.email)
         },
         passwordChanged() {
-            this.utility.thirdStep.password_changed = true;
-            this.isCorrect.password = (this.userData.password == this.utility.thirdStep.passwordConfirm
-                && !validateService.checkIsEmptyStr(this.userData.password)) || !(this.utility.thirdStep.password_confirm_changed)
+            this.password_changed = true;
         },
         passwordConfirmChanged() {
-            this.isCorrect.password = this.userData.password == this.utility.thirdStep.passwordConfirm
+            this.isCorrect.password = this.userData.password == this.passwordConfirm
                 && !validateService.checkIsEmptyStr(this.userData.password)
-            this.utility.thirdStep.password_confirm_changed = true;
+            this.password_confirm_changed = true;
         },
         confirmPersonalDataChanged() {
             this.isCorrect.confirm_personal_data = this.confirm_personal_data
-            this.utility.thirdStep.confirm_personal_data_changed = true;
+            this.confirm_personal_data_changed = true;
         },
         universityChanged() {
-            this.utility.secondStep.university_changed = true;
+            this.university_changed = true;
             this.isCorrect.current_university = this.userData.current_university != '-1';
         },
         facultyChanged() {
-            this.utility.secondStep.faculty_changed = true;
+            this.faculty_changed = true;
             this.isCorrect.current_faculty = this.userData.current_faculty != '-1';
         },
         specialtyChanged() {
-            this.utility.secondStep.specialty_changed = true;
+            this.specialty_changed = true;
             this.isCorrect.current_specialty = this.userData.current_specialty != '-1';
         },
         lastNameChanged() {
-            this.utility.firstStep.last_name_changed = true;
+            this.last_name_changed = true;
             this.isCorrect.last_name = validateService.checkNamesInput(this.userData.last_name)
         },
         firstNameChanged() {
-            this.utility.firstStep.first_name_changed = true;
+            this.first_name_changed = true;
             this.isCorrect.first_name = validateService.checkNamesInput(this.userData.first_name)
         },
         phoneChanged() {
-            this.utility.firstStep.phone_changed = true;
+            this.phone_changed = true;
             this.isCorrect.phone_number = validateService.checkPhoneNumber(this.userData.phone_number)
-        },
-        middleNameChanged(){
-          this.utility.firstStep.middle_name_chaged = true;
-          this.isCorrect.middle_name = validateService.checkIsOnlyRussianLetter(this.userData.middle_name) || validateService.checkIsEmptyStr(this.userData.middle_name)
         },
         nextStep() {
             if (this.step === 1 && !this.checkFirstStep()) {
@@ -367,7 +409,7 @@ export default {
 
         checkFirstStep() {
 
-            this.middleNameChanged()
+            this.isCorrect.middle_name = validateService.checkIsOnlyRussianLetter(this.userData.middle_name) || validateService.checkIsEmptyStr(this.userData.middle_name)
             this.firstNameChanged()
             this.lastNameChanged()
             this.phoneChanged()
@@ -375,7 +417,7 @@ export default {
             return (this.isCorrect.last_name &&
                 this.isCorrect.first_name &&
                 this.isCorrect.middle_name &&
-                this.isCorrect.phone_number) || this.isCorrect.unlock
+                this.isCorrect.phone_number) || this.unlock
         },
 
         checkSecondStep() {
@@ -387,12 +429,11 @@ export default {
             return (this.isCorrect.current_university &&
                 this.isCorrect.current_faculty &&
                 this.isCorrect.current_specialty &&
-                this.isCorrect.year) || this.isCorrect.unlock
+                this.isCorrect.year) || this.unlock
         },
 
         checkThirdStep() {
             this.emailChanged()
-            this.passwordChanged()
             this.passwordConfirmChanged()
             this.confirmPersonalDataChanged()
 
@@ -402,10 +443,10 @@ export default {
         getFacults: function () {
             if (this.userData.current_university != -1) {
                 userService.getFacults(this.userData.current_university).then(response => {
-                    this.utility.secondStep.facults = response;
+                    this.facults = response;
                 })
             } else {
-              this.utility.secondStep.facults = {};
+                this.facults = {};
             }
             this.userData.current_faculty = -1
 
@@ -413,10 +454,10 @@ export default {
         getSpecialty: function () {
             if (this.userData.current_faculty != -1) {
                 userService.getSpecialty(this.userData.current_university, this.userData.current_faculty).then(response => {
-                    this.utility.secondStep.specialties = response;
+                    this.specialties = response;
                 })
             } else {
-              this.utility.secondStep.specialties = {};
+                this.specialties = {};
             }
             this.userData.current_specialty = -1
         }

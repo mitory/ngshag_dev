@@ -82,7 +82,7 @@ async function getSkills() {
 
 async function postSkills(skills) {
     try {
-        const response = await axios.post(API_URL + `skill/`, { skill: skills }, {
+        const response = await axios.post(API_URL + `skill/`, { categories: skills }, {
             headers: authHeader(),
         });
         return response.data;
@@ -135,7 +135,7 @@ function getLkInfo() {
                         this.$store.dispatch('auth/logout');
                     }
                 } else {
-                    throw error;
+                    return { error: error.response.data.error };
                 }
             });
 }
