@@ -5,7 +5,8 @@
                 <form @submit.prevent="registration" novalidate>
                     <transition name="slide-fade">
                         <div v-show="step === 1" class="step">
-                            <h2 class="text-primary mb-3 text-center">НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ В ЦИФРОВЫХ ПРОФЕССИЯХ
+                            <h2 class="text-primary mb-3 text-center">
+                                НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ В ЦИФРОВЫХ ПРОФЕССИЯХ
                             </h2>
                             <div class="typewriter mb-3 p-1 border border-dark bg-secondary">
                                 <p class="line m-0 pb-0 text-center text-mobile"
@@ -24,7 +25,7 @@
                                             id="last_name">
                                         <div v-if="!(isCorrect.last_name) && last_name_changed" id="last_name"
                                             class="form-text text-danger">
-                                            Пожалуйста, введите вашу фамилию (Кириллица)
+                                            Введите вашу фамилию <br class="d-none d-lg-inline">(Кириллица)
                                         </div>
                                     </div>
 
@@ -37,7 +38,7 @@
                                             id="first_name">
                                         <div v-if="!(isCorrect.first_name) && first_name_changed" id="first_name"
                                             class="form-text text-danger">
-                                            Пожалуйста, введите ваше имя (Кириллица)
+                                            Введите ваше имя <br class="d-none d-lg-inline">(Кириллица)
                                         </div>
                                     </div>
 
@@ -46,7 +47,7 @@
                                         <input v-model="userData.middle_name" type="text" class="form-control"
                                             v-bind:class="{ 'border-danger': !isCorrect.middle_name }" id="middle_name">
                                         <div v-if="!isCorrect.middle_name" id="middle_name" class="form-text text-danger">
-                                            Пожалуйста, введите ваше отчество (Кириллица)
+                                            Введите ваше отчество <br class="d-none d-lg-inline">(Кириллица)
                                         </div>
                                     </div>
                                 </div>
@@ -61,7 +62,7 @@
                                             id="phone_number" placeholder="+7XXXXXXXXXX">
                                         <div v-if="!(isCorrect.phone_number) && phone_changed" id="phone_number"
                                             class="form-text text-danger">
-                                            Пожалуйста, введите ваш телефон в формате +7XXXXXXXXXX
+                                            Введите ваш телефон <br class="d-none d-lg-inline">например: +79998887766
                                         </div>
                                     </div>
 
