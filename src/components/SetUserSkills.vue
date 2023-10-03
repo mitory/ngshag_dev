@@ -61,7 +61,22 @@
 
 
                     <div class="d-flex justify-content-center">
-                        <button @click="addSkillToUser" type="button" class="btn btn-primary">Завершить настройку</button>
+                        <button @click="addSkillToUser(); nextStep()" type="button" class="btn btn-primary">Завершить
+                            настройку</button>
+                    </div>
+                </div>
+
+                <div v-if="step === 3" class="">
+                    <div class="col-md-10 col-lg-8 col-xl-8 col-xxl-8 mx-auto">
+                        <div class="typewriter p-1 border border-dark bg-secondary mb-3">
+                            <p class="line m-0 pb-0 text-center fs-sm-5 text-mobile" v-for="(line, index) in textLines3"
+                                :key="index">
+                                {{ line }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button @click="nextStep" type="button" class="btn btn-primary">Понятно</button>
                     </div>
                 </div>
             </div>
@@ -71,6 +86,7 @@
   
 <script>
 import { userService } from '../services/user.service'
+import { textService } from '../services/text.service'
 import 'vue3-carousel/dist/carousel.css';
 import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
 import RangeSlider from "./mini-components/RangeSlider.vue";
@@ -83,15 +99,27 @@ export default {
                 'для проведения цифровых мероприятий! Это не только',
                 'действенный способ усилить свои компетенции, но и',
                 'возможность получить классные бонусы и предложение',
-                'на работу в крупную ИТ-компанию.'
+                'на работу в крупную ИТ-компанию.',
+                'Далее необходимо выяснить направления,',
+                'по которым ты будешь участвовать в Чемпионате'
             ],
             text2: [
                 'Выбери направления, в которых ты готов подтвердить свои компетенции:'
             ],
+            text3: [
+                'Отлично! С 3 по 7 ноября 2023 на площадке',
+                'ДЦ «Октябрьский» состоится студенческий чемпионат',
+                'в области информационных технологий.',
+                'Извещение о твоих последующих действиях и отборочных',
+                'заданиях придёт на указанный адрес электронной почты',
+                'и в личный кабинет.'
+            ],
+            textLines3: [],
             textLines2: [],
             textLines1: [],
             line1: 1,
             line2: 1,
+            line3: 1,
             categories_skills: [],
             set_skills_user: [],
             step: 1,
@@ -128,7 +156,6 @@ export default {
         addSkillToUser: function () {
             userService.postSkills(this.set_skills_user).then(() => {
                 this.$store.dispatch('alert/sendMessage', { message: 'Ваши навыки добавлены в список!', type: 'Success' })
-                this.$router.push("/");
             }).catch(() => {
                 this.$store.dispatch('alert/sendMessage', { message: 'Что-то пошло не так...', type: 'Danger' })
             })
@@ -164,18 +191,14 @@ export default {
         nextStep: function () {
             ++this.step;
             if (this.step === 2) {
-                this.appendLine(this.line2, this.text2, this.textLines2);
+                textService.appendLine(this.line2, this.text2, this.textLines2);
             }
-        },
-        appendLine: function (line, text, textLines) {
-            const int = setInterval(() => {
-                if (line < text.length) {
-                    textLines.push(text[line])
-                    ++line;
-                } else {
-                    clearInterval(int)
-                }
-            }, 2000)
+            if (this.step === 3) {
+                textService.appendLine(this.line3, this.text3, this.textLines3)
+            }
+            if (this.step === 4) {
+                this.$router.push("/");
+            }
         },
         setWidth: function () {
             this.width = window.innerWidth;
@@ -194,6 +217,14 @@ export default {
                     'Выбери направления, в которых ты готов',
                     'подтвердить свои компетенции:'
                 ]
+                this.text3 = [
+                    'Отлично! С 3 по 7 ноября 2023 на площадке',
+                    'ДЦ «Октябрьский» состоится студенческий',
+                    'чемпионат в области информационных технологий.',
+                    'Извещение о твоих последующих действиях и',
+                    'отборочных заданиях придёт на указанный адрес',
+                    'электронной почты и в личный кабинет.'
+                ]
             }
             if (window.innerWidth <= 768) {
                 this.text1 = [
@@ -202,7 +233,20 @@ export default {
                     'мероприятий! Это не только действенный',
                     'способ усилить свои компетенции, но и',
                     'возможность получить классные бонусы и',
-                    'предложение на работу в крупную ИТ-компанию.'
+                    'предложение на работу в крупную ИТ-компанию.',
+                    'Далее необходимо выяснить направления,',
+                    'по которым ты будешь участвовать в Чемпионате'
+                ]
+            }
+            if (window.innerWidth <= 541) {
+                this.text3 = [
+                    'Отлично! С 3 по 7 ноября 2023 на площадке',
+                    'ДЦ «Октябрьский» состоится студенческий',
+                    'чемпионат в области информационных',
+                    'технологий. Извещение о твоих последующих',
+                    'действиях и отборочных заданиях придёт на',
+                    'указанный адрес электронной почты',
+                    'и в личный кабинет.'
                 ]
             }
             if (window.innerWidth <= 510) {
@@ -213,14 +257,53 @@ export default {
                     'способ усилить свои компетенции, но и',
                     'возможность получить классные бонусы и',
                     'предложение на работу в крупную',
-                    'ИТ-компанию.'
+                    'ИТ-компанию.',
+                    'Далее необходимо выяснить направления,',
+                    'по которым ты будешь участвовать',
+                    'в Чемпионате'
                 ]
             }
-            if (window.innerWidth <= 360) {
+            if (window.innerWidth <= 439) {
+                this.text3 = [
+                    'Отлично! С 3 по 7 ноября 2023',
+                    'на площадке ДЦ «Октябрьский»',
+                    'состоится студенческий чемпионат',
+                    'в области информационных технологий.',
+                    'Извещение о твоих последующих действиях',
+                    'и отборочных заданиях придёт на',
+                    'указанный адрес электронной почты',
+                    'и в личный кабинет.'
+                ]
+            }
+            if (window.innerWidth <= 359) {
+                this.text1 = [
+                    'Поздравляем с успешной регистрацией',
+                    'на платформе для проведения',
+                    'цифровых мероприятий! Это не только',
+                    'действенный способ усилить свои',
+                    'компетенции, но и возможность',
+                    'получить классные бонусы',
+                    'и предложение на работу в крупную',
+                    'ИТ-компанию.',
+                    'Далее необходимо выяснить',
+                    'направления, по которым ты будешь',
+                    'участвовать в Чемпионате'
+                ]
                 this.text2 = [
                     'Выбери направления,',
                     'в которых ты готов',
                     'подтвердить свои компетенции:'
+                ]
+                this.text3 = [
+                    'Отлично! С 3 по 7 ноября 2023',
+                    'на площадке ДЦ «Октябрьский»',
+                    'состоится студенческий чемпионат',
+                    'в области информационных технологий.',
+                    'Извещение о твоих последующих',
+                    'действиях и отборочных заданиях',
+                    'придёт на указанный адрес',
+                    'электронной почты',
+                    'и в личный кабинет.'
                 ]
             }
         }
@@ -248,11 +331,15 @@ export default {
 
         this.textLines1.push(this.text1[0])
         this.textLines2.push(this.text2[0])
+        this.textLines3.push(this.text3[0])
         if (this.step === 1) {
-            this.appendLine(this.line1, this.text1, this.textLines1);
+            textService.appendLine(this.line1, this.text1, this.textLines1);
         }
         if (this.step === 2) {
-            this.appendLine(this.line2, this.text2, this.textLines2);
+            textService.appendLine(this.line2, this.text2, this.textLines2);
+        }
+        if (this.step === 3) {
+            textService.appendLine(this.line3, this.text3, this.textLines3);
         }
 
 
