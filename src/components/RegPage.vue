@@ -6,7 +6,7 @@
                     <transition name="slide-fade">
                         <div v-show="step === 1" class="step">
                             <h2 class="text-primary mb-3 text-center">
-                                НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ В ЦИФРОВЫХ ПРОФЕССИЯХ
+                                НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
                             </h2>
                             <div class="typewriter mb-3 p-1 border border-dark bg-secondary">
                                 <p class="line m-0 pb-0 text-center text-mobile"
@@ -25,7 +25,7 @@
                                             id="last_name">
                                         <div v-if="!(isCorrect.last_name) && utility.firstStep.last_name_changed"
                                             id="last_name" class="form-text text-danger">
-                                            Введите вашу фамилию <br class="d-none d-lg-inline">(Кириллица)
+                                            Введи свою фамилию <br class="d-none d-lg-inline">(Кириллица)
                                         </div>
                                     </div>
 
@@ -37,18 +37,21 @@
                                             v-bind:class="{ 'border-danger': !(isCorrect.first_name) && utility.firstStep.first_name_changed }"
                                             id="first_name">
 
-                                        <div v-if="!(isCorrect.first_name) && first_name_changed" id="first_name"
-                                            class="form-text text-danger">
-                                            Введите ваше имя <br class="d-none d-lg-inline">(Кириллица)
+                                        <div v-if="!(isCorrect.first_name) && utility.firstStep.first_name_changed"
+                                            id="first_name" class="form-text text-danger">
+                                            Введи своё имя <br class="d-none d-lg-inline">(Кириллица)
                                         </div>
                                     </div>
 
                                     <div class="mb-3">
                                         <label for="middle_name" class="form-label">Отчество</label>
-                                        <input v-model="userData.middle_name" type="text" class="form-control"
-                                            v-bind:class="{ 'border-danger': !isCorrect.middle_name }" id="middle_name">
-                                        <div v-if="!isCorrect.middle_name" id="middle_name" class="form-text text-danger">
-                                            Введите ваше отчество <br class="d-none d-lg-inline">(Кириллица)
+                                        <input @change="middleNameChanged" v-model="userData.middle_name" type="text"
+                                            class="form-control"
+                                            v-bind:class="{ 'border-danger': !(isCorrect.middle_name) && utility.firstStep.middle_name_chaged }"
+                                            id="middle_name">
+                                        <div v-if="!(isCorrect.middle_name) && utility.firstStep.middle_name_chaged"
+                                            id="middle_name" class="form-text text-danger">
+                                            Введи своё отчество <br class="d-none d-lg-inline">(Кириллица)
                                         </div>
                                     </div>
                                 </div>
@@ -61,9 +64,9 @@
                                             v-model="userData.phone_number" maxlength="12" type="text" class="form-control"
                                             v-bind:class="{ 'border-danger': !(isCorrect.phone_number) && utility.firstStep.phone_changed }"
                                             id="phone_number" placeholder="+7XXXXXXXXXX">
-                                        <div v-if="!(isCorrect.phone_number) && phone_changed" id="phone_number"
-                                            class="form-text text-danger">
-                                            Введите ваш телефон <br class="d-none d-lg-inline">например: +79998887766
+                                        <div v-if="!(isCorrect.phone_number) && utility.firstStep.phone_changed"
+                                            id="phone_number" class="form-text text-danger">
+                                            Введи свой номер телефона <br class="d-none d-lg-inline">например: +79998887766
                                         </div>
                                     </div>
 
@@ -105,7 +108,7 @@
                                 <select @change="getFacults(); universityChanged(); getSpecialty();"
                                     class="form-select mb-3" v-model="userData.current_university"
                                     v-bind:class="{ 'border-danger': !(this.isCorrect.current_university) && utility.secondStep.university_changed }">
-                                    <option value="-1" selected>Выберите ВУЗ</option>
+                                    <option value="-1" selected>Выбери учебное заведение</option>
                                     <option v-for="uviver in utility.secondStep.univers" :value="uviver.id"
                                         :key="uviver.id">
                                         {{ uviver.institution_name }}
@@ -115,7 +118,7 @@
                                 <select @change="getSpecialty(); facultyChanged()" class="form-select mb-3"
                                     v-model="userData.current_faculty"
                                     v-bind:class="{ 'border-danger': !(this.isCorrect.current_faculty) && utility.secondStep.faculty_changed }">
-                                    <option value="-1" selected>Выберите Факультет</option>
+                                    <option value="-1" selected>Выбери Факультет</option>
                                     <option v-for="facult in utility.secondStep.facults" :value="facult.id"
                                         :key="facult.id">
                                         {{ facult.faculty_name }}
@@ -125,7 +128,7 @@
                                 <select @change="specialtyChanged" class="form-select mb-3"
                                     v-model="userData.current_specialty"
                                     v-bind:class="{ 'border-danger': !(this.isCorrect.current_specialty) && utility.secondStep.specialty_changed }">
-                                    <option value="-1" selected>Выберите Специальность</option>
+                                    <option value="-1" selected>Выбери Специальность</option>
                                     <option v-for="specialty in utility.secondStep.specialties" :value="specialty.id"
                                         :key="specialty.id">
                                         {{ specialty.specialty_name }}
@@ -133,13 +136,13 @@
                                 </select>
                                 <div class="mb-3">
                                     <label for="year" class="form-label">Курс<span class="text-danger">*</span></label>
-                                    <input @change="yearChanged" v-model="userData.year" inputmode="numeric" pattern="\d*"
-                                        maxlength="2" type="number" class="form-control"
+                                    <input @input="checkCorrectYear" @change="yearChanged" v-model="userData.year"
+                                        inputmode="numeric" pattern="\d*" maxlength="2" type="number" class="form-control"
                                         v-bind:class="{ 'border-danger': !(isCorrect.year) && utility.secondStep.year_changed }"
                                         id="year" style="width: 5em;">
                                     <div v-if="!(isCorrect.year) && utility.secondStep.year_changed" id="year"
                                         class="form-text text-danger">
-                                        Пожалуйста, введите курс, на котором вы учитесь.
+                                        Введи курс, на котором ты учишься.
                                     </div>
                                 </div>
                             </div>
@@ -161,7 +164,7 @@
                                     v-bind:class="{ 'border-danger': !(isCorrect.email) && utility.thirdStep.email_changed }">
                                 <div v-if="!(isCorrect.email) && utility.thirdStep.email_changed" id="email"
                                     class="form-text text-danger">
-                                    Пожалуйста, введите корректный email. Например test@mail.ru
+                                    Введи корректный email. Например test@mail.ru
                                 </div>
                             </div>
 
@@ -179,7 +182,7 @@
                                     v-bind:class="{ 'border-danger': !(isCorrect.password) && utility.thirdStep.password_confirm_changed }">
                                 <div v-if="!(isCorrect.password) && utility.thirdStep.password_confirm_changed"
                                     id="password" class="form-text text-danger">
-                                    Убедитесь, что вы правильно повторили пароль
+                                    Убедись, что ты правильно повторил пароль
                                 </div>
                             </div>
 
@@ -337,6 +340,15 @@ export default {
                     'технологиях.',
                     'Давай знакомиться:'
                 ]
+            }
+        },
+        checkCorrectYear() {
+            if (this.userData.year < 1) {
+                this.userData.year = 1
+            } else {
+                if (this.userData.year > 6) {
+                    this.userData.year = 6
+                }
             }
         },
         checkFirstLetter() {
