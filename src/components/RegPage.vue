@@ -5,8 +5,13 @@
                 <form @submit.prevent="registration" novalidate>
                     <transition name="slide-fade">
                         <div v-show="step === 1" class="step">
-                            <div class="d-flex typewriter mb-3 p-1 border border-dark bg-secondary">
-                                <p class="mb-0">Привет! Давай знакомиться:</p>
+                            <h2 class="text-primary mb-3 text-center">НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ В ЦИФРОВЫХ ПРОФЕССИЯХ
+                            </h2>
+                            <div class="typewriter mb-3 p-1 border border-dark bg-secondary">
+                                <p class="line m-0 pb-0 text-center text-mobile"
+                                    v-for="(line, index) in textData.textLines1" :key="index">
+                                    {{ line }}
+                                </p>
                             </div>
                             <div class="d-flex flex-column flex-lg-row justify-content-evenly mb-5">
                                 <div class="d-flex flex-column me-lg-4">
@@ -141,7 +146,7 @@
                     <transition name="slide-fade">
                         <div v-show="step === 3" class="step col-sm-8 mx-auto">
                             <div class="d-flex typewriter mb-3 p-1 border border-dark bg-secondary">
-                                <p class="mb-0">Осталось еще немого...</p>
+                                <p class="mb-0">Осталось еще немного...</p>
                             </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
@@ -200,6 +205,7 @@ import '@vuepic/vue-datepicker/dist/main.css'
 import { userService } from '../services/user.service'
 import { publicService } from '../services/public.service'
 import { validateService } from '../services/validate.service'
+import { textService } from '../services/text.service'
 
 export default {
     name: 'RegPage',
@@ -251,22 +257,72 @@ export default {
             password_confirm_changed: false,
             confirm_personal_data_changed: false,
             year_changed: false,
+
+            textData: {
+                text1: [
+                    'Привет! Это верный адрес, отсюда начинается твой путь',
+                    'в профессиональных информационных технологиях.',
+                    'Давай знакомиться:'
+                ],
+                line1: 1,
+                textLines1: []
+            }
         }
     },
     props: {
         source: String
     },
+
     created() {
         if (this.source !== undefined) {
             publicService.sendSourse(this.source);
             this.$router.push("/reg");
         }
         this.$store.dispatch('auth/logout');
+        this.changeTextForMobile()
         userService.getUnivers().then(response => {
             this.univers = response;
         })
     },
+    mounted() {
+        this.textData.textLines1.push(this.textData.text1[0])
+        if (this.step === 1) {
+            textService.appendLine(this.textData.line1, this.textData.text1, this.textData.textLines1);
+        }
+    },
     methods: {
+        changeTextForMobile: function () {
+            if (window.innerWidth <= 992) {
+                this.textData.text1 = [
+                    'Привет! Это верный адрес.',
+                    'Отсюда начинается твой путь в',
+                    'профессиональных информационных',
+                    'технологиях.',
+                    'Давай знакомиться:'
+                ]
+            }
+            if (window.innerWidth <= 380) {
+                this.textData.text1 = [
+                    'Привет! Это верный адрес.',
+                    'Отсюда начинается твой путь',
+                    'в профессиональных',
+                    'информационных',
+                    'технологиях.',
+                    'Давай знакомиться:'
+                ]
+            }
+            if (window.innerWidth <= 339) {
+                this.textData.text1 = [
+                    'Привет! Это верный адрес.',
+                    'Отсюда начинается',
+                    'твой путь',
+                    'в профессиональных',
+                    'информационных',
+                    'технологиях.',
+                    'Давай знакомиться:'
+                ]
+            }
+        },
         checkFirstLetter() {
             if (this.userData.phone_number.length < 2 || !this.userData.phone_number.startsWith('+7')) {
                 this.userData.phone_number = '+7'

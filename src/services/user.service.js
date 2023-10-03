@@ -135,7 +135,7 @@ function getLkInfo() {
                         this.$store.dispatch('auth/logout');
                     }
                 } else {
-                    throw error;
+                    return { error: error.response.data.error };
                 }
             });
 }

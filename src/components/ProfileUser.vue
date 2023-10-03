@@ -1,5 +1,5 @@
 <template>
-    <div v-if="user.email !== ''">
+    <div v-if="!user.error">
         <h1 class="mb-4">{{ user.first_name + ' ' + user.last_name }}</h1>
         <div class="mb-4">
             <h5 class="mb-3">Личная информация</h5>
@@ -41,6 +41,9 @@
             </div>
         </div>
     </div>
+    <div v-else>
+        <h3>{{ user.error }}</h3>
+    </div>
 </template>
 
 <script>
@@ -59,6 +62,7 @@ export default {
                 specialty: [],
                 phone_number: '',
                 year: '',
+                error: null
             },
         }
     },
@@ -68,6 +72,9 @@ export default {
         this.$store.commit('routes/toProfilePage')
         userService.getLkInfo().then(data => {
             this.user = data;
+            console.log(this.user.error)
+        }).catch(error => {
+            this.user.error = error
         })
     },
     methods: {
