@@ -1,14 +1,19 @@
 <template>
   <div class="container">
-    <div class="row" style="height: 100vh">
-      <div class="col-sm-4 m-auto">
+    <div class="d-flex flex-column justify-content-center" style="height: 100vh">
+      <div class="col-sm-8 mx-auto mb-2 mb-lg-5 ">
+        <h2 class="text-primary mb-3 text-center">
+          НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
+        </h2>
+      </div>
+      <div class="col-sm-4 mx-auto">
         <form @submit.prevent="loginUser" novalidate>
           <div class="mb-3">
             <label for="email" class="form-label">Email</label>
             <input @change="emailChanged" v-model="email" type="text" class="form-control" id="email"
               v-bind:class="{ 'border-danger': !(isCorrect.email) && email_changed }">
             <div v-if="!(isCorrect.email) && email_changed" id="email" class="form-text text-danger">
-              Пожалуйста, введите корректный email. Например test@mail.ru
+              Введи корректный email. Например test@mail.ru
             </div>
           </div>
 
@@ -23,7 +28,7 @@
           </div>
 
           <router-link class="btn mb-2" to="/reg">
-            Еще нет аккаунта? Тогда зарегестрируйся!
+            Еще нет аккаунта? Тогда зарегистрируйся!
           </router-link>
           <button type="submit" class="btn btn-primary">Войти</button>
         </form>
