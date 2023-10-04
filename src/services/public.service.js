@@ -4,7 +4,7 @@ import config from '../config'
 const API_URL = config.apiURL;
 
 export const publicService = {
-    getEventsList, getEvent, sendSourse
+    getEventsList, getEvent, sendSourse, getSendEmailForChangePass
 };
 
 async function getEventsList() {
@@ -15,6 +15,17 @@ async function getEventsList() {
         return response.data;
     } catch (err) {
         this.$store.dispatch('alert/sendMessage', { message: 'Не удалось получить мероприятия', type: 'Danger' });
+    }
+}
+
+async function getSendEmailForChangePass(email) {
+    try {
+        const response = await axios.get(API_URL + 'reset_password/' + email + '/', {
+            headers: { 'ngrok-skip-browser-warning': '69420' }
+        });
+        return response.data;
+    } catch (err) {
+        return { ok: 'no', message: err.response.data.Error }
     }
 }
 
