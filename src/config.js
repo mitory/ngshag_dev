@@ -1,6 +1,6 @@
 
 const config = {
-    apiURL: 'https://nwstep.ru:8000' + '/api/'
+    apiURL: 'https://d7c2-37-112-66-98.ngrok-free.app' + '/api/'
 }
 
 export default config;

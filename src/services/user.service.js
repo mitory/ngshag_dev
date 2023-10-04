@@ -8,7 +8,9 @@ import { authService } from './auth.service'
 const API_URL = config.apiURL;
 
 export const userService = {
-    getLkInfo, getUnivers, getFacults, getTeams, getSpecialty, getSkills, postSkills, getVerificeAcc
+    getLkInfo, getUnivers, getFacults, getTeams,
+    getSpecialty, getSkills, postSkills, getVerificeAcc,
+    changePassword
 };
 
 async function getTeams() {
@@ -85,6 +87,28 @@ async function getVerificeAcc(id, token) {
         headers: { 'ngrok-skip-browser-warning': '69420' }
     });
     return response.data;
+}
+
+async function changePassword(old_pass, new_pass) {
+    try {
+        const response = await axios.put(API_URL + `change_password/`, {
+            current_password: old_pass,
+            new_password: new_pass
+        }, {
+            headers: authHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        if (error.response && error.response.status === 401) {
+            if (authService.refresh()) {
+                return changePassword(old_pass, new_pass);
+            } else {
+                this.$store.dispatch('auth/logout');
+            }
+        } else {
+            throw error;
+        }
+    }
 }
 
 async function postSkills(skills) {

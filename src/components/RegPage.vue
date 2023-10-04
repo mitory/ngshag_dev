@@ -202,6 +202,7 @@
                                     :type="utility.thirdStep.isShowPass ? 'text' : 'password'"
                                     class="form-control pass-eye__inp" id="password"
                                     v-bind:class="{ 'border-danger': !this.isCorrect.password }">
+
                                 <span @click="utility.thirdStep.isShowPass = !utility.thirdStep.isShowPass"
                                     class="pass-eye__btn" :class="{ 'active': utility.thirdStep.isShowPass }"></span>
 
@@ -476,6 +477,7 @@ export default {
             if (this.userData.current_university != -1) {
                 userService.getFacults(this.userData.current_university).then(response => {
                     this.utility.secondStep.facults = response;
+                    // this.utility.secondStep.facults.unshift({id: -2, faculty_name: 'Нет в списке'})
                 })
             } else {
                 this.utility.secondStep.facults = {};

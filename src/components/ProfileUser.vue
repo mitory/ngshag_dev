@@ -1,18 +1,15 @@
 <template>
     <div v-if="!user.error">
         <h1 class="mb-4">{{ user.first_name + ' ' + user.last_name }}</h1>
+        <router-link class="btn btn-primary mb-2" to="/change-password">
+            Сменить пароль
+        </router-link>
         <div class="mb-4">
             <h5 class="mb-3">Личная информация</h5>
             <div class="input-group mb-3">
                 <span class="input-group-text" id="email">Email</span>
-                <!--                <input disabled type="text" class="form-control" :value="this.user.email" aria-label="Имя пользователя"
-                    aria-describedby="email">-->
                 <div class="form-control text-break bootstrap-like-bg-color">{{ user.email }}</div>
             </div>
-            <!-- <div class="input-group mb-3">
-                <span class="input-group-text" id="birth_date">Дата рождения</span>
-                <div class="form-control text-break bootstrap-like-bg-color">{{ format_date(user.birth_date) }}</div>
-            </div> -->
             <div class="input-group mb-3">
                 <span class="input-group-text" id="phone_number">Телефон</span>
                 <div class="form-control text-break bootstrap-like-bg-color">{{ user.phone_number }}</div>
@@ -72,7 +69,6 @@ export default {
         this.$store.commit('routes/toProfilePage')
         userService.getLkInfo().then(data => {
             this.user = data;
-            console.log(this.user.error)
         }).catch(error => {
             this.user.error = error
         })
