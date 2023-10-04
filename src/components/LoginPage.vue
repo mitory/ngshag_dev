@@ -39,7 +39,10 @@
           <router-link class="btn mb-2" to="/reg">
             Еще нет аккаунта? Тогда зарегистрируйся!
           </router-link>
-          <button type="submit" class="btn btn-primary">Войти</button>
+          <div class="d-flex justify-content-between">
+            <button @click="forgotPassword" type="button" class="btn btn-secondary">Забыл пароль</button>
+            <button type="submit" class="btn btn-primary">Войти</button>
+          </div>
         </form>
       </div>
     </div>
@@ -48,6 +51,7 @@
 
 <script>
 import { validateService } from '../services/validate.service'
+import { publicService } from '../services/public.service'
 
 export default {
   name: 'LoginPage',
@@ -68,6 +72,18 @@ export default {
     this.$store.dispatch('auth/logout');
   },
   methods: {
+    forgotPassword() {
+      this.emailChanged()
+      if (this.isCorrect.email) {
+        publicService.getSendEmailForChangePass(this.email).then(response => {
+          if (response.Ok === 'Ok') {
+            this.$store.dispatch('alert/sendMessage', { message: 'Новый пароль вылан на почту', type: 'Success' })
+          } else {
+            this.$store.dispatch('alert/sendMessage', { message: response.message, type: 'Danger' });
+          }
+        })
+      }
+    },
     emailChanged() {
       this.isCorrect.email = this.checkEmail(this.email);
       this.email_changed = true;
