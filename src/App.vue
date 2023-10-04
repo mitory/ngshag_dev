@@ -72,4 +72,28 @@ a {
     width: 100%
   }
 }
+
+.pass-eye {
+  position: relative;
+}
+
+.pass-eye__btn {
+  cursor: pointer;
+  position: absolute;
+  top: 55%;
+  right: 6px;
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  opacity: 0.8;
+  background: url('./assets/icons/password_eye/eye-off.svg') 0 0 / cover no-repeat;
+}
+
+.pass-eye__btn.active {
+  background: url('./assets/icons/password_eye/eye-show.svg') 0 0 / cover no-repeat;
+}
+
+.pass-eye__btn.spacing-minus {
+  top: 40%;
+}
 </style>

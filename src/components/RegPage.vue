@@ -5,14 +5,24 @@
                 <form @submit.prevent="registration" novalidate>
                     <transition name="slide-fade">
                         <div v-show="step === 1" class="step">
-                            <h2 class="text-primary mb-3 text-center">
+                            <h2 class="d-none d-lg-block text-primary mb-3 text-center mt-3">
                                 НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
                             </h2>
-                            <div class="typewriter mb-3 p-1 border border-dark bg-secondary">
-                                <p class="line m-0 pb-0 text-center text-mobile"
-                                    v-for="(line, index) in textData.textLines1" :key="index">
-                                    {{ line }}
-                                </p>
+                            <h2 class="d-none d-lg-none d-md-block text-primary mb-3 text-center fs-4 mt-3">
+                                НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
+                            </h2>
+                            <h2 class="d-md-none d-block text-primary mb-3 text-center fs-6 mt-3">
+                                НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
+                            </h2>
+                            <div>
+                                <p class="text-lg-center mx-auto">Привет! Это верный адрес, отсюда начинается твоё
+                                    будущее<br class="d-none d-lg-inline"> в
+                                    профессиональных информационных технологиях.</p>
+                                <div class="col-9 mx-lg-auto typewriter mb-3 p-1 border border-dark bg-secondary">
+                                    <p class="line m-0 pb-0 text-center text-mobile">
+                                        Давай знакомиться:
+                                    </p>
+                                </div>
                             </div>
                             <div class="d-flex flex-column flex-lg-row justify-content-evenly mb-5">
                                 <div class="d-flex flex-column me-lg-4">
@@ -91,7 +101,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="d-flex justify-content-center">
+                            <div class="d-flex justify-content-center mb-2">
                                 <router-link class="btn" to="/login">
                                     Уже есть аккаунт?
                                 </router-link>
@@ -101,6 +111,15 @@
                     </transition>
                     <transition name="slide-fade">
                         <div v-show="step === 2" class="step col-sm-8 mx-auto">
+                            <h4 class="d-none d-lg-block text-primary mb-3 text-center mt-3">
+                                НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
+                            </h4>
+                            <h4 class="d-none d-lg-none d-md-block text-primary mb-3 text-center fs-4 mt-3">
+                                НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
+                            </h4>
+                            <h4 class="d-md-none d-block text-primary mb-3 text-center fs-6 mt-3">
+                                НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
+                            </h4>
                             <div class="d-flex typewriter mb-3 p-1 border border-dark bg-secondary">
                                 <p class="mb-0">Где ты учишься?</p>
                             </div>
@@ -154,6 +173,15 @@
                     </transition>
                     <transition name="slide-fade">
                         <div v-show="step === 3" class="step col-sm-8 mx-auto">
+                            <h4 class="d-none d-lg-block text-primary mb-3 text-center mt-3">
+                                НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
+                            </h4>
+                            <h4 class="d-none d-lg-none d-md-block text-primary mb-3 text-center fs-4 mt-3">
+                                НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
+                            </h4>
+                            <h4 class="d-md-none d-block text-primary mb-3 text-center fs-6 mt-3">
+                                НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
+                            </h4>
                             <div class="d-flex typewriter mb-3 p-1 border border-dark bg-secondary">
                                 <p class="mb-0">Осталось еще немного...</p>
                             </div>
@@ -168,18 +196,27 @@
                                 </div>
                             </div>
 
-                            <div class="mb-3">
+                            <div class="mb-3 pass-eye">
                                 <label for="password" class="form-label">Пароль</label>
-                                <input @change="passwordChanged" v-model="userData.password" type="password"
-                                    class="form-control" id="password"
+                                <input @change="passwordChanged" v-model="userData.password"
+                                    :type="utility.thirdStep.isShowPass ? 'text' : 'password'"
+                                    class="form-control pass-eye__inp" id="password"
                                     v-bind:class="{ 'border-danger': !this.isCorrect.password }">
+                                <span @click="utility.thirdStep.isShowPass = !utility.thirdStep.isShowPass"
+                                    class="pass-eye__btn" :class="{ 'active': utility.thirdStep.isShowPass }"></span>
 
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-3 pass-eye">
                                 <label for="passwordConfirm" class="form-label">Повторите пароль</label>
                                 <input @change="passwordConfirmChanged" v-model="utility.thirdStep.passwordConfirm"
-                                    type="password" class="form-control" id="passwordConfirm"
+                                    :type="utility.thirdStep.isShowConfirmPass ? 'text' : 'password'"
+                                    class="form-control pass-eye__inp" id="passwordConfirm"
                                     v-bind:class="{ 'border-danger': !(isCorrect.password) && utility.thirdStep.password_confirm_changed }">
+
+                                <span @click="utility.thirdStep.isShowConfirmPass = !utility.thirdStep.isShowConfirmPass"
+                                    class="pass-eye__btn"
+                                    :class="{ 'active': utility.thirdStep.isShowConfirmPass, 'spacing-minus': !(isCorrect.password) && utility.thirdStep.password_confirm_changed }"></span>
+
                                 <div v-if="!(isCorrect.password) && utility.thirdStep.password_confirm_changed"
                                     id="password" class="form-text text-danger">
                                     Убедись, что ты правильно повторил пароль
@@ -193,8 +230,8 @@
                                 <label class="form-check-label" for="confirm_person_data">
                                     Согласен на обработку своих персональных данных в соответствии
                                     с Федеральным законом Российской Федерации от 27 июля 2006 года
-                                    № 152-ФЗ "О персональных данных", а также информирование с названными
-                                    целями для участия в цифровых студенческих мероприятиях с использованием
+                                    № 152-ФЗ "О персональных данных", а также информирование для участия в цифровых
+                                    студенческих мероприятиях с использованием
                                     платформы "Новый шаг".
                                 </label>
                             </div>
@@ -216,7 +253,6 @@ import '@vuepic/vue-datepicker/dist/main.css'
 import { userService } from '../services/user.service'
 import { publicService } from '../services/public.service'
 import { validateService } from '../services/validate.service'
-import { textService } from '../services/text.service'
 
 export default {
     name: 'RegPage',
@@ -274,17 +310,9 @@ export default {
                     password_changed: false,
                     password_confirm_changed: false,
                     confirm_personal_data_changed: false,
+                    isShowPass: false,
+                    isShowConfirmPass: false
                 },
-            },
-
-            textData: {
-                text1: [
-                    'Привет! Это верный адрес, отсюда начинается твой путь',
-                    'в профессиональных информационных технологиях.',
-                    'Давай знакомиться:'
-                ],
-                line1: 1,
-                textLines1: []
             }
         }
     },
@@ -298,51 +326,17 @@ export default {
             this.$router.push("/reg");
         }
         this.$store.dispatch('auth/logout');
-        this.changeTextForMobile()
         userService.getUnivers().then(response => {
             this.utility.secondStep.univers = response;
         })
     },
     mounted() {
-        this.textData.textLines1.push(this.textData.text1[0])
-        if (this.step === 1) {
-            textService.appendLine(this.textData.line1, this.textData.text1, this.textData.textLines1);
-        }
     },
     methods: {
-        changeTextForMobile: function () {
-            if (window.innerWidth <= 992) {
-                this.textData.text1 = [
-                    'Привет! Это верный адрес.',
-                    'Отсюда начинается твой путь в',
-                    'профессиональных информационных',
-                    'технологиях.',
-                    'Давай знакомиться:'
-                ]
-            }
-            if (window.innerWidth <= 380) {
-                this.textData.text1 = [
-                    'Привет! Это верный адрес.',
-                    'Отсюда начинается твой путь',
-                    'в профессиональных',
-                    'информационных',
-                    'технологиях.',
-                    'Давай знакомиться:'
-                ]
-            }
-            if (window.innerWidth <= 339) {
-                this.textData.text1 = [
-                    'Привет! Это верный адрес.',
-                    'Отсюда начинается',
-                    'твой путь',
-                    'в профессиональных',
-                    'информационных',
-                    'технологиях.',
-                    'Давай знакомиться:'
-                ]
-            }
-        },
         checkCorrectYear() {
+            if (this.userData.year === '') {
+                return;
+            }
             if (this.userData.year < 1) {
                 this.userData.year = 1
             } else {
@@ -358,8 +352,8 @@ export default {
         },
         yearChanged() {
             this.utility.secondStep.year_changed = true;
-            this.isCorrect.year = validateService.checkIsOnlyNumbers(this.userData.year) && this.userData.year <= 6 &&
-                this.userData.year > 0;
+            this.isCorrect.year = validateService.checkIsOnlyNumbers(this.userData.year) && ((this.userData.year <= 6 &&
+                this.userData.year > 0) || this.userData.year === '');
         },
         emailChanged() {
             this.utility.thirdStep.email_changed = true;
@@ -393,10 +387,12 @@ export default {
         },
         lastNameChanged() {
             this.utility.firstStep.last_name_changed = true;
+            this.userData.last_name = this.userData.last_name.trim()
             this.isCorrect.last_name = validateService.checkNamesInput(this.userData.last_name)
         },
         firstNameChanged() {
             this.utility.firstStep.first_name_changed = true;
+            this.userData.first_name = this.userData.first_name.trim()
             this.isCorrect.first_name = validateService.checkNamesInput(this.userData.first_name)
         },
         phoneChanged() {
@@ -405,6 +401,7 @@ export default {
         },
         middleNameChanged() {
             this.utility.firstStep.middle_name_chaged = true;
+            this.userData.middle_name = this.userData.middle_name.trim()
             this.isCorrect.middle_name = validateService.checkIsOnlyRussianLetter(this.userData.middle_name) || validateService.checkIsEmptyStr(this.userData.middle_name)
         },
         nextStep() {

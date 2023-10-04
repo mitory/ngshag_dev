@@ -2,7 +2,13 @@
   <div class="container">
     <div class="d-flex flex-column justify-content-center" style="height: 100vh">
       <div class="col-sm-8 mx-auto mb-2 mb-lg-5 ">
-        <h2 class="text-primary mb-3 text-center">
+        <h2 class="d-none d-lg-block text-primary mb-3 text-center">
+          НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
+        </h2>
+        <h2 class="d-none d-lg-none d-md-block text-primary mb-3 text-center fs-4">
+          НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
+        </h2>
+        <h2 class="d-md-none d-block text-primary mb-3 text-center fs-6">
           НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
         </h2>
       </div>
@@ -17,10 +23,13 @@
             </div>
           </div>
 
-          <div class="mb-3">
+          <div class="mb-3 pass-eye">
             <label for="password" class="form-label">Пароль</label>
-            <input @change="passwordChanged" v-model="password" type="password" class="form-control" id="password"
+            <input @change="passwordChanged" v-model="password" :type="isShowPass ? 'text' : 'password'"
+              class="form-control pass-eye__inp" id="password"
               v-bind:class="{ 'border-danger': !(isCorrect.password) && password_changed }">
+            <span @click="isShowPass = !isShowPass" class="pass-eye__btn"
+              :class="{ 'active': isShowPass, 'spacing-minus': !(isCorrect.password) && password_changed }"></span>
 
             <div v-if="!(isCorrect.password) && password_changed" id="password" class="form-text text-danger">
               Пароль не может быть пустым!
@@ -46,6 +55,7 @@ export default {
     return {
       email: '',
       password: '',
+      isShowPass: false,
       isCorrect: {
         email: true,
         password: true
@@ -58,11 +68,11 @@ export default {
     this.$store.dispatch('auth/logout');
   },
   methods: {
-    emailChanged(){
+    emailChanged() {
       this.isCorrect.email = this.checkEmail(this.email);
       this.email_changed = true;
     },
-    passwordChanged(){
+    passwordChanged() {
       this.isCorrect.password = !validateService.checkIsEmptyStr(this.password);
       this.password_changed = true;
     },

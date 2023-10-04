@@ -17,7 +17,7 @@ function checkIsEmail(str) {
 }
 
 function checkIsOnlyRussianLetter(str) {
-    return /^[а-яА-Я]+(?:-[а-яА-Я]+)*$/.test(str);
+    return /^[а-яёА-ЯЁ]+(?:-[а-яёА-ЯЁ]+)*$/.test(str);
 }
 
 function checkIsOnlyNumbers(str) {
