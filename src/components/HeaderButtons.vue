@@ -33,7 +33,7 @@
   <header v-if="!is_none" class="mb-5 p-2 bg-primary bg-gradient">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary bg-gradient ">
       <div class="container-fluid d-lg-flex justify-lg-content-between">
-        <a class="navbar-brand" href="#">Новый шаг</a>
+        <a class="navbar-brand" href="#"><img style="height: 2em;" src="../assets/img/main_logo.svg" alt="Новый Шаг"/></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
           aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
