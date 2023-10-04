@@ -2,7 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LoginPage from '../components/LoginPage'
 import ProfileUser from '../components/ProfileUser'
 import MainPage from '../components/MainPage'
-import RegPage from '../components/RegPage'
+/*import RegPage from '../components/RegPage'*/
+import new_RegPage from '../components/new_design/new_RegPage'
 // import EventPage from '../components/EventPage'
 // import RegTeamPage from '../components/RegTeamPage'
 // import InviteToTeamPage from '../components/InviteToTeamPage'
@@ -25,7 +26,7 @@ const router = createRouter({
         },
         {
             path: '/reg',
-            component: RegPage,
+            component: new_RegPage,
             props: (route) => ({ source: route.query.source })
         },
         {
