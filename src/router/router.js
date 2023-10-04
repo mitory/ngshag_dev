@@ -13,6 +13,7 @@ import SetUserSkills from '../components/SetUserSkills'
 import AboutProject from '../components/AboutProject'
 import PoliciesAndProcedures from "../components/PoliciesAndProcedures";
 import SettingPage from '../components/SettingPage'
+import PasswordChange from '../components/PasswordChange'
 
 const router = createRouter({
     routes: [
@@ -28,6 +29,10 @@ const router = createRouter({
             path: '/setting-page-verifice-acc',
             component: SettingPage,
             props: (route) => ({ id: route.query.id, key_link: route.query.key_link })
+        },
+        {
+            path: '/change-password',
+            component: PasswordChange
         },
         {
             path: '/reg',
