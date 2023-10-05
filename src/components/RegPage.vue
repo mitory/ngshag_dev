@@ -124,7 +124,7 @@
                                 <p class="mb-0">Где ты учишься?</p>
                             </div>
                             <div>
-                                <select @change="getFacults(); universityChanged(); checkNotAnOption();"
+                                <select @change="getFacults(); universityChanged(); checkNotAnOption(); getSpecialty();"
                                     class="form-select mb-3" v-model="userData.current_university"
                                     v-bind:class="{ 'border-danger': !(this.isCorrect.current_university) && utility.secondStep.university_changed }">
                                     <option value="-1" selected>Выбери учебное заведение</option>
@@ -458,17 +458,33 @@ export default {
         universityChanged(finale_check = false) {
             this.utility.secondStep.university_changed = true;
             this.isCorrect.current_university = this.userData.current_university != '-1';
+            if (this.isCorrect.current_university) {
+                this.isCorrect.current_faculty = '-1'
+                this.isCorrect.current_specialty = '-1'
+            }
             if (this.userData.current_university != 1 && !finale_check) {
                 this.utility.secondStep.custom_univers = '';
                 this.utility.secondStep.custom_facults = '';
+                this.utility.secondStep.custom_specialty = '';
+            }
+            if (this.userData.current_university == -1) {
+                this.userData.current_faculty = -1;
+                this.userData.current_specialty = -1;
             }
         },
         facultyChanged(finale_check = false) {
             this.utility.secondStep.faculty_changed = true;
             this.isCorrect.current_faculty = this.userData.current_faculty != '-1';
+
+            if (this.isCorrect.current_faculty) {
+                this.isCorrect.current_specialty = '-1'
+            }
             if (this.userData.current_faculty != -2 && !finale_check) {
                 this.utility.secondStep.custom_facults = '';
                 this.utility.secondStep.custom_specialty = '';
+            }
+            if (this.userData.current_faculty == -1) {
+                this.userData.current_specialty = -1
             }
         },
         specialtyChanged(finale_check = false) {
@@ -590,15 +606,7 @@ export default {
             this.customFacultsChanged()
             this.customSpecialtyChanged()
 
-            // const result = (this.isCorrect.current_university && this.isCorrect.current_faculty &&
-            // this.isCorrect.current_specialty) || (this.isCorrect.current_university && this.isCorrect.current_faculty && this.isCorrect.custom_specialty) || (this.isCorrect.current_university && this.isCorrect.custom_facults && this.isCorrect.custom_specialty) || (this.isCorrect.custom_univers && this.isCorrect.custom_facults && this.isCorrect.custom_specialty)
-
-            // (this.isCorrect.current_university &&
-            //     ((this.isCorrect.current_faculty &&
-            //         this.isCorrect.current_specialty) || this.isCorrect.custom_univers)
-
-            const result = ((this.isCorrect.current_university && this.isCorrect.current_faculty) && (this.isCorrect.current_specialty || this.isCorrect.custom_specialty)) || ((this.isCorrect.custom_facults && this.isCorrect.custom_specialty) && (this.isCorrect.current_university || this.isCorrect.custom_specialty))
-
+            const result = ((this.isCorrect.current_university && this.isCorrect.current_faculty) && (this.isCorrect.current_specialty || this.isCorrect.custom_specialty)) || ((this.isCorrect.custom_facults && this.isCorrect.custom_specialty) && (this.isCorrect.current_university || this.isCorrect.custom_univers))
             return (result && this.isCorrect.year) || this.isCorrect.unlock;
         },
 
@@ -619,7 +627,6 @@ export default {
                 })
             } else {
                 this.utility.secondStep.facults = [];
-                this.utility.secondStep.facults.unshift({ id: -2, faculty_name: 'Нет в списке' })
             }
             this.userData.current_faculty = -1
 
@@ -632,7 +639,6 @@ export default {
                 })
             } else {
                 this.utility.secondStep.specialties = [];
-                this.utility.secondStep.specialties.unshift({ id: -2, specialty_name: 'Нет в списке' })
             }
             this.userData.current_specialty = -1
         }
