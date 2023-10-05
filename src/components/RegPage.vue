@@ -124,7 +124,7 @@
                                 <p class="mb-0">Где ты учишься?</p>
                             </div>
                             <div>
-                                <select @change="getFacults(); universityChanged(); getSpecialty(); checkNotAnOption();"
+                                <select @change="getFacults(); universityChanged(); checkNotAnOption();"
                                     class="form-select mb-3" v-model="userData.current_university"
                                     v-bind:class="{ 'border-danger': !(this.isCorrect.current_university) && utility.secondStep.university_changed }">
                                     <option value="-1" selected>Выбери учебное заведение</option>
@@ -133,8 +133,20 @@
                                         {{ uviver.institution_name }}
                                     </option>
                                 </select>
-                              <div v-show="!utility.secondStep.not_an_option">
-                                <select @change="getSpecialty(); facultyChanged()" class="form-select mb-3"
+
+                                <div v-show="utility.secondStep.not_an_option.univers">
+                                    <div class="mb-3">
+                                        <label for="custom_univers" class="form-label">Напиши название учебного
+                                            заведения<span class="text-danger">*</span></label>
+                                        <input @change="customUniversChanged" v-model="utility.secondStep.custom_univers"
+                                            type="text" class="form-control"
+                                            v-bind:class="{ 'border-danger': !(isCorrect.custom_univers) && utility.secondStep.custom_univers_changed }"
+                                            id="custom_univers">
+                                    </div>
+                                </div>
+
+                                <select @change="getSpecialty(); facultyChanged(); checkNotAnOption();"
+                                    v-show="!utility.secondStep.not_an_option.univers" class="form-select mb-3"
                                     v-model="userData.current_faculty"
                                     v-bind:class="{ 'border-danger': !(this.isCorrect.current_faculty) && utility.secondStep.faculty_changed }">
                                     <option value="-1" selected>Выбери Факультет</option>
@@ -144,8 +156,21 @@
                                     </option>
                                 </select>
 
-                                <select @change="specialtyChanged" class="form-select mb-3"
-                                    v-model="userData.current_specialty"
+                                <div
+                                    v-show="utility.secondStep.not_an_option.facults || utility.secondStep.not_an_option.univers">
+                                    <div class="mb-3">
+                                        <label for="custom_facults" class="form-label">Напиши название факультета<span
+                                                class="text-danger">*</span></label>
+                                        <input @change="customFacultsChanged" v-model="utility.secondStep.custom_facults"
+                                            type="text" class="form-control"
+                                            v-bind:class="{ 'border-danger': !(isCorrect.custom_facults) && utility.secondStep.custom_facults_changed }"
+                                            id="custom_facults">
+                                    </div>
+                                </div>
+
+                                <select @change="specialtyChanged(); checkNotAnOption();"
+                                    v-show="!utility.secondStep.not_an_option.univers && !utility.secondStep.not_an_option.facults"
+                                    class="form-select mb-3" v-model="userData.current_specialty"
                                     v-bind:class="{ 'border-danger': !(this.isCorrect.current_specialty) && utility.secondStep.specialty_changed }">
                                     <option value="-1" selected>Выбери Специальность</option>
                                     <option v-for="specialty in utility.secondStep.specialties" :value="specialty.id"
@@ -153,17 +178,20 @@
                                         {{ specialty.specialty_name }}
                                     </option>
                                 </select>
-                              </div>
-                              <div v-show="utility.secondStep.not_an_option">
-                                <div class="mb-3">
-                                  <label for="custom_univers" class="form-label">Напиши где ты учишься<span
-                                      class="text-danger">*</span></label>
-                                  <input @change="customUniversChanged" v-model="utility.secondStep.custom_univers" type="text"
-                                         class="form-control"
-                                         v-bind:class="{ 'border-danger': !(isCorrect.custom_univers) && utility.secondStep.custom_univers_changed }"
-                                         id="custom_univers">
+
+                                <div
+                                    v-show="utility.secondStep.not_an_option.facults || utility.secondStep.not_an_option.univers || utility.secondStep.not_an_option.specialty">
+                                    <div class="mb-3">
+                                        <label for="custom_specialty" class="form-label">Напиши название специальности<span
+                                                class="text-danger">*</span></label>
+                                        <input @change="customSpecialtyChanged"
+                                            v-model="utility.secondStep.custom_specialty" type="text" class="form-control"
+                                            v-bind:class="{ 'border-danger': !(isCorrect.custom_specialty) && utility.secondStep.custom_specialty_changed }"
+                                            id="custom_specialty">
+                                    </div>
                                 </div>
-                              </div>
+
+
                                 <div class="mb-3">
                                     <label for="year" class="form-label">Курс<span class="text-danger">*</span></label>
                                     <input @input="checkCorrectYear" @change="yearChanged" v-model="userData.year"
@@ -298,6 +326,8 @@ export default {
                 confirm_personal_data: true,
                 year: true,
                 custom_univers: true,
+                custom_specialty: true,
+                custom_facults: true,
                 unlock: false,
             },
             utility: {
@@ -315,9 +345,17 @@ export default {
                     faculty_changed: false,
                     specialty_changed: false,
                     year_changed: false,
-                    not_an_option: false,
+                    not_an_option: {
+                        univers: false,
+                        facults: false,
+                        specialty: false
+                    },
                     custom_univers: '',
                     custom_univers_changed: false,
+                    custom_specialty: '',
+                    custom_specialty_changed: false,
+                    custom_facults: '',
+                    custom_facults_changed: false
                 },
                 thirdStep: {
                     passwordConfirm: '',
@@ -349,12 +387,33 @@ export default {
     mounted() {
     },
     methods: {
-        customUniversChanged(){
-          this.utility.secondStep.custom_univers_changed = true;
-          this.isCorrect.custom_univers = !validateService.checkIsEmptyStr(this.utility.secondStep.custom_univers)
+        customUniversChanged() {
+            this.utility.secondStep.custom_univers_changed = true;
+            this.isCorrect.custom_univers = !validateService.checkIsEmptyStr(this.utility.secondStep.custom_univers)
         },
-        checkNotAnOption(){
-          this.utility.secondStep.not_an_option = this.userData.current_university == '1';
+        customFacultsChanged() {
+            this.utility.secondStep.custom_facults_changed = true;
+            this.isCorrect.custom_facults = !validateService.checkIsEmptyStr(this.utility.secondStep.custom_facults)
+        },
+        customSpecialtyChanged() {
+            this.utility.secondStep.custom_specialty_changed = true;
+            this.isCorrect.custom_specialty = !validateService.checkIsEmptyStr(this.utility.secondStep.custom_specialty)
+        },
+        checkNotAnOption() {
+            this.utility.secondStep.not_an_option.univers = this.userData.current_university == '1';
+            if (this.utility.secondStep.not_an_option.univers) {
+                this.userData.current_faculty = -2
+                this.userData.current_specialty = -2
+            }
+
+            this.utility.secondStep.not_an_option.facults = this.userData.current_faculty == '-2';
+
+            if (this.utility.secondStep.not_an_option.facults) {
+                this.userData.current_specialty = -2
+            }
+
+            this.utility.secondStep.not_an_option.specialty = this.userData.current_specialty == '-2';
+
         },
         checkCorrectYear() {
             if (this.userData.year === '') {
@@ -396,17 +455,28 @@ export default {
             this.isCorrect.confirm_personal_data = this.confirm_personal_data
             this.utility.thirdStep.confirm_personal_data_changed = true;
         },
-        universityChanged() {
+        universityChanged(finale_check = false) {
             this.utility.secondStep.university_changed = true;
             this.isCorrect.current_university = this.userData.current_university != '-1';
+            if (this.userData.current_university != 1 && !finale_check) {
+                this.utility.secondStep.custom_univers = '';
+                this.utility.secondStep.custom_facults = '';
+            }
         },
-        facultyChanged() {
+        facultyChanged(finale_check = false) {
             this.utility.secondStep.faculty_changed = true;
             this.isCorrect.current_faculty = this.userData.current_faculty != '-1';
+            if (this.userData.current_faculty != -2 && !finale_check) {
+                this.utility.secondStep.custom_facults = '';
+                this.utility.secondStep.custom_specialty = '';
+            }
         },
-        specialtyChanged() {
+        specialtyChanged(finale_check = false) {
             this.utility.secondStep.specialty_changed = true;
             this.isCorrect.current_specialty = this.userData.current_specialty != '-1';
+            if (this.userData.current_specialty != -2 && !finale_check) {
+                this.utility.secondStep.custom_specialty = '';
+            }
         },
         lastNameChanged() {
             this.utility.firstStep.last_name_changed = true;
@@ -441,15 +511,35 @@ export default {
         },
         registration() {
 
+            const resort = {
+                university: this.utility.secondStep.custom_univers ?
+                    this.utility.secondStep.custom_univers :
+                    `id: ${this.userData.current_university}`,
+                faculty: this.utility.secondStep.custom_facults ?
+                    this.utility.secondStep.custom_facults :
+                    `id: ${this.userData.current_faculty}`,
+                speciality: this.utility.secondStep.custom_specialty ?
+                    this.utility.secondStep.custom_specialty :
+                    `id: ${this.userData.current_specialty}`
+            }
 
+            const sendingEducationResort = `Вуз ${resort.university} \n
+                                            Факультет ${resort.faculty} \n
+                                            Специальность ${resort.speciality}`
+
+            let is_resort = false
+            if (this.isCorrect.custom_univers ||
+                this.isCorrect.custom_facults || this.isCorrect.custom_specialty) {
+                is_resort = true
+                this.userData.current_university = 1
+                this.userData.current_faculty = '';
+                this.userData.current_specialty = '';
+            }
 
             if (!this.checkThirdStep()) {
                 return false;
             }
-            if (this.isCorrect.custom_univers) {
-              this.userData.current_faculty = '';
-              this.userData.current_specialty ='';
-            }
+
             const user = this.userData;
             this.$store.dispatch('auth/register', user).then(response => {
                 if (response.status) {
@@ -457,16 +547,18 @@ export default {
                     const { email, password } = user;
                     this.$store.dispatch("auth/login", { email, password }).then(
                         () => {
-                          if (this.isCorrect.custom_univers) {
-                            const source = this.utility.secondStep.custom_univers;
-                            this.$store.dispatch('auth/sendEducationReport', source).then(response => {
-                              if (response.status) {
-                                this.$store.dispatch('alert/sendMessage', { message: response.message, type: 'Success' })
-                              } else {
-                                this.$store.dispatch('alert/sendMessage', { message: response.message, type: 'Danger' })
-                              }
-                            })
-                          }
+
+                            if (is_resort) {
+                                userService.sendEducationReport(sendingEducationResort).then(
+                                    response => {
+                                        if (response.status) {
+                                            this.$store.dispatch('alert/sendMessage', { message: response.message, type: 'Success' })
+                                        } else {
+                                            this.$store.dispatch('alert/sendMessage', { message: response.message, type: 'Danger' })
+                                        }
+
+                                    })
+                            }
                             this.$router.push("/set-user-skills");
                         })
 
@@ -490,18 +582,24 @@ export default {
         },
 
         checkSecondStep() {
-            if(this.userData.current_university != 1){
-              this.utility.secondStep.custom_univers = '';
-            }
-            this.universityChanged()
-            this.facultyChanged()
-            this.specialtyChanged()
+            this.universityChanged(true)
+            this.facultyChanged(true)
+            this.specialtyChanged(true)
             this.yearChanged()
             this.customUniversChanged()
-            return (this.isCorrect.current_university &&
-                ((this.isCorrect.current_faculty &&
-                this.isCorrect.current_specialty) || this.isCorrect.custom_univers) &&
-                this.isCorrect.year) || this.isCorrect.unlock
+            this.customFacultsChanged()
+            this.customSpecialtyChanged()
+
+            // const result = (this.isCorrect.current_university && this.isCorrect.current_faculty &&
+            // this.isCorrect.current_specialty) || (this.isCorrect.current_university && this.isCorrect.current_faculty && this.isCorrect.custom_specialty) || (this.isCorrect.current_university && this.isCorrect.custom_facults && this.isCorrect.custom_specialty) || (this.isCorrect.custom_univers && this.isCorrect.custom_facults && this.isCorrect.custom_specialty)
+
+            // (this.isCorrect.current_university &&
+            //     ((this.isCorrect.current_faculty &&
+            //         this.isCorrect.current_specialty) || this.isCorrect.custom_univers)
+
+            const result = ((this.isCorrect.current_university && this.isCorrect.current_faculty) && (this.isCorrect.current_specialty || this.isCorrect.custom_specialty)) || ((this.isCorrect.custom_facults && this.isCorrect.custom_specialty) && (this.isCorrect.current_university || this.isCorrect.custom_specialty))
+
+            return (result && this.isCorrect.year) || this.isCorrect.unlock;
         },
 
         checkThirdStep() {
@@ -514,24 +612,27 @@ export default {
         },
 
         getFacults: function () {
-            if (this.userData.current_university != -1) {
+            if (this.userData.current_university != -1 && this.userData.current_university != 1) {
                 userService.getFacults(this.userData.current_university).then(response => {
                     this.utility.secondStep.facults = response;
-                    // this.utility.secondStep.facults.unshift({id: -2, faculty_name: 'Нет в списке'})
+                    this.utility.secondStep.facults.unshift({ id: -2, faculty_name: 'Нет в списке' })
                 })
             } else {
-                this.utility.secondStep.facults = {};
+                this.utility.secondStep.facults = [];
+                this.utility.secondStep.facults.unshift({ id: -2, faculty_name: 'Нет в списке' })
             }
             this.userData.current_faculty = -1
 
         },
         getSpecialty: function () {
-            if (this.userData.current_faculty != -1) {
+            if (this.userData.current_faculty != -1 && this.userData.current_faculty != -2) {
                 userService.getSpecialty(this.userData.current_university, this.userData.current_faculty).then(response => {
                     this.utility.secondStep.specialties = response;
+                    this.utility.secondStep.specialties.unshift({ id: -2, specialty_name: 'Нет в списке' })
                 })
             } else {
-                this.utility.secondStep.specialties = {};
+                this.utility.secondStep.specialties = [];
+                this.utility.secondStep.specialties.unshift({ id: -2, specialty_name: 'Нет в списке' })
             }
             this.userData.current_specialty = -1
         }
