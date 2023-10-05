@@ -10,8 +10,26 @@ const API_URL = config.apiURL;
 export const userService = {
     getLkInfo, getUnivers, getFacults, getTeams,
     getSpecialty, getSkills, postSkills, getVerificeAcc,
-    changePassword
+    changePassword, sendEducationReport
 };
+
+function sendEducationReport(source) {
+    return axios.post(API_URL + `education_report/`, {
+        source: source
+    }, {
+        headers: authHeader()
+    }).then(() => {
+        return { status: true, message: 'Данные об отсутствующем учебном заведении отправлены' };
+    }).catch(error => {
+        if (error.response && error.response.status === 401) {
+            if (authService.refresh()) {
+                return sendEducationReport(source);
+            }
+        } else {
+            return { status: false, message: error.response.data.detail }
+        }
+    });
+}
 
 async function getTeams() {
     return axios.get(API_URL + 'view_teams/', {
