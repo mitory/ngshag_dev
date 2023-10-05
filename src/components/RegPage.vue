@@ -124,7 +124,7 @@
                                 <p class="mb-0">Где ты учишься?</p>
                             </div>
                             <div>
-                                <select @change="getFacults(); universityChanged(); getSpecialty();"
+                                <select @change="getFacults(); universityChanged(); getSpecialty(); checkNotAnOption();"
                                     class="form-select mb-3" v-model="userData.current_university"
                                     v-bind:class="{ 'border-danger': !(this.isCorrect.current_university) && utility.secondStep.university_changed }">
                                     <option value="-1" selected>Выбери учебное заведение</option>
@@ -133,7 +133,7 @@
                                         {{ uviver.institution_name }}
                                     </option>
                                 </select>
-
+                              <div v-show="!utility.secondStep.not_an_option">
                                 <select @change="getSpecialty(); facultyChanged()" class="form-select mb-3"
                                     v-model="userData.current_faculty"
                                     v-bind:class="{ 'border-danger': !(this.isCorrect.current_faculty) && utility.secondStep.faculty_changed }">
@@ -153,6 +153,17 @@
                                         {{ specialty.specialty_name }}
                                     </option>
                                 </select>
+                              </div>
+                              <div v-show="utility.secondStep.not_an_option">
+                                <div class="mb-3">
+                                  <label for="custom_univers" class="form-label">Напиши где ты учишься<span
+                                      class="text-danger">*</span></label>
+                                  <input @change="customUniversChanged" v-model="utility.secondStep.custom_univers" type="text"
+                                         class="form-control"
+                                         v-bind:class="{ 'border-danger': !(isCorrect.custom_univers) && utility.secondStep.custom_univers_changed }"
+                                         id="custom_univers">
+                                </div>
+                              </div>
                                 <div class="mb-3">
                                     <label for="year" class="form-label">Курс<span class="text-danger">*</span></label>
                                     <input @input="checkCorrectYear" @change="yearChanged" v-model="userData.year"
@@ -286,6 +297,7 @@ export default {
                 password: true,
                 confirm_personal_data: true,
                 year: true,
+                custom_univers: true,
                 unlock: false,
             },
             utility: {
@@ -303,6 +315,9 @@ export default {
                     faculty_changed: false,
                     specialty_changed: false,
                     year_changed: false,
+                    not_an_option: false,
+                    custom_univers: '',
+                    custom_univers_changed: false,
                 },
                 thirdStep: {
                     passwordConfirm: '',
@@ -334,6 +349,13 @@ export default {
     mounted() {
     },
     methods: {
+        customUniversChanged(){
+          this.utility.secondStep.custom_univers_changed = true;
+          this.isCorrect.custom_univers = !validateService.checkIsEmptyStr(this.utility.secondStep.custom_univers)
+        },
+        checkNotAnOption(){
+          this.utility.secondStep.not_an_option = this.userData.current_university == '1';
+        },
         checkCorrectYear() {
             if (this.userData.year === '') {
                 return;
@@ -419,22 +441,37 @@ export default {
         },
         registration() {
 
-            const user = this.userData;
+
 
             if (!this.checkThirdStep()) {
                 return false;
             }
-
+            if (this.isCorrect.custom_univers) {
+              this.userData.current_faculty = '';
+              this.userData.current_specialty ='';
+            }
+            const user = this.userData;
             this.$store.dispatch('auth/register', user).then(response => {
                 if (response.status) {
                     this.$store.dispatch('alert/sendMessage', { message: response.message, type: 'Success' })
                     const { email, password } = user;
                     this.$store.dispatch("auth/login", { email, password }).then(
                         () => {
+                          if (this.isCorrect.custom_univers) {
+                            const source = this.utility.secondStep.custom_univers;
+                            this.$store.dispatch('auth/sendEducationReport', source).then(response => {
+                              if (response.status) {
+                                this.$store.dispatch('alert/sendMessage', { message: response.message, type: 'Success' })
+                              } else {
+                                this.$store.dispatch('alert/sendMessage', { message: response.message, type: 'Danger' })
+                              }
+                            })
+                          }
                             this.$router.push("/set-user-skills");
                         })
+
                 } else {
-                    this.$store.dispatch('alert/sendMessage', { messge: response.message, type: 'Danger' })
+                    this.$store.dispatch('alert/sendMessage', { message: response.message, type: 'Danger' })
                 }
             })
         },
@@ -453,14 +490,17 @@ export default {
         },
 
         checkSecondStep() {
+            if(this.userData.current_university != 1){
+              this.utility.secondStep.custom_univers = '';
+            }
             this.universityChanged()
             this.facultyChanged()
             this.specialtyChanged()
             this.yearChanged()
-
+            this.customUniversChanged()
             return (this.isCorrect.current_university &&
-                this.isCorrect.current_faculty &&
-                this.isCorrect.current_specialty &&
+                ((this.isCorrect.current_faculty &&
+                this.isCorrect.current_specialty) || this.isCorrect.custom_univers) &&
                 this.isCorrect.year) || this.isCorrect.unlock
         },
 

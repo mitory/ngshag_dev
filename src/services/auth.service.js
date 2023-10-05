@@ -1,8 +1,9 @@
 import axios from 'axios';
 import config from '../config'
+import authHeader from './auth-header';
 
 export const authService = {
-    login, logout, register, refresh
+    login, logout, register, refresh, sendEducationReport
 }
 
 const API_URL = config.apiURL;
@@ -47,6 +48,22 @@ function refresh() {
 
 function logout() {
     localStorage.removeItem('user');
+}
+
+function sendEducationReport(source){
+    return  axios.post(API_URL + `education_report/`, {
+        source: source}, {headers: authHeader()
+    }).then(()=>{
+        return { status: true, message: 'Данные об отсутствующем учебном заведении отправлены' };
+    }).catch(error => {
+        if (error.response && error.response.status === 401) {
+            if (refresh()) {
+                return sendEducationReport(source);
+            }
+        } else {
+            return { status: false, message: error.response.data.detail }
+        }
+    });
 }
 
 function register(user) {

@@ -54,6 +54,15 @@ export const auth = {
                 }).catch(() => {
                     commit('registerFailure');
                 })
+        },
+        sendEducationReport({commit}, source){
+            return authService.sendEducationReport(source).then(
+                response => {
+                    commit('sendEducationSuccess');
+                    return response;
+                }).catch(() => {
+                commit('sendEducationFailure');
+                })
         }
     }
 };
