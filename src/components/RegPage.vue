@@ -169,7 +169,7 @@
                                 </div>
 
                                 <select @change="specialtyChanged(); checkNotAnOption();"
-                                    v-show="!utility.secondStep.not_an_option.univers && !utility.secondStep.not_an_option.facults"
+                                    v-show="!utility.secondStep.not_an_option.univers && !utility.secondStep.not_an_option.facults && !utility.secondStep.not_an_option.specialty"
                                     class="form-select mb-3" v-model="userData.current_specialty"
                                     v-bind:class="{ 'border-danger': !(this.isCorrect.current_specialty) && utility.secondStep.specialty_changed }">
                                     <option value="-1" selected>Выбери Специальность</option>
@@ -466,8 +466,9 @@ export default {
                 this.utility.secondStep.custom_univers = '';
                 this.utility.secondStep.custom_facults = '';
                 this.utility.secondStep.custom_specialty = '';
+                this.utility.secondStep.not_an_option.specialty = false
             }
-            if (this.userData.current_university == -1) {
+            if (this.userData.current_university != 1 && !finale_check) {
                 this.userData.current_faculty = -1;
                 this.userData.current_specialty = -1;
             }
@@ -605,6 +606,20 @@ export default {
             this.customUniversChanged()
             this.customFacultsChanged()
             this.customSpecialtyChanged()
+
+            this.isCorrect.current_university = this.userData.current_faculty != '1' &&
+                this.userData.current_faculty != '-1';
+            this.isCorrect.current_faculty = this.userData.current_faculty != '-2' &&
+                this.userData.current_faculty != '-1';
+            this.isCorrect.current_specialty = this.userData.current_specialty != '-2' &&
+                this.userData.current_specialty != '-1'
+
+            console.log('this.isCorrect.current_university ' + this.isCorrect.current_university)
+            console.log('this.isCorrect.current_faculty ' + this.isCorrect.current_faculty)
+            console.log('this.isCorrect.current_specialty ' + this.isCorrect.current_specialty)
+            console.log('this.isCorrect.custom_univers ' + this.isCorrect.custom_univers)
+            console.log('this.isCorrect.current_university ' + this.isCorrect.custom_facults)
+            console.log('this.isCorrect.custom_facults ' + this.isCorrect.custom_specialty)
 
             const result = ((this.isCorrect.current_university && this.isCorrect.current_faculty) && (this.isCorrect.current_specialty || this.isCorrect.custom_specialty)) || ((this.isCorrect.custom_facults && this.isCorrect.custom_specialty) && (this.isCorrect.current_university || this.isCorrect.custom_univers))
             return (result && this.isCorrect.year) || this.isCorrect.unlock;
