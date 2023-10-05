@@ -607,8 +607,8 @@ export default {
             this.customFacultsChanged()
             this.customSpecialtyChanged()
 
-            this.isCorrect.current_university = this.userData.current_faculty != '1' &&
-                this.userData.current_faculty != '-1';
+            this.isCorrect.current_university = this.userData.current_university != '1' &&
+                this.userData.current_university != '-1';
             this.isCorrect.current_faculty = this.userData.current_faculty != '-2' &&
                 this.userData.current_faculty != '-1';
             this.isCorrect.current_specialty = this.userData.current_specialty != '-2' &&
