@@ -614,13 +614,6 @@ export default {
             this.isCorrect.current_specialty = this.userData.current_specialty != '-2' &&
                 this.userData.current_specialty != '-1'
 
-            console.log('this.isCorrect.current_university ' + this.isCorrect.current_university)
-            console.log('this.isCorrect.current_faculty ' + this.isCorrect.current_faculty)
-            console.log('this.isCorrect.current_specialty ' + this.isCorrect.current_specialty)
-            console.log('this.isCorrect.custom_univers ' + this.isCorrect.custom_univers)
-            console.log('this.isCorrect.current_university ' + this.isCorrect.custom_facults)
-            console.log('this.isCorrect.custom_facults ' + this.isCorrect.custom_specialty)
-
             const result = ((this.isCorrect.current_university && this.isCorrect.current_faculty) && (this.isCorrect.current_specialty || this.isCorrect.custom_specialty)) || ((this.isCorrect.custom_facults && this.isCorrect.custom_specialty) && (this.isCorrect.current_university || this.isCorrect.custom_univers))
             return (result && this.isCorrect.year) || this.isCorrect.unlock;
         },
