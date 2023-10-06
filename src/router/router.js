@@ -31,10 +31,6 @@ const router = createRouter({
             props: (route) => ({ id: route.query.id, key_link: route.query.key_link })
         },
         {
-            path: '/change-password',
-            component: PasswordChange
-        },
-        {
             path: '/reg',
             component: RegPage,
             props: (route) => ({ source: route.query.source })
@@ -71,6 +67,10 @@ const router = createRouter({
                     path: '/my-teams/:id',
                     name: 'team',
                     component: TeamPage
+                },
+                {
+                    path: '/change-password',
+                    component: PasswordChange
                 },
             ]
         },

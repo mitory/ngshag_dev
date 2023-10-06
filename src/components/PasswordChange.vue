@@ -1,17 +1,6 @@
 <template>
     <div class="container">
         <div class="d-flex flex-column justify-content-center" style="height: 100vh">
-            <div class="col-sm-8 mx-auto mb-2 mb-lg-5 ">
-                <h2 class="d-none d-lg-block text-primary mb-3 text-center">
-                    НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
-                </h2>
-                <h2 class="d-none d-lg-none d-md-block text-primary mb-3 text-center fs-4">
-                    НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
-                </h2>
-                <h2 class="d-md-none d-block text-primary mb-3 text-center fs-6">
-                    НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
-                </h2>
-            </div>
             <div class="col-sm-4 mx-auto">
                 <form @submit.prevent="change_pass" novalidate>
 
