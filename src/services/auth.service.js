@@ -47,6 +47,7 @@ function refresh() {
 
 function logout() {
     localStorage.removeItem('user');
+    localStorage.removeItem('user_data');
 }
 
 function register(user) {

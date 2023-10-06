@@ -14,6 +14,7 @@ import AboutProject from '../components/AboutProject'
 import PoliciesAndProcedures from "../components/PoliciesAndProcedures";
 import SettingPage from '../components/SettingPage'
 import PasswordChange from '../components/PasswordChange'
+import ForgotPasswordPage from '../components/ForgotPasswordPage'
 
 const router = createRouter({
     routes: [
@@ -26,13 +27,13 @@ const router = createRouter({
             component: LoginPage
         },
         {
+            path: '/forgot-password',
+            component: ForgotPasswordPage
+        },
+        {
             path: '/setting-page-verifice-acc',
             component: SettingPage,
             props: (route) => ({ id: route.query.id, key_link: route.query.key_link })
-        },
-        {
-            path: '/change-password',
-            component: PasswordChange
         },
         {
             path: '/reg',
@@ -72,6 +73,10 @@ const router = createRouter({
                     name: 'team',
                     component: TeamPage
                 },
+                {
+                    path: '/change-password',
+                    component: PasswordChange
+                },
             ]
         },
         {
@@ -87,7 +92,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    const publicPages = ['/reg', '/login', '/setting-page-verifice-acc'];
+    const publicPages = ['/reg', '/login', '/setting-page-verifice-acc', '/forgot-password'];
     // const publicStartPath = ['/event/'];
     const authRequired = publicPages.includes(to.path);
     const loggedIn = localStorage.getItem('user');
