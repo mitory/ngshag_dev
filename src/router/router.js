@@ -16,7 +16,7 @@ import SettingPage from '../components/SettingPage'
 import PasswordChange from '../components/PasswordChange'
 import ForgotPasswordPage from '../components/ForgotPasswordPage'
 
-const router = createRouter({
+export const router = createRouter({
     routes: [
         {
             path: '/',
@@ -39,10 +39,6 @@ const router = createRouter({
             path: '/reg',
             component: RegPage,
             props: (route) => ({ source: route.query.source })
-        },
-        {
-            path: '/set-user-skills',
-            component: SetUserSkills
         },
         // {
         //     path: '/event/:id_event',
@@ -67,15 +63,20 @@ const router = createRouter({
             component: LK,
             children: [
                 { path: '', component: ProfileUser },
+                {
+                    path: '/change-password',
+                    component: PasswordChange
+                },
+                {
+                    path: '/set-user-skills',
+                    name: 'setUserSkills',
+                    component: SetUserSkills
+                },
                 { path: 'my-teams', component: UserTeams },
                 {
                     path: '/my-teams/:id',
                     name: 'team',
                     component: TeamPage
-                },
-                {
-                    path: '/change-password',
-                    component: PasswordChange
                 },
             ]
         },
@@ -104,4 +105,4 @@ router.beforeEach((to, from, next) => {
     }
 });
 
-export default router;
+export default router

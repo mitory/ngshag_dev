@@ -25,7 +25,7 @@ function sendEducationReport(source) {
             if (authService.refresh()) {
                 return sendEducationReport(source);
             } else {
-                this.$store.dispatch('auth/logout');
+                this.$store.dispatch('auth/logout', true);
             }
         } else {
             return { status: false, message: error.response.data.detail }
@@ -41,9 +41,9 @@ async function getTeams() {
     }).catch(error => {
         if (error.response && error.response.status === 401) {
             if (authService.refresh()) {
-                return getLkInfo();
+                return getTeams();
             } else {
-                this.$store.dispatch('auth/logout');
+                this.$store.dispatch('auth/logout', true);
             }
         } else {
             return { message: error.response.data.error, status: false }
@@ -123,7 +123,7 @@ async function changePassword(old_pass, new_pass) {
             if (authService.refresh()) {
                 return changePassword(old_pass, new_pass);
             } else {
-                this.$store.dispatch('auth/logout');
+                this.$store.dispatch('auth/logout', true);
             }
         } else {
             throw error;
@@ -142,7 +142,7 @@ async function postSkills(skills) {
             if (authService.refresh()) {
                 return postSkills(skills);
             } else {
-                this.$store.dispatch('auth/logout');
+                this.$store.dispatch('auth/logout', true);
             }
         } else {
             throw error;
@@ -183,7 +183,7 @@ function getLkInfo() {
                     if (authService.refresh()) {
                         return getLkInfo();
                     } else {
-                        this.$store.dispatch('auth/logout');
+                        this.$store.dispatch('auth/logout', true);
                     }
                 } else {
                     return { error: error.response.data.error };

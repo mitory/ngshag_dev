@@ -22,7 +22,7 @@ export default {
       return this.$store.state.auth.status.loggedIn
     },
     is_none() {
-      return !this.loggedIn || this.$route.path === '/set-user-skills'
+      return !this.loggedIn || this.$route.path === 'LK/set-user-skills' || this.$route.path === '/reg'
     }
   }
 }

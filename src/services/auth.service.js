@@ -1,5 +1,6 @@
 import axios from 'axios';
 import config from '../config'
+import { router } from '../router/router'
 
 export const authService = {
     login, logout, register, refresh
@@ -45,9 +46,13 @@ function refresh() {
 
 }
 
-function logout() {
+function logout(redirect = false) {
     localStorage.removeItem('user');
     localStorage.removeItem('user_data');
+    if (redirect) {
+        router.push("/");
+    }
+
 }
 
 function register(user) {

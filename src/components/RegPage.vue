@@ -1,6 +1,8 @@
+<style scoped></style>
+
 <template>
     <div class="container">
-        <div class="row" style="height: 100vh">
+        <div class="row" style="min-height: 100vh">
             <div class="col-sm-8 m-auto ">
                 <form @submit.prevent="registration" novalidate>
                     <transition name="slide-fade">
@@ -284,6 +286,44 @@
                     </transition>
                 </form>
             </div>
+            <transition name="slide-fade">
+                <div v-if="step === 4" class="">
+                    <h4 class="d-none d-lg-block text-primary mb-3 text-center mt-3">
+                        НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
+                    </h4>
+                    <h4 class="d-none d-lg-none d-md-block text-primary mb-3 text-center fs-4 mt-3">
+                        НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
+                    </h4>
+                    <h4 class="d-md-none d-block text-primary mb-3 text-center fs-6 mt-3">
+                        НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
+                    </h4>
+                    <div class="col-md-10 col-lg-8 col-xl-8 col-xxl-8 mx-auto">
+                        <div class="col-5 col-md-3 typewriter p-1 border border-dark bg-secondary mb-3">
+                            <p class="line m-0 pb-0 text-center fs-sm-5 text-mobile">
+                                Поздравляем
+                            </p>
+                        </div>
+                        <p class="text-md-start text-center mb-3">
+                            с успешной регистрацией на платформе для проведения цифровых мероприятий! Это не только
+                            действенный способ усилить свои компетенции, но и возможность получить классные бонусы и
+                            предложение на работу в крупную ИТ-компанию. Далее необходимо выяснить направления, по
+                            которым
+                            ты будешь участвовать в Чемпионате.
+                        </p>
+                        <p class="text-md-start text-center">
+                            С 3 по 7 ноября 2023 на площадке
+                            ДЦ «Октябрьский» состоится студенческий чемпионат
+                            в области информационных технологий.
+                            Извещение о твоих последующих действиях и отборочных
+                            заданиях придёт на указанный адрес электронной почты
+                            и в личный кабинет.
+                        </p>
+                    </div>
+                    <div class="d-flex justify-content-center mt-2">
+                        <button @click="nextStep" type="button" class="btn btn-primary">Продолжить</button>
+                    </div>
+                </div>
+            </transition>
         </div>
     </div>
 </template>
@@ -521,6 +561,9 @@ export default {
             if (this.step === 2 && !this.checkSecondStep()) {
                 return false
             }
+            if (this.step === 4) {
+                this.$router.push("/");
+            }
             this.step++
         },
         backStep() {
@@ -576,7 +619,7 @@ export default {
 
                                     })
                             }
-                            this.$router.push("/set-user-skills");
+                            this.step = 4
                         })
 
                 } else {
@@ -654,5 +697,3 @@ export default {
 }
 
 </script>
-
-<style scoped></style>
