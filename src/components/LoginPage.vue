@@ -40,7 +40,7 @@
             Еще нет аккаунта? Тогда зарегистрируйся!
           </router-link>
           <div class="d-flex justify-content-between">
-            <button @click="forgotPassword" type="button" class="btn btn-secondary">Забыл пароль</button>
+            <router-link to="/forgot-password" class="btn btn-secondary">Забыл пароль</router-link>
             <button type="submit" class="btn btn-primary">Войти</button>
           </div>
         </form>

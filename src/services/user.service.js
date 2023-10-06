@@ -24,6 +24,8 @@ function sendEducationReport(source) {
         if (error.response && error.response.status === 401) {
             if (authService.refresh()) {
                 return sendEducationReport(source);
+            } else {
+                this.$store.dispatch('auth/logout');
             }
         } else {
             return { status: false, message: error.response.data.detail }

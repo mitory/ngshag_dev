@@ -14,6 +14,7 @@ import AboutProject from '../components/AboutProject'
 import PoliciesAndProcedures from "../components/PoliciesAndProcedures";
 import SettingPage from '../components/SettingPage'
 import PasswordChange from '../components/PasswordChange'
+import ForgotPasswordPage from '../components/ForgotPasswordPage'
 
 const router = createRouter({
     routes: [
@@ -24,6 +25,10 @@ const router = createRouter({
         {
             path: '/login',
             component: LoginPage
+        },
+        {
+            path: '/forgot-password',
+            component: ForgotPasswordPage
         },
         {
             path: '/setting-page-verifice-acc',
@@ -87,7 +92,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    const publicPages = ['/reg', '/login', '/setting-page-verifice-acc'];
+    const publicPages = ['/reg', '/login', '/setting-page-verifice-acc', '/forgot-password'];
     // const publicStartPath = ['/event/'];
     const authRequired = publicPages.includes(to.path);
     const loggedIn = localStorage.getItem('user');

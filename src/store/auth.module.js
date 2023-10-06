@@ -35,10 +35,9 @@ export const auth = {
                     commit('loginSuccess', user);
                 },
                 error => {
-                    alert(error)
                     commit('loginFailure');
                     authService.logout();
-                    location.reload(true);
+                    throw error
                 }
             );
         },

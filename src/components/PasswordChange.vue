@@ -1,11 +1,11 @@
 <template>
     <div class="container">
-        <div class="d-flex flex-column justify-content-center" style="height: 100vh">
-            <div class="col-sm-4 mx-auto">
+        <div class="d-flex flex-column justify-content-center">
+            <div class="col-sm-10 mx-auto">
                 <form @submit.prevent="change_pass" novalidate>
 
                     <div class="mb-3 pass-eye">
-                        <label for="old_password" class="form-label">Старый или временный пароль</label>
+                        <label for="old_password" class="form-label">Текущий или временный пароль</label>
                         <input @change="passwordOldChanged" v-model="old_password"
                             :type="isShowOldPass ? 'text' : 'password'" class="form-control pass-eye__inp" id="old_password"
                             v-bind:class="{ 'border-danger': !(isCorrect.old_password) && old_password_changed }">
@@ -97,6 +97,9 @@ export default {
             this.confirm_password_changed = true;
         },
         change_pass() {
+            this.passwordOldChanged()
+            this.passwordChanged()
+            this.passwordConfirmChanged()
             if (this.isCorrect.old_password && this.isCorrect.password && this.isCorrect.confirm_password) {
                 userService.changePassword(this.old_password, this.password).then(response => {
                     this.$store.dispatch('alert/sendMessage', { message: response.ok, type: 'Success' })

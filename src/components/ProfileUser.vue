@@ -1,10 +1,7 @@
 <template>
     <div v-if="!user.error">
         <h1 v-if="user.first_name && user.last_name" class="mb-4">{{ user.first_name + ' ' + user.last_name }}</h1>
-        <router-link class="btn btn-primary mb-2" to="/change-password">
-            Сменить пароль
-        </router-link>
-        <div class="mb-4">
+        <div v-if="user.email" class="mb-4">
             <h5 class="mb-3">Личная информация</h5>
             <div v-if="user.email" class="input-group mb-3">
                 <span class="input-group-text" id="email">Email</span>
@@ -15,7 +12,8 @@
                 <div class="form-control text-break bootstrap-like-bg-color">{{ user.phone_number }}</div>
             </div>
         </div>
-        <div class="mb-4">
+        <div v-if="user.institution && user.institution.institution_name && user.institution.institution_name != 'Нет в списке'"
+            class="mb-4">
             <h5 class="mb-3">Информация об учебном заведении</h5>
             <div v-if="user.institution && user.institution.institution_name && user.institution.institution_name != 'Нет в списке'"
                 class="input-group mb-3">
@@ -28,9 +26,6 @@
             </div>
             <div v-if="user.specialty && user.specialty.specialty_name" class="input-group mb-3">
                 <span class="input-group-text" id="specialty">Направление</span>
-                <!--              <textarea disabled style="resize:none;" class="form-control"
-                        :value="user.specialty.specialty_name"
-                        aria-label="Название Специальности" aria-describedby="specialty"></textarea>-->
                 <div class="form-control text-break bootstrap-like-bg-color">{{ user.specialty.specialty_name }}</div>
             </div>
             <div v-if="user.year" class="input-group mb-3">
@@ -38,6 +33,9 @@
                 <div class="form-control text-break bootstrap-like-bg-color">{{ user.year }}</div>
             </div>
         </div>
+        <router-link class="btn btn-primary mb-2" to="/change-password">
+            Сменить пароль
+        </router-link>
     </div>
     <div v-else>
         <h3>{{ user.error }}</h3>
@@ -68,11 +66,19 @@ export default {
     },
     created() {
         this.$store.commit('routes/toProfilePage')
-        userService.getLkInfo().then(data => {
-            this.user = data;
-        }).catch(error => {
-            this.user.error = error
-        })
+        const user_data = JSON.parse(localStorage.getItem('user_data'));
+
+        if (user_data) {
+            this.user = user_data
+        } else {
+            userService.getLkInfo().then(data => {
+                this.user = data;
+                localStorage.setItem('user_data', JSON.stringify(data));
+            }).catch(error => {
+                this.user.error = error
+            })
+        }
+
     },
     methods: {
         // format_date(date) {
