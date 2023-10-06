@@ -44,6 +44,18 @@
           </div>
         </div>
         <div class="mb-4">
+          <h4 class="mb-3">Текущие номинации:</h4>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">1. Анимация трёхмерных моделей.</li>
+            <li class="list-group-item">2. Программирование графики.</li>
+            <li class="list-group-item">3. Математическое моделирование.</li>
+            <li class="list-group-item">4. Веб-разработка.</li>
+            <li class="list-group-item">5. Базы данных.</li>
+            <li class="list-group-item">6. Программирование сетевого взаимодействия.</li>
+            <li class="list-group-item">7. Моделирование и реализация графического интерфейса.</li>
+          </ul>
+        </div>
+        <div class="mb-4">
           <div class="mb-1">
             <h4>Организаторы</h4>
           </div>

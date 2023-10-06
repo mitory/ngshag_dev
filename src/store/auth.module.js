@@ -41,8 +41,8 @@ export const auth = {
                 }
             );
         },
-        logout({ commit }) {
-            authService.logout();
+        logout({ commit }, redirect = false) {
+            authService.logout(redirect);
             commit('logout');
         },
         register({ commit }, user) {
