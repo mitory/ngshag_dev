@@ -1,0 +1,163 @@
+:root {
+	--h-size: 32px;
+	--max-text-size: 16px;
+	--avg-text-size: 14px;
+	--min-text-size: 12px;
+	--blue-color: #3194F0;
+	--black-color: #292929;
+	--gray-color: #AABDC6;
+	--white-color: #F6FCFF;
+	--red-color: #f02f48;
+}
+
+.text-danger {
+	color: var(--red-color)
+}
+
+.text-thin {
+	font-weight: 400;
+}
+
+.text-bold {
+	font-weight: 700;
+}
+
+.text-max {
+	font-size: var(--max-text-size);
+}
+
+.text-avg {
+	font-size: var(--avg-text-size);
+}
+
+.text-blue {
+	color: var(--blue-color)
+}
+
+.text-black {
+	color: var(--black-color)
+}
+
+.text-gray {
+	color: var(--gray-color)
+}
+
+.text-white {
+	color: var(--white-color)
+}
+
+* {
+	font-family: Montserrat;
+	font-size: var(--min-text-size);
+}
+
+html {
+	font-size: 100%;
+}
+
+body {
+	background-color: #fdfdfd;
+	line-height: normal;
+	font-weight: 500;
+	color: var(--black-color)
+}
+
+h1 {
+	font-weight: 500;
+	color: #50B6DF;
+	font-size: var(--avg-text-size);
+}
+
+.row {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.col {
+	flex: 0 0 100%;
+	box-sizing: border-box;
+}
+
+/* Определяем стиль для колонок шириной в 8 из 12 */
+.col-8 {
+	flex: 0 0 66.6667%;
+}
+
+.col-11 {
+	flex: 0 0 91.6667%;
+}
+
+.col-10 {
+	flex: 0 0 83.3337%;
+}
+
+.col-9 {
+	flex: 0 0 75%;
+}
+
+.col-7 {
+	flex: 0 0 58.3337%;
+}
+
+.col-6 {
+	flex: 0 0 50%;
+}
+
+.col-5 {
+	flex: 0 0 41.6667%;
+}
+
+.col-4 {
+	flex: 0 0 33.3337%;
+}
+
+.col-3 {
+	flex: 0 0 25%;
+}
+
+.col-2 {
+	flex: 0 0 16.6667%;
+}
+
+.m-auto {
+	margin: auto;
+}
+
+.my-auto {
+	margin: auto 0;
+}
+
+.mx-auto {
+	margin: 0 auto;
+}
+
+.container {
+	padding: 0;
+	margin: 0 auto;
+}
+
+@media (min-width: 575.98px) {
+	.container {
+		max-width: 540px;
+		margin: auto;
+		padding: 0;
+	}
+}
+
+@media (min-width: 767.98px) {
+	.container {
+		max-width: 720px;
+	}
+}
+
+@media (min-width: 991.98px) {
+	.container {
+		max-width: 960px;
+	}
+}
+
+@media (min-width: 1199.98px) {
+	.container {
+		max-width: 1140px;
+	}
+}

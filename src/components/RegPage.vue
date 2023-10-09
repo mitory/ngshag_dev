@@ -1,34 +1,97 @@
-<style scoped></style>
+<style scoped>
+.header-title {
+    height: 30px;
+    background: linear-gradient(270deg, rgba(84, 209, 204, 0.2) 51.05%, rgba(75, 161, 235, 0.2) 66%);
+    display: flex;
+    justify-content: center;
+    margin-bottom: 35px;
+}
+
+.header-title__text {
+    margin: auto 0;
+}
+
+.header__logo {
+    display: block;
+    max-width: 262.7px;
+    max-height: 78.26px;
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.step1__hello-text {
+    display: flex;
+    justify-content: end;
+}
+
+.hello_text {
+    width: 70%;
+    background-color: #F6FCFD;
+    padding: 23px;
+}
+
+input {
+    display: flex;
+    padding: 16px 8px 16px 16px;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    border-radius: 18px;
+    border: 1px solid #2896B9;
+    background: linear-gradient(180deg, #FFF 0%, #F6FBFD 100%);
+    width: 263px;
+    height: 49px;
+    margin-bottom: 10px;
+}
+
+.form-label {
+    display: inline-block;
+    font-size: var(--avg-text-size);
+    font-weight: 400;
+    color: var(--gray-color);
+    margin-top: -20px;
+}
+
+.step1__inputs {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+@media (max-width: 767px) {
+    .step1__inputs {
+        flex-direction: column;
+    }
+
+}
+</style>
 
 <template>
+    <div class="header-title">
+        <h1 class="header-title__text">СТУДЕНЧЕСКИЙ IT-ЧЕМПИОНАТ</h1>
+    </div>
     <div class="container">
-        <div class="row" style="min-height: 100vh">
-            <div class="col-sm-8 m-auto ">
+        <img src="../assets/img/main_logo.svg" alt="Лого" class="header__logo mx-auto">
+        <div class="row" style="min-height: 90vh">
+            <div class="mx-auto " :class="classCol">
                 <form @submit.prevent="registration" novalidate>
                     <transition name="slide-fade">
                         <div v-show="step === 1" class="step">
-                            <h2 class="d-none d-lg-block text-primary mb-3 text-center mt-3">
-                                НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
-                            </h2>
-                            <h2 class="d-none d-lg-none d-md-block text-primary mb-3 text-center fs-4 mt-3">
-                                НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
-                            </h2>
-                            <h2 class="d-md-none d-block text-primary mb-3 text-center fs-6 mt-3">
-                                НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
-                            </h2>
-                            <div>
-                                <p class="text-lg-center mx-auto">Привет! Это верный адрес, отсюда начинается твоё
-                                    будущее<br class="d-none d-lg-inline"> в
-                                    профессиональных информационных технологиях.</p>
-                                <div class="col-9 mx-lg-auto typewriter mb-3 p-1 border border-dark bg-secondary">
-                                    <p class="line m-0 pb-0 text-center text-mobile">
-                                        Давай знакомиться:
-                                    </p>
-                                </div>
+                            <div class="step1__hello-text">
+                                <p class="hello_text text-blue text-thin text-max">
+                                    Привет! Это верный адрес, отсюда начинается твоё будущее в профессиональных
+                                    информационных технологиях.
+                                </p>
                             </div>
-                            <div class="d-flex flex-column flex-lg-row justify-content-evenly mb-5">
+                            <div class="step1__inputs d-flex flex-column flex-lg-row justify-content-evenly mb-5">
                                 <div class="d-flex flex-column me-lg-4">
-                                    <div class="mb-3 col-ms-2">
+                                    <div class="col">
                                         <label for="last_name" class="form-label">Фамилия <span
                                                 class="text-danger">*</span></label>
                                         <input @change="lastNameChanged" v-model="userData.last_name" type="text"
@@ -413,7 +476,15 @@ export default {
     props: {
         source: String
     },
-
+    computed: {
+        classCol() {
+            return {
+                'col-8': window.innerWidth > 768,
+                'col-10': window.innerWidth <= 768 && window.innerWidth > 576,
+                'col-12': window.innerWidth <= 576
+            };
+        },
+    },
     created() {
         if (this.source !== undefined) {
             publicService.sendSourse(this.source);
