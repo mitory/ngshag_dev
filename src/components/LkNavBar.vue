@@ -28,7 +28,7 @@ export default {
                 {
                     id: 3,
                     path: '/set-user-skills',
-                    title: 'Выбрать наывки'
+                    title: 'Выбрать навыки'
                 },
             ],
             page_select: 0
