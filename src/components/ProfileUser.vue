@@ -2,7 +2,7 @@
     <div v-if="!user.error">
         <h1 v-if="user.first_name && user.last_name" class="mb-4">{{ user.first_name + ' ' + user.last_name }}</h1>
         <div v-if="user.email" class="mb-4">
-            <h5 class="mb-3">Личная информация</h5>
+            <h5 class="mb-3 text-uppercase text-center">Личная информация</h5>
             <div v-if="user.email" class="input-group mb-3">
                 <span class="input-group-text" id="email">Email</span>
                 <div class="form-control text-break bootstrap-like-bg-color">{{ user.email }}</div>
@@ -14,7 +14,7 @@
         </div>
         <div v-if="user.institution && user.institution.institution_name && user.institution.institution_name != 'Нет в списке'"
             class="mb-4">
-            <h5 class="mb-3">Информация об учебном заведении</h5>
+            <h5 class="mb-3 text-uppercase text-center">Информация об учебном заведении</h5>
             <div v-if="user.institution && user.institution.institution_name && user.institution.institution_name != 'Нет в списке'"
                 class="input-group mb-3">
                 <span class="input-group-text" id="inst">Название</span>
@@ -36,6 +36,19 @@
         <router-link class="btn btn-primary mb-2" to="/change-password">
             Сменить пароль
         </router-link>
+      <div class="mt-3" v-if="user.categories.length > 0">
+        <h5 class="mb-3 text-uppercase text-center">Навыки</h5>
+        <div v-for="category in user.categories" :key="category.id">
+          <div class="fs-5 mb-2">{{ category.name }}</div>
+          <div class="d-flex flex-row align-items-center flex-wrap">
+            <div class="d-flex" v-for="skill in category.skills" :key="skill.id">
+              <div class="skill fs-6">{{ skill.name }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-else>
+      </div>
     </div>
     <div v-else>
         <h3>{{ user.error }}</h3>
@@ -58,7 +71,8 @@ export default {
                 specialty: [],
                 phone_number: '',
                 year: '',
-                error: null
+                error: null,
+                categories: []
             },
         }
     },
@@ -95,5 +109,12 @@ export default {
 <style scoped>
 .bootstrap-like-bg-color {
     background-color: #E9ECEF;
+}
+.skill{
+  border-radius: 5px;
+  background-color: #EEEFF1;
+  padding: 0.5em 0.5em 0.5em 0.5em;
+  margin-right: 0.7em;
+  margin-bottom: 0.7em;
 }
 </style>
