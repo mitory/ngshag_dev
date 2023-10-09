@@ -36,6 +36,17 @@
         <router-link class="btn btn-primary mb-2" to="/change-password">
             Сменить пароль
         </router-link>
+      <div v-if="user.categories.length > 0">
+        <div v-for="category in user.categories" :key="category.id">
+          <h4>{{ category.name }}</h4>
+          <div v-for="skill in category.skills" :key="skill.id">
+            {{ skill.name }}
+          </div>
+        </div>
+      </div>
+      <div v-else>
+          Навыков ты не выбрал, чел
+      </div>
     </div>
     <div v-else>
         <h3>{{ user.error }}</h3>
@@ -58,7 +69,8 @@ export default {
                 specialty: [],
                 phone_number: '',
                 year: '',
-                error: null
+                error: null,
+                categories: []
             },
         }
     },
