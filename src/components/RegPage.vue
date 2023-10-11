@@ -35,20 +35,28 @@
     width: 70%;
     background-color: #F6FCFD;
     padding: 23px;
+    margin-bottom: 23px;
 }
 
 input {
     display: flex;
     padding: 16px 8px 16px 16px;
-    align-items: center;
-    gap: 10px;
-    align-self: stretch;
+    /* align-items: center; */
+    /* gap: 10px; */
+    /* align-self: stretch; */
     border-radius: 18px;
-    border: 1px solid #2896B9;
     background: linear-gradient(180deg, #FFF 0%, #F6FBFD 100%);
+    border: 1px solid #2896B9;
+}
+
+input[type="text"],
+input[type="password"] {
     width: 263px;
     height: 49px;
     margin-bottom: 10px;
+    font-size: var(--avg-text-size);
+    font-weight: 400;
+    color: var(--black-color);
 }
 
 .form-label {
@@ -56,19 +64,68 @@ input {
     font-size: var(--avg-text-size);
     font-weight: 400;
     color: var(--gray-color);
-    margin-top: -20px;
+    margin-bottom: 5px;
 }
 
 .step1__inputs {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 23px;
+}
+
+/* d-flex justify-content-lg-evenly justify-content-center */
+.inputs__sex {
     display: flex;
     justify-content: space-evenly;
 }
 
-@media (max-width: 767px) {
+
+.form-check {
+    display: flex;
+    margin-right: 10px;
+}
+
+.form-check-input {
+    margin-right: 5px;
+    width: 20px;
+}
+
+.form-check-label {
+    color: var(--black-color);
+    font-size: var(--avg-text-size);
+    font-weight: 400;
+}
+
+.step1__buttons {
+    width: 90%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+
+@media (max-width: 992px) {
     .step1__inputs {
         flex-direction: column;
+        align-items: center;
+        margin: 0 auto;
     }
 
+    .inputs__sex {
+        justify-content: center;
+        margin-bottom: 23px;
+    }
+
+}
+
+@media (max-width: 767px) {
+    .step1__buttons {
+        flex-direction: column-reverse;
+        align-items: center;
+        gap: 23px;
+        margin-bottom: 10px;
+    }
 }
 </style>
 
@@ -78,7 +135,7 @@ input {
     </div>
     <div class="container">
         <img src="../assets/img/main_logo.svg" alt="Лого" class="header__logo mx-auto">
-        <div class="row" style="min-height: 90vh">
+        <div class="row" style="min-height: 70vh">
             <div class="mx-auto " :class="classCol">
                 <form @submit.prevent="registration" novalidate>
                     <transition name="slide-fade">
@@ -89,22 +146,22 @@ input {
                                     информационных технологиях.
                                 </p>
                             </div>
-                            <div class="step1__inputs d-flex flex-column flex-lg-row justify-content-evenly mb-5">
-                                <div class="d-flex flex-column me-lg-4">
-                                    <div class="col">
+                            <div class="step1__inputs">
+                                <div class="">
+                                    <div class="">
                                         <label for="last_name" class="form-label">Фамилия <span
                                                 class="text-danger">*</span></label>
                                         <input @change="lastNameChanged" v-model="userData.last_name" type="text"
                                             class="form-control"
-                                            v-bind:class="{ 'border-danger': !(isCorrect.last_name) && utility.firstStep.last_name_changed }"
+                                            :class="{ 'border-danger': !isCorrect.last_name && utility.firstStep.last_name_changed }"
                                             id="last_name">
                                         <div v-if="!(isCorrect.last_name) && utility.firstStep.last_name_changed"
                                             id="last_name" class="form-text text-danger">
-                                            Введи свою фамилию <br class="d-none d-lg-inline">(Кириллица)
+                                            Введи свою фамилию (Кириллица)
                                         </div>
                                     </div>
 
-                                    <div class="mb-3">
+                                    <div class="">
                                         <label for="first_name" class="form-label">Имя <span
                                                 class="text-danger">*</span></label>
                                         <input @change="firstNameChanged" v-model="userData.first_name" type="text"
@@ -114,11 +171,11 @@ input {
 
                                         <div v-if="!(isCorrect.first_name) && utility.firstStep.first_name_changed"
                                             id="first_name" class="form-text text-danger">
-                                            Введи своё имя <br class="d-none d-lg-inline">(Кириллица)
+                                            Введи своё имя (Кириллица)
                                         </div>
                                     </div>
 
-                                    <div class="mb-3">
+                                    <div class="">
                                         <label for="middle_name" class="form-label">Отчество</label>
                                         <input @change="middleNameChanged" v-model="userData.middle_name" type="text"
                                             class="form-control"
@@ -126,13 +183,13 @@ input {
                                             id="middle_name">
                                         <div v-if="!(isCorrect.middle_name) && utility.firstStep.middle_name_chaged"
                                             id="middle_name" class="form-text text-danger">
-                                            Введи своё отчество <br class="d-none d-lg-inline">(Кириллица)
+                                            Введи своё отчество (Кириллица)
                                         </div>
                                     </div>
                                 </div>
-                                <div class="d-flex flex-column">
+                                <div class="">
 
-                                    <div class="mb-3">
+                                    <div class="">
                                         <label for="phone_number" class="form-label">Телефон <span
                                                 class="text-danger">*</span></label>
                                         <input @input="checkFirstLetter" @change="phoneChanged"
@@ -141,14 +198,14 @@ input {
                                             id="phone_number" placeholder="+7XXXXXXXXXX">
                                         <div v-if="!(isCorrect.phone_number) && utility.firstStep.phone_changed"
                                             id="phone_number" class="form-text text-danger">
-                                            Введи свой номер телефона <br class="d-none d-lg-inline">например: +79998887766
+                                            Введи свой номер телефона например: +79998887766
                                         </div>
                                     </div>
 
                                     <div class="">
-                                        <p>Пол</p>
-                                        <div class="d-flex justify-content-lg-evenly justify-content-center">
-                                            <div class="form-check me-5 me-lg-0">
+                                        <p class="text-avg text-gray">Пол</p>
+                                        <div class="inputs__sex">
+                                            <div class="form-check">
                                                 <input v-model="userData.sex" class="form-check-input" type="radio"
                                                     name="sex" id="M" value="M" checked>
                                                 <label class="form-check-label" for="M">
@@ -166,11 +223,11 @@ input {
                                     </div>
                                 </div>
                             </div>
-                            <div class="d-flex justify-content-center mb-2">
-                                <router-link class="btn" to="/login">
+                            <div class="step1__buttons">
+                                <router-link class="btn btn-secondary" to="/login">
                                     Уже есть аккаунт?
                                 </router-link>
-                                <button @click="nextStep" type="button" class="btn btn-primary">Следующий шаг</button>
+                                <button @click="nextStep" type="button" class="btn">Следующий шаг</button>
                             </div>
                         </div>
                     </transition>
@@ -193,7 +250,7 @@ input {
                                     class="form-select mb-3" v-model="userData.current_university"
                                     v-bind:class="{ 'border-danger': !(this.isCorrect.current_university) && utility.secondStep.university_changed }">
                                     <option value="-1" selected>Выбери учебное заведение</option>
-                                    <option v-for="uviver in utility.secondStep.univers" :value="uviver.id"
+                                    <option v-for=" uviver  in  utility.secondStep.univers " :value="uviver.id"
                                         :key="uviver.id">
                                         {{ uviver.institution_name }}
                                     </option>
@@ -215,7 +272,7 @@ input {
                                     v-model="userData.current_faculty"
                                     v-bind:class="{ 'border-danger': !(this.isCorrect.current_faculty) && utility.secondStep.faculty_changed }">
                                     <option value="-1" selected>Выбери Факультет</option>
-                                    <option v-for="facult in utility.secondStep.facults" :value="facult.id"
+                                    <option v-for=" facult  in  utility.secondStep.facults " :value="facult.id"
                                         :key="facult.id">
                                         {{ facult.faculty_name }}
                                     </option>
@@ -238,7 +295,7 @@ input {
                                     class="form-select mb-3" v-model="userData.current_specialty"
                                     v-bind:class="{ 'border-danger': !(this.isCorrect.current_specialty) && utility.secondStep.specialty_changed }">
                                     <option value="-1" selected>Выбери Специальность</option>
-                                    <option v-for="specialty in utility.secondStep.specialties" :value="specialty.id"
+                                    <option v-for=" specialty  in  utility.secondStep.specialties " :value="specialty.id"
                                         :key="specialty.id">
                                         {{ specialty.specialty_name }}
                                     </option>
@@ -483,7 +540,7 @@ export default {
                 'col-10': window.innerWidth <= 768 && window.innerWidth > 576,
                 'col-12': window.innerWidth <= 576
             };
-        },
+        }
     },
     created() {
         if (this.source !== undefined) {
@@ -498,6 +555,12 @@ export default {
     mounted() {
     },
     methods: {
+        styleDanger(isDanger) {
+            return {
+                'border-danger': isDanger,
+                'border-success': !isDanger
+            }
+        },
         customUniversChanged() {
             this.utility.secondStep.custom_univers_changed = true;
             this.isCorrect.custom_univers = !validateService.checkIsEmptyStr(this.utility.secondStep.custom_univers)

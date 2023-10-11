@@ -10,6 +10,35 @@
 	--red-color: #f02f48;
 }
 
+.btn {
+	display: flex;
+	width: 192px;
+	padding: 16px 8px 16px 16px;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+	border-radius: 18px;
+	background: linear-gradient(180deg, #488CF4 0%, #2C61EF 100%);
+	box-shadow: 0px 4px 4px 0px rgba(38, 79, 245, 0.20);
+	color: #FFF;
+	font-size: var(--avg-text-size);
+	font-weight: 700;
+}
+
+.btn-secondary {
+	background: linear-gradient(180deg, #caddfa 0%, #b0b8cf 100%);
+	box-shadow: 0px 4px 4px 0px rgba(167, 183, 243, 0.2);
+	color: var(--black-color)
+}
+
+.border-danger {
+	border: 1px solid var(--red-color) !important;
+}
+
+.border-success {
+	border: 1px solid #2896B9;
+}
+
 .text-danger {
 	color: var(--red-color)
 }
