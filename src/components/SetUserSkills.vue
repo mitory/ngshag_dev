@@ -37,7 +37,7 @@
                         </Slide>
                         <!-- <Slide v-if="width >= 768" class="item"></Slide> -->
                         <template #addons>
-                            <!-- <Navigation class="d-none d-md-block px-md-0" /> -->
+                            <Navigation class="navig d-none d-md-block px-md-0" />
                             <Pagination class="ps-0" />
                         </template>
                     </carousel>
@@ -56,7 +56,7 @@
 <script>
 import { userService } from '../services/user.service'
 import 'vue3-carousel/dist/carousel.css';
-import { Carousel, Slide, Pagination } from 'vue3-carousel';
+import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
 import RangeSlider from "./mini-components/RangeSlider.vue";
 
 
@@ -76,7 +76,7 @@ export default {
         Carousel,
         Slide,
         Pagination,
-        // Navigation,
+        Navigation,
         RangeSlider
     },
     methods: {
@@ -97,6 +97,7 @@ export default {
         addSkillToUser: function () {
             userService.postSkills(this.set_skills_user).then(() => {
                 this.$store.dispatch('alert/sendMessage', { message: 'Ваши навыки добавлены в список!', type: 'Success' })
+                localStorage.removeItem('user_data');
                 this.$router.push("/LK");
             }).catch(() => {
                 this.$store.dispatch('alert/sendMessage', { message: 'Что-то пошло не так...', type: 'Danger' })
@@ -162,6 +163,10 @@ export default {
 </script>
  
 <style scoped>
+.navig {
+    left: -200px !important;
+}
+
 @media (max-width: 510px) {
     .text-mobile {
         font-size: 14px;
