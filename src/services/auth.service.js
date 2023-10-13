@@ -27,24 +27,64 @@ function login(user) {
             });
 }
 
-function refresh() {
+async function refresh() {
     const tokens = JSON.parse(localStorage.getItem('user'));
     if (tokens) {
-        return axios.post(API_URL + 'refresh/', {
-            refresh: tokens.refresh
-        }).then(response => {
+        try {
+            const response = await axios.post(API_URL + 'refresh/', {
+                refresh: tokens.refresh
+            });
             if (response.data.access) {
                 localStorage.setItem('user', JSON.stringify(response.data));
                 return true;
             } else {
                 return false
             }
-        }).catch(() => {
+        } catch {
             return false
-        });
+        }
+    } else {
+        logout()
     }
 
 }
+
+// try {
+//     const response = await axios.put(API_URL + `task/`, formData, {
+//         headers: authHeader(),
+//     });
+//     return response.data;
+// } catch (error) {
+//     if (error.response && error.response.status === 401) {
+//         if (authService.refresh()) {
+//             const value = setTimeout(putTaskFile(formData), 2000);
+//             return value
+//         } else {
+//             this.$store.dispatch('auth/logout', true);
+//         }
+//     } else {
+//         throw error;
+//     }
+// }
+
+// function refresh() {
+//     const tokens = JSON.parse(localStorage.getItem('user'));
+//     if (tokens) {
+//         return axios.post(API_URL + 'refresh/', {
+//             refresh: tokens.refresh
+//         }).then(response => {
+//             if (response.data.access) {
+//                 localStorage.setItem('user', JSON.stringify(response.data));
+//                 return true;
+//             } else {
+//                 return false
+//             }
+//         }).catch(() => {
+//             return false
+//         });
+//     }
+
+// }
 
 function logout(redirect = false) {
     localStorage.removeItem('user');

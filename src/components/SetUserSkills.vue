@@ -31,6 +31,7 @@
                             <div v-if="categories_levels && categories_levels[category.id] && categories_levels[category.id].status"
                                 class="mx-auto">
                                 <p class="text-start">Желаемый уровень:</p>
+
                                 <range-slider v-model:value="categories_levels[category.id].prospective_level"
                                     @update:value="onProspectiveNowChange(category.id)" />
                             </div>

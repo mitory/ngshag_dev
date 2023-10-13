@@ -1,6 +1,19 @@
 <template>
     <div v-if="!user.error">
         <h1 v-if="user.first_name && user.last_name" class="mb-4">{{ user.first_name + ' ' + user.last_name }}</h1>
+        <div class="mb-3" v-if="user.categories.length > 0">
+            <h5 class="mb-3 text-uppercase text-center">Навыки</h5>
+            <div v-for="category in user.categories" :key="category.id">
+                <div class="fs-5 mb-2">{{ category.name }}</div>
+                <div class="d-flex flex-row align-items-center flex-wrap">
+                    <div class="d-flex" v-for="skill in category.skills" :key="skill.id">
+                        <div class="skill fs-6">{{ skill.name }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div v-else>
+        </div>
         <div v-if="user.email" class="mb-4">
             <h5 class="mb-3 text-uppercase text-center">Личная информация</h5>
             <div v-if="user.email" class="input-group mb-3">
@@ -36,19 +49,6 @@
         <router-link class="btn btn-primary mb-2" to="/LK/change-password">
             Сменить пароль
         </router-link>
-        <div class="mt-3" v-if="user.categories.length > 0">
-            <h5 class="mb-3 text-uppercase text-center">Навыки</h5>
-            <div v-for="category in user.categories" :key="category.id">
-                <div class="fs-5 mb-2">{{ category.name }}</div>
-                <div class="d-flex flex-row align-items-center flex-wrap">
-                    <div class="d-flex" v-for="skill in category.skills" :key="skill.id">
-                        <div class="skill fs-6">{{ skill.name }}</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div v-else>
-        </div>
     </div>
     <div v-else>
         <h3>{{ user.error }}</h3>

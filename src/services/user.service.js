@@ -11,124 +11,256 @@ export const userService = {
     getLkInfo, getUnivers, getFacults, getTeams,
     getSpecialty, getSkills, postSkills, getVerificeAcc,
     changePassword, sendEducationReport, getTasks, getTask,
-    postTaskFile, getTaskStatus
+    postTaskFile, getTaskStatus, putTaskFile
 };
 
 function sendEducationReport(source) {
-    return axios.post(API_URL + `education_report/`, {
-        source: source
-    }, {
-        headers: authHeader()
-    }).then(() => {
-        return { status: true, message: 'Данные об отсутствующем учебном заведении отправлены' };
-    }).catch(error => {
-        if (error.response && error.response.status === 401) {
-            if (authService.refresh()) {
-                return sendEducationReport(source);
+    return new Promise((resolve) => {
+        axios.post(API_URL + `education_report/`, {
+            source: source
+        }, {
+            headers: authHeader()
+        }).then(() => {
+            resolve({ status: true, message: 'Данные об отсутствующем учебном заведении отправлены' });
+        }).catch(error => {
+            if (error.response && error.response.status === 401) {
+                authService.refresh().then(response => {
+                    if (response) {
+                        return getTasks().then(data => resolve(data))
+                            .catch(error => resolve(error));
+                    } else {
+                        this.$store.dispatch('auth/logout', true);
+                    }
+                })
             } else {
-                this.$store.dispatch('auth/logout', true);
+                resolve({ status: false, message: error.response.data.detail })
             }
-        } else {
-            return { status: false, message: error.response.data.detail }
-        }
-    });
+        });
+    })
 }
 
 async function getTeams() {
-    return axios.get(API_URL + 'view_teams/', {
-        headers: authHeader()
-    }).then(response => {
-        return { data: response.data, status: true };
-    }).catch(error => {
-        if (error.response && error.response.status === 401) {
-            if (authService.refresh()) {
-                return getTeams();
+    return new Promise((resolve) => {
+        axios.get(API_URL + 'view_teams/', {
+            headers: authHeader()
+        }).then(response => {
+            resolve({ data: response.data, status: true });
+        }).catch(error => {
+            if (error.response && error.response.status === 401) {
+                authService.refresh().then(response => {
+                    if (response) {
+                        return getTasks().then(data => resolve(data))
+                            .catch(error => resolve(error));
+                    } else {
+                        this.$store.dispatch('auth/logout', true);
+                    }
+                })
             } else {
-                this.$store.dispatch('auth/logout', true);
+                resolve({ message: error.response.data.error, status: false })
             }
-        } else {
-            return { message: error.response.data.error, status: false }
-        }
-    });
+        });
+    })
 }
 
 async function getTasks() {
-    return axios.get(API_URL + 'task/', {
-        headers: authHeader()
-    }).then(response => {
-        return { data: response.data, status: true };
-    }).catch(error => {
-        if (error.response && error.response.status === 401) {
-            if (authService.refresh()) {
-                return getTasks();
+    return new Promise((resolve) => {
+        axios.get(API_URL + 'task/', {
+            headers: authHeader()
+        }).then(response => {
+            resolve({ data: response.data, status: true });
+        }).catch(error => {
+            if (error.response && error.response.status === 401) {
+                authService.refresh().then(response => {
+                    if (response) {
+                        return getTasks().then(tasksData => resolve(tasksData))
+                            .catch(error => resolve(error));
+                    } else {
+                        this.$store.dispatch('auth/logout', true);
+                    }
+                })
             } else {
-                this.$store.dispatch('auth/logout', true);
+                resolve({ message: error.response.data.error, status: false })
             }
-        } else {
-            return { message: error.response.data.error, status: false }
-        }
-    });
+        });
+    })
 }
 
 async function getTask(id_task) {
-    return axios.get(API_URL + 'task/' + id_task + '/',
-        {
-            headers: authHeader(),
-        }).then(response => {
-            return { data: response.data, status: true };
+    return new Promise((resolve) => {
+        axios.get(API_URL + 'task/' + id_task + '/',
+            {
+                headers: authHeader(),
+            }).then(response => {
+                resolve({ data: response.data, status: true });
 
-        }).catch(error => {
-            if (error.response && error.response.status === 401) {
-                if (authService.refresh()) {
-                    return getTask(id_task);
+            }).catch(error => {
+                if (error.response && error.response.status === 401) {
+                    authService.refresh().then(response => {
+                        if (response) {
+                            return getTask(id_task).then(data => resolve(data))
+                                .catch(error => resolve(error));
+                        } else {
+                            this.$store.dispatch('auth/logout', true);
+                        }
+                    })
                 } else {
-                    this.$store.dispatch('auth/logout', true);
+                    resolve({ message: error.response.data.error, status: false })
                 }
-            } else {
-                return { message: error.response.data.error, status: false }
-            }
-        });
+            });
+    })
 }
 
 async function getTaskStatus(id_task) {
-    return axios.get(API_URL + 'task_status/' + id_task + '/',
-        {
-            headers: authHeader(),
-        }).then(response => {
-            return { data: response.data, status: true };
+    return new Promise((resolve) => {
+        axios.get(API_URL + 'task_status/' + id_task + '/',
+            {
+                headers: authHeader(),
+            }).then(response => {
+                resolve({ data: response.data, status: true });
 
-        }).catch(error => {
-            if (error.response && error.response.status === 401) {
-                if (authService.refresh()) {
-                    return getTask(id_task);
+            }).catch(error => {
+                if (error.response && error.response.status === 401) {
+                    authService.refresh().then(response => {
+                        if (response) {
+                            return getTaskStatus(id_task).then(data => resolve(data))
+                                .catch(error => resolve(error));
+                        } else {
+                            this.$store.dispatch('auth/logout', true);
+                        }
+                    })
+                } else if (error.response && error.response.status === 404) {
+                    resolve({ status: false })
                 } else {
-                    this.$store.dispatch('auth/logout', true);
+                    resolve({ message: error.response.data.error, status: false })
                 }
-            } else if (error.response && error.response.status === 404) {
-                return { status: true }
-            } else {
-                return { message: error.response.data.error, status: false }
-            }
-        });
+            });
+
+    })
 }
 
 async function postTaskFile(formData) {
-    try {
-        const response = await axios.post(API_URL + `task/`, formData, {
+    return new Promise((resolve, reject) => {
+        axios.post(API_URL + `task/`, formData, {
             headers: authHeader(),
-        });
-        return response.data;
-    } catch (error) {
-        if (error.response && error.response.status === 401) {
-            if (authService.refresh()) {
-                return postTaskFile(formData);
+        }).then(response => {
+            resolve(response.data);
+        }).catch(error => {
+            if (error.response && error.response.status === 401) {
+                authService.refresh().then(response => {
+                    if (response) {
+                        return postTaskFile(formData).then(data => resolve(data))
+                            .catch(error => reject(error));
+                    } else {
+                        this.$store.dispatch('auth/logout', true);
+                    }
+                })
             } else {
-                this.$store.dispatch('auth/logout', true);
+                reject(error);
             }
-        } else {
-            throw error;
-        }
-    }
+        })
+
+    })
+}
+
+async function putTaskFile(formData) {
+    return new Promise((resolve, reject) => {
+
+        axios.put(API_URL + `task/`, formData, {
+            headers: authHeader(),
+        }).then(response => {
+            resolve(response.data);
+        }).catch(error => {
+            console.log('Я в кетч')
+            if (error.response && error.response.status === 401) {
+                authService.refresh().then(response => {
+                    if (response) {
+                        return putTaskFile(formData).then(data => resolve(data))
+                            .catch(error => reject(error));
+                    } else {
+                        this.$store.dispatch('auth/logout', true);
+                    }
+                })
+            } else {
+                reject(error);
+            }
+        });
+
+    })
+}
+
+async function changePassword(old_pass, new_pass) {
+    return new Promise((resolve, reject) => {
+        axios.put(API_URL + `change_password/`, {
+            current_password: old_pass,
+            new_password: new_pass
+        }, {
+            headers: authHeader(),
+        }).then(response => {
+            resolve(response.data);
+        }).catch(error => {
+            if (error.response && error.response.status === 401) {
+                authService.refresh().then(response => {
+                    if (response) {
+                        return changePassword(old_pass, new_pass).then(data => resolve(data))
+                            .catch(error => reject(error));
+                    } else {
+                        this.$store.dispatch('auth/logout', true);
+                    }
+                })
+            } else {
+                reject(error);
+            }
+        })
+    })
+}
+
+async function postSkills(skills) {
+    return new Promise((resolve, reject) => {
+        axios.post(API_URL + `skill/`, { categories: skills }, {
+            headers: authHeader(),
+        }).then(response => {
+            resolve(response.data);
+        }).catch(error => {
+            if (error.response && error.response.status === 401) {
+                authService.refresh().then(response => {
+                    if (response) {
+                        return postSkills(skills).then(data => resolve(data))
+                            .catch(error => reject(error));
+                    } else {
+                        this.$store.dispatch('auth/logout', true);
+                    }
+                })
+            } else {
+                reject(error);
+            }
+        })
+
+    })
+}
+
+function getLkInfo() {
+    return new Promise((resolve) => {
+        axios
+            .get(API_URL + 'personal_cabinet/',
+                {
+                    headers: authHeader()
+                }).then(response => {
+                    resolve(response.data)
+                }).catch(error => {
+                    if (error.response && error.response.status === 401) {
+                        authService.refresh().then(response => {
+                            if (response) {
+                                return getLkInfo().then(data => resolve(data))
+                                    .catch(error => resolve(error));
+                            } else {
+                                this.$store.dispatch('auth/logout', true);
+                            }
+                        })
+                    } else {
+                        resolve({ error: error.response.data.error });
+                    }
+                });
+    })
 }
 
 // async function getTeam(id_team) {
@@ -189,47 +321,6 @@ async function getVerificeAcc(id, token) {
     return response.data;
 }
 
-async function changePassword(old_pass, new_pass) {
-    try {
-        const response = await axios.put(API_URL + `change_password/`, {
-            current_password: old_pass,
-            new_password: new_pass
-        }, {
-            headers: authHeader(),
-        });
-        return response.data;
-    } catch (error) {
-        if (error.response && error.response.status === 401) {
-            if (authService.refresh()) {
-                return changePassword(old_pass, new_pass);
-            } else {
-                this.$store.dispatch('auth/logout', true);
-            }
-        } else {
-            throw error;
-        }
-    }
-}
-
-async function postSkills(skills) {
-    try {
-        const response = await axios.post(API_URL + `skill/`, { categories: skills }, {
-            headers: authHeader(),
-        });
-        return response.data;
-    } catch (error) {
-        if (error.response && error.response.status === 401) {
-            if (authService.refresh()) {
-                return postSkills(skills);
-            } else {
-                this.$store.dispatch('auth/logout', true);
-            }
-        } else {
-            throw error;
-        }
-    }
-}
-
 // async function invitingTeam(code) {
 //     try {
 //         await axios
@@ -251,22 +342,4 @@ async function postSkills(skills) {
 //     }
 // }
 
-function getLkInfo() {
-    return axios
-        .get(API_URL + 'personal_cabinet/',
-            {
-                headers: authHeader()
-            }).then(response => {
-                return response.data
-            }).catch(error => {
-                if (error.response && error.response.status === 401) {
-                    if (authService.refresh()) {
-                        return getLkInfo();
-                    } else {
-                        this.$store.dispatch('auth/logout', true);
-                    }
-                } else {
-                    return { error: error.response.data.error };
-                }
-            });
-}
+
