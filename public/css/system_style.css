@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates&family=Montserrat:wght@400;500;700&display=swap');
+
 :root {
 	--h-size: 32px;
 	--max-text-size: 16px;
@@ -76,7 +78,7 @@
 }
 
 * {
-	font-family: Montserrat;
+	font-family: 'Montserrat', sans-serif;
 	font-size: var(--min-text-size);
 }
 

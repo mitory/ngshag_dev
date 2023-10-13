@@ -38,7 +38,13 @@
     margin-bottom: 23px;
 }
 
-input {
+.hello_text2 {
+    width: 100%;
+    padding: 23px;
+}
+
+input,
+select {
     display: flex;
     padding: 16px 8px 16px 16px;
     /* align-items: center; */
@@ -49,14 +55,76 @@ input {
     border: 1px solid #2896B9;
 }
 
+.form-check-input {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+}
+
+.form-check-input+label {
+    display: inline-flex;
+    align-items: start;
+    user-select: none;
+}
+
+.form-check-input+label::before {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    flex-grow: 0;
+    border-radius: 4px;
+    border: 1px solid #2896B9;
+    background: linear-gradient(180deg, #FFF 0%, #F6FBFD 100%);
+    margin-right: 16px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 50% 50%;
+}
+
+.form-check-input.border-danger+label::before {
+    border: 1px solid var(--red-color);
+}
+
+.form-check-input:checked+label::before {
+    border-color: #0b76ef;
+    background-color: #0b76ef;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e");
+}
+
+option {
+    font-size: var(--avg-text-size);
+}
+
 input[type="text"],
-input[type="password"] {
+input[type="email"],
+input[type="password"],
+select {
     width: 263px;
     height: 49px;
     margin-bottom: 10px;
     font-size: var(--avg-text-size);
     font-weight: 400;
     color: var(--black-color);
+}
+
+input[type="number"] {
+    font-size: var(--avg-text-size);
+    font-weight: 400;
+    color: var(--black-color);
+}
+
+select,
+.step2 input[type="text"] {
+    height: 60px;
+    width: 300px;
+}
+
+.step3 input[type="password"],
+.step3 input[type="email"],
+.step3 input[type="text"] {
+    width: 300px;
 }
 
 .form-label {
@@ -71,7 +139,9 @@ input[type="password"] {
     width: 100%;
     height: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: space-evenly;
+    align-items: center;
     margin-bottom: 23px;
 }
 
@@ -82,32 +152,49 @@ input[type="password"] {
 }
 
 
-.form-check {
+.form-check__radio {
     display: flex;
     margin-right: 10px;
 }
 
-.form-check-input {
+.form-check-input__radio {
     margin-right: 5px;
     width: 20px;
 }
 
-.form-check-label {
+.form-check-label,
+.form-check-label__radio {
     color: var(--black-color);
     font-size: var(--avg-text-size);
     font-weight: 400;
+    margin-bottom: 10px;
 }
 
 .step1__buttons {
     width: 90%;
     display: flex;
     justify-content: space-evenly;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 23px;
+    margin-bottom: 10px;
+}
+
+.step2__inputs {
+    margin-bottom: 23px;
+}
+
+.form-check {
+    display: flex;
+    gap: 16px;
+    margin: 16px 0;
+    width: 300px;
+    align-items: start;
 }
 
 
 @media (max-width: 992px) {
     .step1__inputs {
-        flex-direction: column;
         align-items: center;
         margin: 0 auto;
     }
@@ -198,24 +285,24 @@ input[type="password"] {
                                             id="phone_number" placeholder="+7XXXXXXXXXX">
                                         <div v-if="!(isCorrect.phone_number) && utility.firstStep.phone_changed"
                                             id="phone_number" class="form-text text-danger">
-                                            Введи свой номер телефона например: +79998887766
+                                            Введи свой номер телефона<br> например: +79998887766
                                         </div>
                                     </div>
 
                                     <div class="">
                                         <p class="text-avg text-gray">Пол</p>
                                         <div class="inputs__sex">
-                                            <div class="form-check">
-                                                <input v-model="userData.sex" class="form-check-input" type="radio"
+                                            <div class="form-check__radio">
+                                                <input v-model="userData.sex" class="form-check-input__radio" type="radio"
                                                     name="sex" id="M" value="M" checked>
-                                                <label class="form-check-label" for="M">
+                                                <label class="form-check-label__radio" for="M">
                                                     Мужской
                                                 </label>
                                             </div>
-                                            <div class="form-check">
-                                                <input v-model="userData.sex" class="form-check-input" type="radio"
+                                            <div class="form-check__radio">
+                                                <input v-model="userData.sex" class="form-check-input__radio" type="radio"
                                                     name="sex" id="F" value="F">
-                                                <label class="form-check-label" for="F">
+                                                <label class="form-check-label__radio" for="F">
                                                     Женский
                                                 </label>
                                             </div>
@@ -232,20 +319,13 @@ input[type="password"] {
                         </div>
                     </transition>
                     <transition name="slide-fade">
-                        <div v-show="step === 2" class="step col-sm-8 mx-auto">
-                            <h4 class="d-none d-lg-block text-primary mb-3 text-center mt-3">
-                                НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
-                            </h4>
-                            <h4 class="d-none d-lg-none d-md-block text-primary mb-3 text-center fs-4 mt-3">
-                                НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
-                            </h4>
-                            <h4 class="d-md-none d-block text-primary mb-3 text-center fs-6 mt-3">
-                                НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
-                            </h4>
-                            <div class="d-flex typewriter mb-3 p-1 border border-dark bg-secondary">
-                                <p class="mb-0">Где ты учишься?</p>
+                        <div v-show="step === 2" class="step step2">
+                            <div class="step1__hello-text">
+                                <p class="hello_text hello_text2 text-blue text-thin text-max">
+                                    Где ты учишься?
+                                </p>
                             </div>
-                            <div>
+                            <div class="step2__inputs">
                                 <select @change="getFacults(); universityChanged(); checkNotAnOption(); getSpecialty();"
                                     class="form-select mb-3" v-model="userData.current_university"
                                     v-bind:class="{ 'border-danger': !(this.isCorrect.current_university) && utility.secondStep.university_changed }">
@@ -326,38 +406,31 @@ input[type="password"] {
                                     </div>
                                 </div>
                             </div>
-                            <div class="d-flex justify-content-center">
-                                <button @click="backStep" type="button" class="me-2 btn btn-light">Назад</button>
-                                <button @click="nextStep" type="button" class="btn btn-primary">Следующий шаг</button>
+                            <div class="step1__buttons">
+                                <button @click="backStep" type="button" class="btn btn-secondary">Назад</button>
+                                <button @click="nextStep" type="button" class="btn">Следующий шаг</button>
                             </div>
                         </div>
                     </transition>
                     <transition name="slide-fade">
-                        <div v-show="step === 3" class="step col-sm-8 mx-auto">
-                            <h4 class="d-none d-lg-block text-primary mb-3 text-center mt-3">
-                                НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
-                            </h4>
-                            <h4 class="d-none d-lg-none d-md-block text-primary mb-3 text-center fs-4 mt-3">
-                                НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
-                            </h4>
-                            <h4 class="d-md-none d-block text-primary mb-3 text-center fs-6 mt-3">
-                                НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
-                            </h4>
-                            <div class="d-flex typewriter mb-3 p-1 border border-dark bg-secondary">
-                                <p class="mb-0">Осталось еще немного...</p>
+                        <div v-show="step === 3" class="step step3">
+                            <div class="step1__hello-text">
+                                <p class="hello_text hello_text2 text-blue text-thin text-max">
+                                    Укажи данные для доступа в аккаунт
+                                </p>
                             </div>
-                            <div class="mb-3">
+                            <div class="">
                                 <label for="email" class="form-label">Email</label>
                                 <input @change="emailChanged" v-model="userData.email" type="email" class="form-control"
                                     id="email"
                                     v-bind:class="{ 'border-danger': !(isCorrect.email) && utility.thirdStep.email_changed }">
                                 <div v-if="!(isCorrect.email) && utility.thirdStep.email_changed" id="email"
                                     class="form-text text-danger">
-                                    Введи корректный email. Например test@mail.ru
+                                    Введи корректный email.<br> Например test@mail.ru
                                 </div>
                             </div>
 
-                            <div class="mb-3 pass-eye">
+                            <div class="pass-eye">
                                 <label for="password" class="form-label">Пароль</label>
                                 <input @change="passwordChanged" v-model="userData.password"
                                     :type="utility.thirdStep.isShowPass ? 'text' : 'password'"
@@ -368,7 +441,7 @@ input[type="password"] {
                                     class="pass-eye__btn" :class="{ 'active': utility.thirdStep.isShowPass }"></span>
 
                             </div>
-                            <div class="mb-3 pass-eye">
+                            <div class="pass-eye">
                                 <label for="passwordConfirm" class="form-label">Повторите пароль</label>
                                 <input @change="passwordConfirmChanged" v-model="utility.thirdStep.passwordConfirm"
                                     :type="utility.thirdStep.isShowConfirmPass ? 'text' : 'password'"
@@ -385,7 +458,7 @@ input[type="password"] {
                                 </div>
                             </div>
 
-                            <div class="form-check mb-3">
+                            <div class="form-check">
                                 <input @change="confirmPersonalDataChanged" v-model="this.confirm_personal_data"
                                     v-bind:class="{ 'border-danger': !(this.isCorrect.confirm_personal_data) && utility.thirdStep.confirm_personal_data_changed }"
                                     class="form-check-input" type="checkbox" id="confirm_person_data">
@@ -398,9 +471,9 @@ input[type="password"] {
                                 </label>
                             </div>
 
-                            <div class="d-flex justify-content-center">
-                                <button @click="backStep" type="button" class="me-2 btn btn-light">Назад</button>
-                                <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+                            <div class="step1__buttons">
+                                <button @click="backStep" type="button" class="btn btn-secondary">Назад</button>
+                                <button type="submit" class="btn">Зарегистрироваться</button>
                             </div>
                         </div>
                     </transition>
@@ -458,7 +531,7 @@ export default {
     name: 'RegPage',
     data() {
         return {
-            step: 1,
+            step: 3,
             userData: {
                 last_name: '',
                 first_name: '',

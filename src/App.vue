@@ -57,25 +57,7 @@ a {
   width: 300px;
 }
 
-.typewriter p {
-  color: white;
-  font-family: monospace;
-  overflow: hidden;
-  white-space: nowrap;
-  letter-spacing: .15em;
-  animation:
-    typing 2s steps(30, end)
-}
 
-@keyframes typing {
-  from {
-    width: 0
-  }
-
-  to {
-    width: 100%
-  }
-}
 
 .pass-eye {
   position: relative;
@@ -84,8 +66,8 @@ a {
 .pass-eye__btn {
   cursor: pointer;
   position: absolute;
-  top: 55%;
-  right: 6px;
+  top: 40%;
+  right: 10px;
   display: inline-block;
   width: 25px;
   height: 25px;
@@ -98,6 +80,6 @@ a {
 }
 
 .pass-eye__btn.spacing-minus {
-  top: 40%;
+  top: 35%;
 }
 </style>
