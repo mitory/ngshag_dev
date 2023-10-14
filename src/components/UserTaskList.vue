@@ -1,12 +1,14 @@
 <template>
     <div class=''>
         <div v-if="tasks != null">
-            <p><em>Уважаемый пользователь! Мы подобрали для тебя задачи согласно указанным компетенциям.</em></p>
+            <p v-if="user_name"><em>{{ user_name }}, специально для тебя мы подобрали задачи согласно указанным
+                    компетенциям.</em></p>
+            <p v-else><em>Уважаемый пользователь! Мы подобрали для тебя задачи согласно указанным компетенциям.</em></p>
             <h2 class="text-center mb-5">Задачи для отбора участников по направлениям:</h2>
-            <div v-for="task in tasks" :value="task.id" :key="task.id" class="mb-3 border-bottom pb-3">
-                <h5 class="mb-2">Задача: <span class="task__title">{{ task.name }}</span></h5>
-                <p>Номинация: <em class="text-primary">{{ task.nomination_name }}</em></p>
-                <p v-if="task.status" class="mb-2" :class="{
+            <div v-for="task in tasks" :value="task.id" :key="task.id" class="mb-2 border-bottom pb-1">
+                <h5 class="mb-1 fs-6">Задача: <span class="task__title">{{ task.name }}</span></h5>
+                <p class="p-0 m-0 pb-1">Номинация: <em class="text-primary">{{ task.nomination_name }}</em></p>
+                <p v-if="task.status" class="p-0 m-0" :class="{
                     'text-secondary': task.is_accepted == 'О',
                     'text-success': task.is_accepted == 'П',
                     'text-danger': task.is_accepted == 'Н',
@@ -32,6 +34,10 @@
         </div>
         <div v-else>
             <h3>{{ message }}</h3>
+            <div class="mb-3 text-center text-white bg-primary p-2 rounded">
+                Перейди во вкладку "Выбрать навыки" и выбери компетенции, в которых ты силен.
+                После этого станут доступны задачи во вкладке "Мои задачи".
+            </div>
         </div>
     </div>
 </template>
@@ -44,15 +50,21 @@ export default {
     data() {
         return {
             tasks: {},
-            message: ''
+            message: '',
+            user_name: ''
         }
     },
     components: {
 
     },
     created() {
+        const user_data = JSON.parse(localStorage.getItem('user_data'));
+
+        if (user_data) {
+            this.user_name = user_data.first_name
+        }
+
         userService.getTasks().then(response => {
-            console.log(response)
             if (response.status) {
                 this.tasks = response.data;
                 for (let i = 0; i < this.tasks.length; ++i) {
@@ -74,13 +86,12 @@ export default {
                     })
                 }
                 //this.setTextButton()
-                console.log('tasks')
-                console.log(this.tasks)
-                setTimeout(this.sortTasks, 1500);
 
                 if (this.tasks.length == 0) {
                     this.tasks = null
                     this.message = 'Под твои компетенции еще нет задач'
+                } else {
+                    //setTimeout(this.sortTasks, 1500);
                 }
             } else {
                 this.tasks = null
@@ -103,15 +114,9 @@ export default {
                 // Если значения a.is_accepted и b.is_accepted равны, то сравниваем по другому полю, например, id.
                 return a.id - b.id;
             })
-
-            console.log('sort')
-            console.log(this.tasks)
         },
         setTextButton() {
             for (let i = 0; i < this.tasks.length; ++i) {
-                console.log('task: ')
-                console.log(this.tasks[i].is_accepted)
-                console.log(this.tasks[i])
                 if (this.tasks[i].is_accepted == 'С' || this.tasks[i].is_accepted == 'О') {
                     this.tasks[i]['button_text'] = "Перейти к условию";
                 } else if (this.tasks[i].is_accepted == 'П' || this.tasks[i].is_accepted == 'Н') {
@@ -128,14 +133,11 @@ export default {
                 const formData = new FormData();
                 formData.append('task_id', id);
 
-                userService.postTaskFile(formData).then(response => {
-                    console.log(response)
+                userService.postTaskFile(formData).then(() => {
+                    this.$store.dispatch('alert/sendMessage', { message: 'Вы приступили к выполнению!', type: 'Success' })
                     this.$router.push("/LK/my-tasks/" + id);
-                    //this.$store.dispatch('alert/sendMessage', { message: 'Решение отправлено!', type: 'Success' })
-                    //this.setStatus()
                 }).catch(error => {
-                    console.log(error)
-                    //this.$store.dispatch('alert/sendMessage', { message: error.response.data.error, type: 'Danger' });
+                    this.$store.dispatch('alert/sendMessage', { message: error.response.data.error, type: 'Danger' });
                 })
             } else {
                 this.$router.push("/LK/my-tasks/" + id);

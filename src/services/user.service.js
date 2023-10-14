@@ -170,7 +170,6 @@ async function putTaskFile(formData) {
         }).then(response => {
             resolve(response.data);
         }).catch(error => {
-            console.log('Я в кетч')
             if (error.response && error.response.status === 401) {
                 authService.refresh().then(response => {
                     if (response) {

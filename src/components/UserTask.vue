@@ -13,15 +13,16 @@
         </div>
         <div class="mb-3">
             <h5>Требования к представлению результатов</h5>
-            <p class="mb-1">- результаты представить в одном zip-архиве</p>
-            <p class="mb-1">- максимальный размер архива – {{ task.max_file_size }} Мб</p>
+            <p class="mb-1">- результаты представить в одном zip-архиве;</p>
+            <p class="mb-1">- максимальный размер архива – {{ task.max_file_size }} Мб;</p>
             <div v-if="task.additional_requirements">
                 <p v-for="requirement, index in task.additional_requirements" :key="index" class="mb-1">
                     {{ requirement }}
                 </p>
             </div>
             <p class="mb-1">- архив должен обязательно содержать:</p>
-            <p v-for="contain, index in task.must_contain" :key="index" class="mb-1 ps-5" v-html="contain">
+            <p v-for="contain, index in task.must_contain" :key="index" class="mb-1" style="margin: 0 0 0 25px"
+                v-html="contain">
 
             </p>
         </div>
@@ -79,12 +80,10 @@ export default {
         userService.getTask(this.$route.params.id).then(response => {
             if (response.status) {
                 this.task = response.data;
-                this.task.description = this.task.description.split(';')
-                this.task.criteria_score = this.task.criteria_score.split(';')
-                this.task.must_contain = this.task.must_contain.split(';')
-                this.task.additional_requirements = this.task.additional_requirements.split(';')
-
-                console.log(this.task)
+                this.task.description = this.task.description.split('|')
+                this.task.criteria_score = this.task.criteria_score.split('|')
+                this.task.must_contain = this.task.must_contain.split('|')
+                this.task.additional_requirements = this.task.additional_requirements.split('|')
             }
         })
         this.setStatus()
@@ -92,7 +91,7 @@ export default {
     methods: {
         inputLabel(is_accepted) {
             return is_accepted == 'С' ? 'Загрузи архив с решением!' :
-                'Ты можешь отправить архив <em class="text-primary">повторно</em>, если не уверен в предыдущем решении.'
+                'Если нет уверенности в решении, архив можно отправить <em class="text-primary">повторно</em>. <br>Учитывается только последнее загруженное решение.'
         },
         setStatus() {
             userService.getTaskStatus(this.$route.params.id).then(response => {
@@ -110,7 +109,6 @@ export default {
         },
         updateFile() {
             this.selectedFile = event.target.files[0];
-            console.log(this.selectedFile)
         },
         uploadFile() {
             if (!this.selectedFile) {
@@ -133,8 +131,7 @@ export default {
             formData.append('file', this.selectedFile);
             formData.append('id', this.status.id);
 
-            userService.putTaskFile(formData).then(response => {
-                console.log(response)
+            userService.putTaskFile(formData).then(() => {
                 this.$store.dispatch('alert/sendMessage', { message: 'Решение отправлено!', type: 'Success' })
                 this.setStatus()
                 this.$refs.fileInput.value = null;

@@ -1,7 +1,8 @@
 <template>
   <footer v-if="!is_none">
     <div class="mt-2 p-2 bg-dark bg-gradient">
-      <div class="container">
+      <div class="container d-flex flex-column flex-lg-row">
+        <div class="text-white col-lg-4 mb-2 mb-lg-0 align-self-center">©️ НИИ "Центрпрограммсистем", 2023г.</div>
         <div class="d-flex justify-content-end container">
           <p class="text-white me-3 my-auto">
             Телеграм-канал проекта: <a href="https://t.me/tverchamp" target="_blank">@tverchamp</a>

@@ -22,11 +22,6 @@ export default {
                 },
                 {
                     id: 2,
-                    path: '/LK/my-teams',
-                    title: 'Мои мероприятия'
-                },
-                {
-                    id: 3,
                     path: '/LK/set-user-skills',
                     title: 'Выбрать навыки'
                 },
