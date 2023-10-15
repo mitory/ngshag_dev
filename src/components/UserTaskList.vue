@@ -54,7 +54,7 @@ import { userService } from '../services/user.service'
 export default {
     data() {
         return {
-            tasks: {},
+            tasks: null,
             message: '',
             user_name: ''
         }

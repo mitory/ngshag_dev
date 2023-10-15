@@ -90,6 +90,7 @@ export default {
 
     },
     created() {
+        this.setStatus()
         this.link = config.apiURL.replace('api/', '')
         userService.getTask(this.$route.params.id).then(response => {
             if (response.status) {
@@ -100,7 +101,6 @@ export default {
                 this.task.additional_requirements = this.task.additional_requirements.split('|')
             }
         })
-        this.setStatus()
     },
     methods: {
         inputLabel(is_accepted) {
