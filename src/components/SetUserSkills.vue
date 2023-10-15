@@ -100,8 +100,12 @@ export default {
                 this.$store.dispatch('alert/sendMessage', { message: 'Ваши навыки добавлены в список!', type: 'Success' })
                 localStorage.removeItem('user_data');
                 this.$router.push("/LK");
-            }).catch(() => {
-                this.$store.dispatch('alert/sendMessage', { message: 'Что-то пошло не так...', type: 'Danger' })
+            }).catch((error) => {
+                if (error.status && error.status == 403) {
+                    this.$store.dispatch('alert/sendMessage', { message: error.error, type: 'Danger' })
+                } else {
+                    this.$store.dispatch('alert/sendMessage', { message: 'Что-то пошло не так...', type: 'Danger' })
+                }
             })
         },
         add_skill: function (id_cat, id_skill) {

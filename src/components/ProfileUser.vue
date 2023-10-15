@@ -98,7 +98,7 @@ export default {
                 }
                 localStorage.setItem('user_data', JSON.stringify(data));
             }).catch(error => {
-                this.user.error = error
+                this.user.error = error.error
             })
         }
 
