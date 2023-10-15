@@ -1,18 +1,27 @@
 <template>
     <div class=''>
         <div v-if="tasks != null">
-            <p v-if="user_name"><em>{{ user_name }}, специально для тебя мы подобрали задачи согласно указанным
-                    компетенциям.</em></p>
-            <p v-else><em>Уважаемый пользователь! Мы подобрали для тебя задачи согласно указанным компетенциям.</em></p>
+            <p v-if="user_name"><em>{{ user_name }}, начался отборочный этап мероприятия, теперь ты можешь приступить к
+                    выполнению задач. <br>Отправлять решения можно до 22.10.2023</em></p>
+            <p v-else><em>Уважаемый пользователь! начался отборочный этап мероприятия, теперь ты можешь приступить к
+                    выполнению задач. <br>Отправлять решения можно до 22.10.2023</em></p>
             <h2 class="text-center mb-5">Задачи для отбора участников по направлениям:</h2>
-            <div v-for="task in tasks" :value="task.id" :key="task.id" class="mb-2 border-bottom pb-1">
-                <h5 class="mb-1 fs-6">Задача: <span class="task__title">{{ task.name }}</span></h5>
-                <p class="p-0 m-0 pb-1">Номинация: <em class="text-primary">{{ task.nomination_name }}</em></p>
+
+            <div v-for="task in tasks" :value="task.id" :key="task.id" class="mb-2 border-bottom pb-1"
+                :id="task.nomination">
+                <!-- <h5 class="mb-1 fs-6">Задача: <span class="task__title">{{ task.name }}</span></h5> -->
+                <h5 class="mb-1 fs-6">Номинация: <span class="task__title">{{ task.nomination_name }}</span></h5>
+                <p class="p-0 m-0 pb-1">Задача: <em class="text-primary task__title">{{ task.name }}</em></p>
+                <!-- <p class="p-0 m-0 pb-1">Номинация: <em class="text-primary">{{ task.nomination_name }}</em></p> -->
+                <p v-if="task.is_user_category && !task.is_accepted" class="text-warning">
+                    Рекомендовано
+                </p>
+
                 <p v-if="task.status" class="p-0 m-0" :class="{
                     'text-secondary': task.is_accepted == 'О',
                     'text-success': task.is_accepted == 'П',
                     'text-danger': task.is_accepted == 'Н',
-                    'd-none': task.is_accepted == 'С'
+                    'd-none': task.is_accepted == 'C'
                 }">
                     {{ task.status }}
                 </p>
@@ -34,10 +43,6 @@
         </div>
         <div v-else>
             <h3>{{ message }}</h3>
-            <div class="mb-3 text-center text-white bg-primary p-2 rounded">
-                Перейди во вкладку "Выбрать навыки" и выбери компетенции, в которых ты силен.
-                После этого станут доступны задачи во вкладке "Мои задачи".
-            </div>
         </div>
     </div>
 </template>
@@ -67,13 +72,14 @@ export default {
         userService.getTasks().then(response => {
             if (response.status) {
                 this.tasks = response.data;
+                this.tasks.sort((a, b) => a.nomination - b.nomination);
                 for (let i = 0; i < this.tasks.length; ++i) {
                     userService.getTaskStatus(this.tasks[i].id).then(response => {
                         if (response.status) {
                             if (response.data) {
                                 this.tasks[i]['status'] = response.data.is_accepted_display
                                 this.tasks[i]['is_accepted'] = response.data.is_accepted
-                                if (this.tasks[i]['is_accepted'] == 'С' || this.tasks[i]['is_accepted'] == 'О') {
+                                if (this.tasks[i]['is_accepted'] == 'C' || this.tasks[i]['is_accepted'] == 'О') {
                                     this.tasks[i]['button_text'] = "Перейти к условию";
                                 }
                                 // if (this.tasks[i]['is_accepted'] == 'П' || this.tasks[i]['is_accepted'] == 'Н') {
@@ -89,9 +95,19 @@ export default {
 
                 if (this.tasks.length == 0) {
                     this.tasks = null
-                    this.message = 'Под твои компетенции еще нет задач'
+                    this.message = 'Задач не найдено'
                 } else {
                     //setTimeout(this.sortTasks, 1500);
+                }
+                const hash = this.$route.params.hash;
+                if (hash) {
+                    setTimeout(() => {
+                        const elementToScrollTo = document.getElementById(hash);
+                        if (elementToScrollTo) {
+                            elementToScrollTo.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }, 500);
+
                 }
             } else {
                 this.tasks = null
@@ -101,7 +117,7 @@ export default {
     },
     methods: {
         sortTasks() {
-            const customSortOrder = { 'С': 1, 'П': 2, 'Н': 3, 'О': 4 };
+            const customSortOrder = { 'C': 1, 'П': 2, 'Н': 3, 'О': 4 };
 
             this.tasks = this.tasks.sort((a, b) => {
                 const aOrder = customSortOrder[a.is_accepted] || 5;
@@ -117,7 +133,7 @@ export default {
         },
         setTextButton() {
             for (let i = 0; i < this.tasks.length; ++i) {
-                if (this.tasks[i].is_accepted == 'С' || this.tasks[i].is_accepted == 'О') {
+                if (this.tasks[i].is_accepted == 'C' || this.tasks[i].is_accepted == 'О') {
                     this.tasks[i]['button_text'] = "Перейти к условию";
                 } else if (this.tasks[i].is_accepted == 'П' || this.tasks[i].is_accepted == 'Н') {
                     this.tasks[i]['button_text'] = null;
@@ -150,6 +166,10 @@ export default {
 </script>
 
 <style scoped>
+button {
+    width: 170px;
+}
+
 a {
     color: white;
 }

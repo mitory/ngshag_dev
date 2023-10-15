@@ -1,7 +1,20 @@
 <template>
     <div class=''>
-        <h3 class="task__title">{{ task.name }}</h3>
-        <p>Номинация: <em class="text-primary">{{ task.nomination_name }}</em></p>
+        <div class="mb-2">
+            <router-link to="/LK/my-tasks">
+                <img src="../assets/img/arrow_back.svg" alt="Вернуться к полному списку" style="width: 20px" />
+                <span class="text-dark link_svg_text">вернуться к списку задач</span>
+            </router-link>
+        </div>
+
+        <!-- <h5 class="mb-1 fs-6">Номинация: <span class="task__title">{{ task.nomination_name }}</span></h5>
+        <p class="p-0 m-0 pb-1">Задача: <em class="text-primary task__title">{{ task.name }}</em></p> -->
+
+        <h3 class="task__title">{{ task.nomination_name }}</h3>
+        <p>Задача: <em class="text-primary task__title">{{ task.name }}</em></p>
+
+        <!-- <h3 class="task__title">{{ task.name }}</h3>
+        <p>Номинация: <em class="text-primary">{{ task.nomination_name }}</em></p> -->
         <div class="mb-2">
             <h5>Описание задачи</h5>
             <p v-for="descr, index in task.description" :key="index" class="mb-1" v-html="descr"></p>
@@ -26,7 +39,7 @@
 
             </p>
         </div>
-        <div v-if="status && status.is_accepted && (status.is_accepted == 'С' || status.is_accepted == 'О')" class="">
+        <div v-if="status && status.is_accepted && (status.is_accepted == 'C' || status.is_accepted == 'О')" class="">
             <label for="formFile" class="form-label" v-html="inputLabel(status.is_accepted)">
 
             </label>
@@ -36,7 +49,7 @@
                 'text-secondary': status.is_accepted == 'О',
                 'text-success': status.is_accepted == 'П',
                 'text-danger': status.is_accepted == 'Н',
-                'd-none': status.is_accepted == 'С'
+                'd-none': status.is_accepted == 'C'
             }">
                 {{ status.is_accepted_display }}
             </p>
@@ -51,7 +64,8 @@
             <p v-if="status" class="mb-2" :class="{
                 'text-secondary': status.is_accepted == 'О',
                 'text-success': status.is_accepted == 'П',
-                'text-danger': status.is_accepted == 'Н'
+                'text-danger': status.is_accepted == 'Н',
+                'd-none': status.is_accepted == 'C'
             }">
                 {{ status.is_accepted_display }}
             </p>
@@ -90,7 +104,7 @@ export default {
     },
     methods: {
         inputLabel(is_accepted) {
-            return is_accepted == 'С' ? 'Загрузи архив с решением!' :
+            return is_accepted == 'C' ? 'Загрузи архив с решением!' :
                 'Если нет уверенности в решении, архив можно отправить <em class="text-primary">повторно</em>. <br>Учитывается только последнее загруженное решение.'
         },
         setStatus() {
@@ -144,4 +158,8 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+a {
+    text-decoration: none;
+}
+</style>

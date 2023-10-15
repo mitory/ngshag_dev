@@ -3,7 +3,6 @@
         <h1 v-if="user.first_name && user.last_name" class="mb-4">{{ user.first_name + ' ' + user.last_name }}</h1>
         <div v-if="user.categories.length == 0" class="mb-3 text-center text-white bg-primary p-2 rounded">
             Перейди во вкладку "Выбрать навыки" и выбери компетенции, в которых ты силен.
-            После этого станут доступны задачи во вкладке "Мои задачи".
         </div>
         <div v-if="user.email" class="mb-4">
             <h5 class="mb-3 text-uppercase text-center">Личная информация</h5>

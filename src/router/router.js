@@ -86,6 +86,11 @@ export const router = createRouter({
                     name: 'task',
                     component: UserTask
                 },
+                {
+                    path: 'my-tasks/:hash',
+                    name: 'tasks',
+                    component: UserTaskList
+                },
 
             ]
         },
@@ -107,11 +112,16 @@ router.beforeEach((to, from, next) => {
     const authRequired = publicPages.includes(to.path);
     const loggedIn = localStorage.getItem('user');
     // && publicStartPath.filter(str => to.path.startsWith(str)).length == 0
+    if (!to.hash) {
+        window.scrollTo(0, 0);
+    }
     if (!authRequired && !loggedIn) {
         next('/reg');
     } else {
         next();
     }
 });
+
+
 
 export default router

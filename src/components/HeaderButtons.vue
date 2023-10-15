@@ -1,6 +1,6 @@
 
 <template>
-<!--  <header v-if="!is_none" class="mb-5 p-2 bg-primary bg-gradient">
+  <!--  <header v-if="!is_none" class="mb-5 p-2 bg-primary bg-gradient">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary bg-gradient ">
       <div class="container-fluid d-lg-flex justify-lg-content-between col-lg-10">
         <a class="navbar-brand" href="#"><img style="height: 2em;" src="../assets/img/main_logo.svg"
@@ -40,11 +40,12 @@
       </div>
     </nav>
   </header>-->
-  <header v-if="!is_none" >
+  <header v-if="!is_none">
     <section class="top-nav">
       <div>
-        <a class="navbar-brand" href="#"><img style="height: 2em;" src="../assets/img/main_logo2.svg"
-                                              alt="Новый Шаг" /></a>
+        <router-link class="navbar-brand" to="/">
+          <img style="height: 2em;" src="../assets/img/main_logo2.svg" alt="Новый Шаг" />
+        </router-link>
       </div>
       <input id="menu-toggle" type="checkbox" />
       <label class='menu-button-container' for="menu-toggle">
@@ -52,19 +53,23 @@
       </label>
       <ul class="menu">
         <li :class="{ 'active': this.$route.path === '/' }">
-          <router-link @click="liClicked" :class="{ 'active': this.$route.path === '/' }" class="custom__link text-decoration-none"
-                         to="/">Главная</router-link></li>
+          <router-link @click="liClicked" :class="{ 'active': this.$route.path === '/' }"
+            class="custom__link text-decoration-none" to="/">Главная</router-link>
+        </li>
         <li :class="{ 'active': this.$route.path === '/policies-and-procedures' }">
           <router-link @click="liClicked" :class="{ 'active': this.$route.path === '/policies-and-procedures' }"
-                         class="custom__link text-decoration-none" to="/policies-and-procedures">Правила</router-link></li>
+            class="custom__link text-decoration-none" to="/policies-and-procedures">Правила</router-link>
+        </li>
         <li :class="{ 'active': this.$route.path === '/about-project' }">
           <router-link @click="liClicked" :class="{ 'active': this.$route.path === '/about-project' }"
-                         class="custom__link text-decoration-none" to="/about-project">О проекте</router-link></li>
+            class="custom__link text-decoration-none" to="/about-project">О проекте</router-link>
+        </li>
         <li :class="{ 'active': this.$route.path === '/LK' }">
           <router-link @click="liClicked" :class="{ 'active': this.$route.path === '/LK' }"
-                       v-if="loggedIn /*&& this.routes.isProfilePage*/" class="custom__link text-decoration-none" to="/LK">
-          Личный кабинет
-        </router-link></li>
+            v-if="loggedIn /*&& this.routes.isProfilePage*/" class="custom__link text-decoration-none" to="/LK">
+            Личный кабинет
+          </router-link>
+        </li>
         <li><router-link v-if="loggedIn" class="custom__link text-decoration-none" to="/login">Выйти</router-link></li>
       </ul>
     </section>
@@ -86,7 +91,7 @@ export default {
     this.width = window.innerWidth;
   },
   methods: {
-    liClicked(){
+    liClicked() {
       document.getElementById('menu-toggle').click()
     }
   },
@@ -102,17 +107,19 @@ export default {
 
 </script>
 <style scoped>
-header{
+header {
   margin-bottom: 3em;
-  background: rgb(47,130,253);
-  background: linear-gradient(180deg, rgba(47,130,253,1) 22%, rgba(22,116,253,1) 71%);
+  background: rgb(47, 130, 253);
+  background: linear-gradient(180deg, rgba(47, 130, 253, 1) 22%, rgba(22, 116, 253, 1) 71%);
 }
+
 h2 {
   vertical-align: center;
   text-align: center;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   height: 100%;
 }
@@ -141,7 +148,7 @@ html, body {
   padding: 0;
 }
 
-.menu > li {
+.menu>li {
   margin: 0 1rem;
   overflow: hidden;
 }
@@ -182,16 +189,16 @@ html, body {
   margin-top: 8px;
 }
 
-#menu-toggle:checked + .menu-button-container .menu-button::before {
+#menu-toggle:checked+.menu-button-container .menu-button::before {
   margin-top: 0px;
   transform: rotate(405deg);
 }
 
-#menu-toggle:checked + .menu-button-container .menu-button {
+#menu-toggle:checked+.menu-button-container .menu-button {
   background: rgba(255, 255, 255, 0);
 }
 
-#menu-toggle:checked + .menu-button-container .menu-button::after {
+#menu-toggle:checked+.menu-button-container .menu-button::after {
   margin-top: 0px;
   transform: rotate(-405deg);
 }
@@ -200,6 +207,7 @@ html, body {
   .menu-button-container {
     display: flex;
   }
+
   .menu {
     position: absolute;
     top: 0;
@@ -210,20 +218,23 @@ html, body {
     justify-content: center;
     align-items: center;
   }
-  #menu-toggle ~ .menu li {
+
+  #menu-toggle~.menu li {
     height: 0;
     margin: 0;
     padding: 0;
     border: 0;
     transition: height 400ms cubic-bezier(0.23, 1, 0.32, 1);
   }
-  #menu-toggle:checked ~ .menu li {
+
+  #menu-toggle:checked~.menu li {
     border-bottom: 1px solid #ffffff;
     height: 2.5em;
     padding: 0.5em;
     transition: height 400ms cubic-bezier(0.23, 1, 0.32, 1);
   }
-  .menu > li {
+
+  .menu>li {
     display: flex;
     justify-content: center;
     margin: 0;
@@ -232,9 +243,11 @@ html, body {
     background: #1674FD;
     /*background: linear-gradient(180deg, rgba(47,130,253,1) 22%, rgba(22,116,253,1) 71%);*/
   }
-  .menu > li:not(:last-child) {
+
+  .menu>li:not(:last-child) {
     border-bottom: 1px solid #444;
   }
+
   .menu li.active {
     background-color: white;
   }
@@ -255,6 +268,7 @@ html, body {
   .custom__link.active:after {
     display: none;
   }
+
   .custom__link.active {
     color: black;
   }
@@ -285,6 +299,5 @@ html, body {
 
 .custom__link:hover {
   color: #225384;
-}
-</style>
+}</style>
   

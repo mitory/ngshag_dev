@@ -5,9 +5,26 @@
         <h1 class="fs-3 text-center mb-4">Студенческий фестиваль ИТ-профессий<br>«Новый шаг-2023»</h1>
         <p class="fs-6 text-primary"><em>Проводится с 3 по 7 ноября 2023 года</em></p>
 
-        <p class="mb-3 text-center text-white bg-primary p-2 rounded">
+        <!-- <p class="mb-3 text-center text-white bg-primary p-2 rounded">
           Для принятия участия в очном этапе мероприятия необходимо пройти отборочный, заочный этап, решив соответствующие
           <router-link class="text-white" to="/LK/my-tasks">номинации задачи</router-link>
+        </p> -->
+        <!-- 
+        <p class="mb-3 text-center text-white bg-primary p-2 rounded">
+          Для принятия участия в мероприятии необходимо <router-link class="text-white" to="/LK/my-tasks">выбрать
+            номинацию</router-link> и пройти отборочный этап, решив соответствующую задачу в срок до 22.10.2023.
+          Участники, предоставившие лучшие решения, по решению комиссии, будут допущены до очного этапа мероприятия.
+          Примечание: допускается участие в нескольких номинациях, при условии, что при проведении очного этапа, участнику
+          может потребоваться выбрать в какой из номинаций продолжить участие.
+        </p> -->
+
+        <p class="mb-3 text-center text-white bg-primary p-2 rounded">
+          Для дальнейшего участия необходимо выбрать номинацию и пройти отборочный этап, представив свои решения задач
+          комиссии.
+          Приём решений заканчивается 22.10.2023.
+          Лучшие участники по решению отборочной комиссии будут допущены к очному этапу мероприятия.
+          При проведении очного этапа допускается участие в нескольких номинациях, если соревнования по каждой из них не
+          проходят одновременно.
         </p>
 
         <h4 class="mb-3 d-none">Расписание проведения мероприятий:</h4>
@@ -51,17 +68,16 @@
         <div class="mb-4">
           <h4 class="mb-3">Текущие номинации:</h4>
           <ul class="list-group list-group-flush mb-2">
-            <li class="list-group-item">1. Анимация трёхмерных моделей.</li>
-            <li class="list-group-item">2. Программирование графики.</li>
-            <li class="list-group-item">3. Математическое моделирование.</li>
-            <li class="list-group-item">4. Веб-разработка.</li>
-            <li class="list-group-item">5. Базы данных.</li>
-            <li class="list-group-item">6. Программирование сетевого взаимодействия.</li>
-            <li class="list-group-item">7. Моделирование и реализация графического интерфейса.</li>
+            <router-link class="link-underline-none" v-for="nomination in nominations" :key="nomination.id"
+              :to="{ name: 'tasks', params: { hash: nomination.id } }" v-scroll-to="'#' + nomination.id">
+              <li class="list-group-item link-nomination">
+                {{ nomination.id }}. {{ nomination.name }}
+              </li>
+            </router-link>
           </ul>
-          <div class="d-flex justify-content-end">
+          <!-- <div class="d-flex justify-content-end">
             <router-link class="btn btn-primary text-white" to="/LK/my-tasks">Перейти к задачам</router-link>
-          </div>
+          </div> -->
         </div>
         <div class="mb-4">
           <div class="mb-1">
@@ -105,6 +121,7 @@
 // import { publicService } from '../services/public.service'
 import NewsBar from './NewsBar.vue'
 import EventsBar from './EventsBar.vue'
+import { publicService } from '../services/public.service'
 
 export default {
 
@@ -115,7 +132,8 @@ export default {
       pages: [
         { title: 'Мероприятия', id: 1 },
         { title: 'Новости', id: 2 }
-      ]
+      ],
+      nominations: []
     }
   },
   components: {
@@ -123,6 +141,9 @@ export default {
   },
   created() {
     this.$store.commit('routes/toMainPage')
+    publicService.getNominations().then(response => {
+      this.nominations = response
+    })
     // publicService.getEventsList().then(response => {
     //   this.events = response;
     // })
@@ -133,6 +154,15 @@ export default {
 </script>
 
 <style scoped>
+.link-nomination:hover {
+  background: #0d6efd;
+  color: white;
+}
+
+.link-underline-none {
+  text-decoration: none;
+}
+
 a {
   color: black
 }
