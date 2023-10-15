@@ -11,7 +11,7 @@ export const userService = {
     getLkInfo, getUnivers, getFacults, getTeams,
     getSpecialty, getSkills, postSkills, getVerificeAcc,
     changePassword, sendEducationReport, getTasks, getTask,
-    postTaskFile, getTaskStatus, putTaskFile
+    postTaskFile, getTaskStatus, putTaskFile, getFile
 };
 
 function sendEducationReport(source) {
@@ -88,6 +88,31 @@ async function getTasks() {
 async function getTask(id_task) {
     return new Promise((resolve) => {
         axios.get(API_URL + 'task/' + id_task + '/',
+            {
+                headers: authHeader(),
+            }).then(response => {
+                resolve({ data: response.data, status: true });
+
+            }).catch(error => {
+                if (error.response && error.response.status === 401) {
+                    authService.refresh().then(response => {
+                        if (response) {
+                            return getTask(id_task).then(data => resolve(data))
+                                .catch(error => resolve(error));
+                        } else {
+                            this.$store.dispatch('auth/logout', true);
+                        }
+                    })
+                } else {
+                    resolve({ message: error.response.data.error, status: false })
+                }
+            });
+    })
+}
+
+async function getFile(id_task) {
+    return new Promise((resolve) => {
+        axios.get(API_URL + 'download-file/' + id_task + '/',
             {
                 headers: authHeader(),
             }).then(response => {

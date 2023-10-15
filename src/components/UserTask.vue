@@ -18,7 +18,9 @@
         <div class="mb-2">
             <h5>Описание задачи</h5>
             <p v-for="descr, index in task.description" :key="index" class="mb-1" v-html="descr"></p>
-            <a v-if="task.file" :href="link + task.file" download class="text-dark">Скачать приложение</a>
+            <a v-if="task.file" @click="downloadFile" href="#" download class="text-dark"
+                style="text-decoration: underline;">Скачать приложение</a>
+            <!-- <button @click="downloadFile">Скачать файл</button> -->
         </div>
         <div class="mb-2">
             <h5>Критерии оценки</h5>
@@ -103,6 +105,9 @@ export default {
         })
     },
     methods: {
+        downloadFile() {
+            window.location.href = 'https//nwstep.ru/api/download-file/' + this.$route.params.id + '/';
+        },
         inputLabel(is_accepted) {
             return is_accepted == 'C' ? 'Загрузи архив с решением!' :
                 'Если нет уверенности в решении, архив можно отправить <em class="text-primary">повторно</em>. <br>Учитывается только последнее загруженное решение.'
