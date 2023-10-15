@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!user.error">
+    <div v-if="user.error != null">
         <h1 v-if="user.first_name && user.last_name" class="mb-4">{{ user.first_name + ' ' + user.last_name }}</h1>
         <div v-if="user.categories.length == 0" class="mb-3 text-center text-white bg-primary p-2 rounded">
             Перейди во вкладку "Выбрать навыки" и выбери компетенции, в которых ты силен.
