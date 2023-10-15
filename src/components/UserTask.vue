@@ -18,8 +18,8 @@
         <div class="mb-2">
             <h5>Описание задачи</h5>
             <p v-for="descr, index in task.description" :key="index" class="mb-1" v-html="descr"></p>
-            <a v-if="task.file" @click="downloadFile" href="#" download class="text-dark"
-                style="text-decoration: underline;">Скачать приложение</a>
+            <a v-if="task.file" :href="'https//nwstep.ru/api/download-file/' + this.$route.params.id + '/'" download
+                class="text-dark" style="text-decoration: underline;">Скачать приложение</a>
             <!-- <button @click="downloadFile">Скачать файл</button> -->
         </div>
         <div class="mb-2">
