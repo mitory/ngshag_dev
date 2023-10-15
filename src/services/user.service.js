@@ -229,6 +229,8 @@ async function postSkills(skills) {
                         this.$store.dispatch('auth/logout', true);
                     }
                 })
+            } else if (error.response && error.response.status === 403) {
+                reject({ status: 403, error: error.response.data.error })
             } else {
                 reject(error);
             }
@@ -238,7 +240,7 @@ async function postSkills(skills) {
 }
 
 function getLkInfo() {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         axios
             .get(API_URL + 'personal_cabinet/',
                 {
@@ -250,13 +252,13 @@ function getLkInfo() {
                         authService.refresh().then(response => {
                             if (response) {
                                 return getLkInfo().then(data => resolve(data))
-                                    .catch(error => resolve(error));
+                                    .catch(error => reject(error));
                             } else {
                                 this.$store.dispatch('auth/logout', true);
                             }
                         })
                     } else {
-                        resolve({ error: error.response.data.error });
+                        reject({ error: error.response.data.error });
                     }
                 });
     })
