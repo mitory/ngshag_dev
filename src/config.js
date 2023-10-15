@@ -1,6 +1,6 @@
 
 const config = {
-    apiURL: 'https://nwstep.ru:8000' + '/api/'
+    apiURL: '/api/'
 }
 
 export default config;

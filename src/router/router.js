@@ -15,6 +15,8 @@ import PoliciesAndProcedures from "../components/PoliciesAndProcedures";
 import SettingPage from '../components/SettingPage'
 import PasswordChange from '../components/PasswordChange'
 import ForgotPasswordPage from '../components/ForgotPasswordPage'
+import UserTaskList from '../components/UserTaskList'
+import UserTask from '../components/UserTask'
 
 export const router = createRouter({
     routes: [
@@ -64,20 +66,32 @@ export const router = createRouter({
             children: [
                 { path: '', component: ProfileUser },
                 {
-                    path: '/change-password',
+                    path: 'change-password',
                     component: PasswordChange
                 },
                 {
-                    path: '/set-user-skills',
+                    path: 'set-user-skills',
                     name: 'setUserSkills',
                     component: SetUserSkills
                 },
                 { path: 'my-teams', component: UserTeams },
                 {
-                    path: '/my-teams/:id',
+                    path: 'my-teams/:id',
                     name: 'team',
                     component: TeamPage
                 },
+                { path: 'my-tasks', component: UserTaskList },
+                {
+                    path: 'my-tasks/:id',
+                    name: 'task',
+                    component: UserTask
+                },
+                {
+                    path: 'my-tasks/:hash',
+                    name: 'tasks',
+                    component: UserTaskList
+                },
+
             ]
         },
         {
@@ -98,11 +112,16 @@ router.beforeEach((to, from, next) => {
     const authRequired = publicPages.includes(to.path);
     const loggedIn = localStorage.getItem('user');
     // && publicStartPath.filter(str => to.path.startsWith(str)).length == 0
+    if (!to.hash) {
+        window.scrollTo(0, 0);
+    }
     if (!authRequired && !loggedIn) {
         next('/reg');
     } else {
         next();
     }
 });
+
+
 
 export default router

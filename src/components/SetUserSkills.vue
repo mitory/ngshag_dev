@@ -31,13 +31,14 @@
                             <div v-if="categories_levels && categories_levels[category.id] && categories_levels[category.id].status"
                                 class="mx-auto">
                                 <p class="text-start">Желаемый уровень:</p>
+
                                 <range-slider v-model:value="categories_levels[category.id].prospective_level"
                                     @update:value="onProspectiveNowChange(category.id)" />
                             </div>
                         </Slide>
                         <!-- <Slide v-if="width >= 768" class="item"></Slide> -->
                         <template #addons>
-                            <!-- <Navigation class="d-none d-md-block px-md-0" /> -->
+                            <Navigation class="navig d-none d-md-block px-md-0" />
                             <Pagination class="ps-0" />
                         </template>
                     </carousel>
@@ -56,7 +57,7 @@
 <script>
 import { userService } from '../services/user.service'
 import 'vue3-carousel/dist/carousel.css';
-import { Carousel, Slide, Pagination } from 'vue3-carousel';
+import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
 import RangeSlider from "./mini-components/RangeSlider.vue";
 
 
@@ -76,7 +77,7 @@ export default {
         Carousel,
         Slide,
         Pagination,
-        // Navigation,
+        Navigation,
         RangeSlider
     },
     methods: {
@@ -97,6 +98,7 @@ export default {
         addSkillToUser: function () {
             userService.postSkills(this.set_skills_user).then(() => {
                 this.$store.dispatch('alert/sendMessage', { message: 'Ваши навыки добавлены в список!', type: 'Success' })
+                localStorage.removeItem('user_data');
                 this.$router.push("/LK");
             }).catch(() => {
                 this.$store.dispatch('alert/sendMessage', { message: 'Что-то пошло не так...', type: 'Danger' })
@@ -162,6 +164,10 @@ export default {
 </script>
  
 <style scoped>
+.navig {
+    left: -200px !important;
+}
+
 @media (max-width: 510px) {
     .text-mobile {
         font-size: 14px;

@@ -40,6 +40,10 @@ a {
   color: white;
 }
 
+.task__title:first-letter {
+  text-transform: uppercase;
+}
+
 .slide-fade-enter-active {
   transition: all 0.3s ease-out;
 }

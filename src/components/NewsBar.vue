@@ -2,6 +2,10 @@
     <article>
         <div class='text-white'>
             <h4 class="text-dark text-center">Новости</h4>
+            <div class="news__item p-2 bg-primary bg-gradient rounded mb-2">
+                <h6>Начало отборочного этапа</h6>
+                <p>15.10.2023г</p>
+            </div>
             <div class="news__item p-2 bg-primary bg-gradient rounded">
                 <h6>Открыта регистрация участников на платформе «Новый шаг»</h6>
                 <p>20.09.2023г</p>
