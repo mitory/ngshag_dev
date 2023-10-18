@@ -17,12 +17,17 @@ import PasswordChange from '../components/PasswordChange'
 import ForgotPasswordPage from '../components/ForgotPasswordPage'
 import UserTaskList from '../components/UserTaskList'
 import UserTask from '../components/UserTask'
+import HacatonPage from '../components/HacatonPage'
 
 export const router = createRouter({
     routes: [
         {
             path: '/',
             component: MainPage,
+        },
+        {
+            path: '/hackathon',
+            component: HacatonPage,
         },
         {
             path: '/login',

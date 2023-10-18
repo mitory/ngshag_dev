@@ -36,6 +36,10 @@ export default {
 </script>
 
 <style>
+.cursor:hover {
+  cursor: pointer;
+}
+
 a {
   color: white;
 }

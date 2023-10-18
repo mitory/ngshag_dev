@@ -6,6 +6,11 @@
                 <p class="fs-6">Кубок НИИ «Центрпрограммсистем» по ИТ-дисциплинам – 2023</p>
                 <!-- <a @click="showMsg" class="text-dark cursor">Читать подробнее</a> -->
             </div>
+            <div class="p-2 border border-dark rounded mb-2">
+                <p class="fs-6">Хакатон "Защита и действие"<br>
+                    Дисциплина «Продуктовое программирование»</p>
+                <router-link class="text-dark cursor" to="/hackathon">Читать подробнее</router-link>
+            </div>
         </div>
     </article>
 </template>
@@ -28,8 +33,4 @@ export default {
 }
 </script>
 
-<style scoped>
-.cursor:hover {
-    cursor: pointer;
-}
-</style>
+<style scoped></style>
