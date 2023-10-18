@@ -4,7 +4,7 @@ import config from '../config'
 const API_URL = config.apiURL;
 
 export const publicService = {
-    getEventsList, getEvent, sendSourse, getSendEmailForChangePass, getNominations
+    getEventsList, getEvent, sendSourse, getSendEmailForChangePass, getNominations, getNews
 };
 
 async function getEventsList() {
@@ -26,6 +26,17 @@ async function getSendEmailForChangePass(email) {
         return response.data;
     } catch (err) {
         return { ok: 'no', message: err.response.data.Error }
+    }
+}
+
+async function getNews() {
+    try {
+        const response = await axios.get(API_URL + 'news/', {
+            headers: { 'ngrok-skip-browser-warning': '69420' }
+        });
+        return response.data;
+    } catch (err) {
+        return { message: err.response.data.Error }
     }
 }
 
