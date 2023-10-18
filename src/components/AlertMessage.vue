@@ -53,6 +53,6 @@ export default {
     position: fixed;
     bottom: 0;
     left: 0;
-    width: 400px;
+    width: 320px;
 }
 </style>

@@ -1,12 +1,14 @@
 <template>
     <div class="teams">
-        <div :v-if="teams != null" v-for="team in teams" :value="team.id" :key="team.id">
-            <h3>Команда: {{ team.name }}</h3>
-            <button class="btn btn-primary m-3">
-                <router-link router-link :to="{ name: 'team', params: { id: team.id } }">
-                    Перейти
+        <div class="p-2 border border-primary rounded" :v-if="teams != null" v-for="team in teams" :value="team.id"
+            :key="team.id">
+            <h5 class="mb-1 fs-6">{{ team.event_name }}</h5>
+            <p class="p-0 m-0 pb-1 mb-1">Команда: <em class="text-primary task__title">{{ team.name }}</em></p>
+            <div class="d-flex justify-content-end">
+                <router-link class="btn btn-primary" :to="{ name: 'team', params: { id: team.id } }">
+                    Комната команды
                 </router-link>
-            </button>
+            </div>
         </div>
         <div :v-else="teams == null">
             <h3>{{ message }}</h3>

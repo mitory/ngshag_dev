@@ -1,7 +1,7 @@
 <template>
     <div class=''>
-        <P>Название команда: {{ team.name }}</P>
-        <p>Пароль: {{ team.team_password }}</p>
+        <h5 class="mx-auto text-center">{{ team.name }}</h5>
+        <p><em>{{ event_name }}</em></p>
         <p>Код приглашения {{ team.invitation_code }}</p>
         <p>Состав команды:</p>
         <ul>
@@ -13,26 +13,30 @@
 </template>
 
 <script>
-import { userService } from '../services/user.service'
+import { teamService } from '../services/team.service'
 
 export default {
     data() {
         return {
             team: {},
-            team_members: {}
+            team_members: {},
+            event_name: ''
         }
     },
     components: {
 
     },
     created() {
-        userService.getTeam(this.$route.params.id).then(response => {
+        teamService.getTeam(this.$route.params.id).then(response => {
             if (response.status) {
                 this.team = response.data.team;
                 this.team_members = response.data.team_members;
+                this.event_name = response.data.event_name;
             } else {
                 this.$router.push("/login");
             }
+        }).catch(() => {
+            this.$store.dispatch('alert/sendMessage', { message: 'Непредвиденная ошибка', type: 'Danger' });
         })
     },
     methods: {

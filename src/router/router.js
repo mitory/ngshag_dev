@@ -4,7 +4,7 @@ import ProfileUser from '../components/ProfileUser'
 import MainPage from '../components/MainPage'
 import RegPage from '../components/RegPage'
 // import EventPage from '../components/EventPage'
-// import RegTeamPage from '../components/RegTeamPage'
+import RegTeamPage from '../components/RegTeamPage'
 // import InviteToTeamPage from '../components/InviteToTeamPage'
 import TeamPage from '../components/TeamPage'
 import LK from '../components/LK'
@@ -57,11 +57,11 @@ export const router = createRouter({
         //     name: 'eventPage',
         //     component: EventPage
         // },
-        // {
-        //     path: '/reg-team/:id_event',
-        //     name: 'regTeamPage',
-        //     component: RegTeamPage
-        // },
+        {
+            path: '/reg-team/:id_event',
+            name: 'regTeamPage',
+            component: RegTeamPage
+        },
         // {
         //     path: '/invite-to-team',
         //     component: InviteToTeamPage

@@ -11,9 +11,12 @@
         <p>Команда формируется капитаном.</p>
         <p>Время проведения: <em>36 часов</em>. С 9:00 6 ноября до 21:30 7 ноября 2023 года.</p>
         <div class="d-flex justify-content-end">
-            <button class="btn btn-primary" @click="showMsg">
+            <router-link class="btn btn-primary" :to="{ name: 'regTeamPage', params: { id_event: 2 } }">
                 Создать команду
-            </button>
+            </router-link>
+            <!-- <button class="btn btn-primary" @click="showMsg">
+                Создать команду
+            </button> -->
         </div>
     </div>
 </template>

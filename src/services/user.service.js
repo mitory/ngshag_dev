@@ -289,24 +289,6 @@ function getLkInfo() {
     })
 }
 
-// async function getTeam(id_team) {
-//     console.log(id_team)
-//     return axios.get(API_URL + 'team_detail/' + id_team + '/',
-//         {
-//             headers: authHeader(),
-//         }).then(response => {
-//             return { data: response.data, status: true };
-
-//         }).catch(err => {
-//             if (err.response.status == 401) {
-//                 alert('Пользователь не авторизован')
-//                 return { message: 'Пользователь не авторизован', status: false }
-//             } else {
-//                 return { message: err.response.data.error, status: false }
-//             }
-//         })
-// }
-
 
 async function getUnivers() {
     try {
