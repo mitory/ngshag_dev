@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="d-flex flex-column justify-content-center" style="height: 100vh">
+<!--    <div class="d-flex flex-column justify-content-center" style="height: 100vh">
       <div class="col-sm-8 mx-auto mb-2 mb-lg-5 ">
         <h2 class="d-none d-lg-block text-primary mb-3 text-center">
           НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
@@ -45,6 +45,56 @@
           </div>
         </form>
       </div>
+    </div>-->
+    <div class="d-flex flex-column justify-content-center" style="height: 100vh">
+      <div class="col-sm-8 mx-auto mb-2 mb-lg-5 ">
+        <h2 class="d-none d-lg-block text-primary mb-3 text-center">
+          НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
+        </h2>
+        <h2 class="d-none d-lg-none d-md-block text-primary mb-3 text-center fs-4">
+          НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
+        </h2>
+        <h2 class="d-md-none d-block text-primary mb-3 text-center fs-6">
+          НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
+        </h2>
+      </div>
+      <div class="d-flex flex-sm-row justify-content-around flex-column-reverse">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-4 mx-auto">
+          <form @submit.prevent="loginUser" novalidate>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input @change="emailChanged" v-model="email" type="text" class="form-control" id="email"
+                     v-bind:class="{ 'border-danger': !(isCorrect.email) && email_changed }">
+              <div v-if="!(isCorrect.email) && email_changed" id="email" class="form-text text-danger">
+                Введи корректный email. Например test@mail.ru
+              </div>
+            </div>
+
+            <div class="mb-3 pass-eye">
+              <label for="password" class="form-label">Пароль</label>
+              <input @change="passwordChanged" v-model="password" :type="isShowPass ? 'text' : 'password'"
+                     class="form-control pass-eye__inp" id="password"
+                     v-bind:class="{ 'border-danger': !(isCorrect.password) && password_changed }">
+              <span @click="isShowPass = !isShowPass" class="pass-eye__btn"
+                    :class="{ 'active': isShowPass, 'spacing-minus': !(isCorrect.password) && password_changed }"></span>
+
+              <div v-if="!(isCorrect.password) && password_changed" id="password" class="form-text text-danger">
+                Пароль не может быть пустым!
+              </div>
+            </div>
+
+            <router-link class="btn mb-2" to="/reg">
+              Еще нет аккаунта? Тогда зарегистрируйся!
+            </router-link>
+            <div class="d-flex justify-content-between">
+              <router-link to="/forgot-password" class="btn btn-secondary">Забыл пароль</router-link>
+              <button type="submit" class="btn btn-primary">Войти</button>
+            </div>
+          </form>
+        </div>
+        <NewsBar class="col-sm-3 mb-3 mb-sm-0"></NewsBar>
+      </div>
     </div>
   </div>
 </template>
@@ -52,6 +102,7 @@
 <script>
 import { validateService } from '../services/validate.service'
 import { publicService } from '../services/public.service'
+import NewsBar from "@/components/NewsBar";
 
 export default {
   name: 'LoginPage',
@@ -67,6 +118,9 @@ export default {
       email_changed: false,
       password_changed: false,
     }
+  },
+  components: {
+    NewsBar
   },
   created() {
     this.$store.dispatch('auth/logout');
