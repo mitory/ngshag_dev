@@ -17,6 +17,7 @@ import PasswordChange from '../components/PasswordChange'
 import ForgotPasswordPage from '../components/ForgotPasswordPage'
 import UserTaskList from '../components/UserTaskList'
 import UserTask from '../components/UserTask'
+import NewsPage from "../components/NewsPage";
 import HacatonPage from '../components/HacatonPage'
 import HackathonRegulations from '../components/HackathonRegulations'
 
@@ -107,6 +108,10 @@ export const router = createRouter({
         {
             path: '/policies-and-procedures',
             component: PoliciesAndProcedures
+        },
+        {
+            path: '/news',
+            component: NewsPage
         },
         {
             path: '/:catchAll(.*)',

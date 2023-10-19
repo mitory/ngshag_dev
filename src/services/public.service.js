@@ -29,9 +29,9 @@ async function getSendEmailForChangePass(email) {
     }
 }
 
-async function getNews() {
+async function getNews(page = 1) {
     try {
-        const response = await axios.get(API_URL + 'news/', {
+        const response = await axios.get(API_URL + 'news/' +'?page_size=' + page, {
             headers: { 'ngrok-skip-browser-warning': '69420' }
         });
         return response.data;
