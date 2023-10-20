@@ -626,7 +626,7 @@ export default {
                         })
 
                 } else {
-                    this.$store.dispatch('alert/sendMessage', { message: response.message, type: 'Danger' })
+                    this.$store.dispatch('alert/sendMessage', { message: response.message[0], type: 'Danger' })
                 }
             })
         },

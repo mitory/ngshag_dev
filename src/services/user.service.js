@@ -86,7 +86,7 @@ async function getTasks() {
 }
 
 async function getTask(id_task) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         axios.get(API_URL + 'task/' + id_task + '/',
             {
                 headers: authHeader(),
@@ -98,13 +98,15 @@ async function getTask(id_task) {
                     authService.refresh().then(response => {
                         if (response) {
                             return getTask(id_task).then(data => resolve(data))
-                                .catch(error => resolve(error));
+                                .catch(error => reject(error));
                         } else {
                             this.$store.dispatch('auth/logout', true);
                         }
                     })
+                } else if (error.response && error.response.status == 404) {
+                    reject({ error: error.response.data.error, status: 404 })
                 } else {
-                    resolve({ message: error.response.data.error, status: false })
+                    reject({ status: false })
                 }
             });
     })
