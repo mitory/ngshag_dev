@@ -19,7 +19,7 @@
                     </div>
 
                 </form>
-                <router-link class="col-8 text-center text-dark mx-auto" to="/reg-team/2">Создать команду</router-link>
+                <router-link class="col-8 text-center text-dark mx-auto" to="/reg-team/1">Создать команду</router-link>
             </div>
         </div>
     </div>

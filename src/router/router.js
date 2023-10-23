@@ -131,7 +131,7 @@ router.beforeEach((to, from, next) => {
         window.scrollTo(0, 0);
     }
     if (!authRequired && !loggedIn) {
-        next('/reg');
+        next('/login');
     } else {
         next();
     }

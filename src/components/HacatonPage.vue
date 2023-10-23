@@ -14,7 +14,7 @@
             <router-link class="btn btn-primary me-1" to="/invite-to-team">
                 Присоединиться к команде
             </router-link>
-            <router-link class="btn btn-primary" :to="{ name: 'regTeamPage', params: { id_event: 2 } }">
+            <router-link class="btn btn-primary" :to="{ name: 'regTeamPage', params: { id_event: 1 } }">
                 Создать команду
             </router-link>
             <!-- <button class="btn btn-primary" @click="showMsg">
