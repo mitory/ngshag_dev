@@ -1,11 +1,12 @@
 <template>
     <div class=''>
-        <div class="mb-2">
+        <BackLink link="/LK/my-tasks" text="вернуться к списку задач" />
+        <!-- <div class="mb-2">
             <router-link to="/LK/my-tasks">
                 <img src="../assets/img/arrow_back.svg" alt="Вернуться к полному списку" style="width: 20px" />
                 <span class="text-dark link_svg_text">вернуться к списку задач</span>
             </router-link>
-        </div>
+        </div> -->
 
         <!-- <h5 class="mb-1 fs-6">Номинация: <span class="task__title">{{ task.nomination_name }}</span></h5>
         <p class="p-0 m-0 pb-1">Задача: <em class="text-primary task__title">{{ task.name }}</em></p> -->
@@ -78,6 +79,7 @@
 <script>
 import { userService } from '../services/user.service'
 import config from '../config'
+import BackLink from './mini-components/BackLink.vue'
 
 export default {
     data() {
@@ -89,7 +91,7 @@ export default {
         }
     },
     components: {
-
+        BackLink
     },
     created() {
         this.setStatus()
@@ -102,6 +104,13 @@ export default {
                 this.task.must_contain = this.task.must_contain.split('|')
                 this.task.additional_requirements = this.task.additional_requirements.split('|')
             }
+        }).catch(err => {
+            if (err.status && err.status == 404) {
+                this.$store.dispatch('alert/sendMessage', { message: err.error, type: 'Danger' });
+            } else {
+                this.$store.dispatch('alert/sendMessage', { message: 'Непредвиденная ошибка', type: 'Danger' });
+            }
+            this.$router.push("/LK/my-tasks");
         })
     },
     methods: {
@@ -118,7 +127,7 @@ export default {
                     if (response.data) {
                         this.status = response.data
                         if (this.status.is_accepted == 'Н' || this.status.is_accepted == 'П') {
-                            this.$router.push("/");
+                            this.$router.push("/LK/my-tasks");
                         }
                     }
                 } else {

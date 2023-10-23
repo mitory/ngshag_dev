@@ -4,8 +4,8 @@ import ProfileUser from '../components/ProfileUser'
 import MainPage from '../components/MainPage'
 import RegPage from '../components/RegPage'
 // import EventPage from '../components/EventPage'
-// import RegTeamPage from '../components/RegTeamPage'
-// import InviteToTeamPage from '../components/InviteToTeamPage'
+import RegTeamPage from '../components/RegTeamPage'
+import InviteToTeamPage from '../components/InviteToTeamPage'
 import TeamPage from '../components/TeamPage'
 import LK from '../components/LK'
 import UserTeams from '../components/UserTeams'
@@ -17,6 +17,7 @@ import PasswordChange from '../components/PasswordChange'
 import ForgotPasswordPage from '../components/ForgotPasswordPage'
 import UserTaskList from '../components/UserTaskList'
 import UserTask from '../components/UserTask'
+import NewsPage from "../components/NewsPage";
 import HacatonPage from '../components/HacatonPage'
 import HackathonRegulations from '../components/HackathonRegulations'
 
@@ -57,15 +58,15 @@ export const router = createRouter({
         //     name: 'eventPage',
         //     component: EventPage
         // },
-        // {
-        //     path: '/reg-team/:id_event',
-        //     name: 'regTeamPage',
-        //     component: RegTeamPage
-        // },
-        // {
-        //     path: '/invite-to-team',
-        //     component: InviteToTeamPage
-        // },
+        {
+            path: '/reg-team/:id_event',
+            name: 'regTeamPage',
+            component: RegTeamPage
+        },
+        {
+            path: '/invite-to-team',
+            component: InviteToTeamPage
+        },
         {
             path: '/about-project',
             component: AboutProject
@@ -109,6 +110,10 @@ export const router = createRouter({
             component: PoliciesAndProcedures
         },
         {
+            path: '/news',
+            component: NewsPage
+        },
+        {
             path: '/:catchAll(.*)',
             component: MainPage
         }
@@ -126,7 +131,7 @@ router.beforeEach((to, from, next) => {
         window.scrollTo(0, 0);
     }
     if (!authRequired && !loggedIn) {
-        next('/reg');
+        next('/login');
     } else {
         next();
     }

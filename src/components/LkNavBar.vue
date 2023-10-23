@@ -30,6 +30,11 @@ export default {
                     path: '/LK/my-tasks',
                     title: 'Мои задачи'
                 },
+                {
+                    id: 4,
+                    path: '/LK/my-teams',
+                    title: 'Мои команды'
+                },
             ],
             page_select: 0
         }

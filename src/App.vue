@@ -40,7 +40,8 @@ export default {
   cursor: pointer;
 }
 
-a {
+a,
+.text-white {
   color: white;
 }
 
