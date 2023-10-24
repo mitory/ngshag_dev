@@ -20,6 +20,7 @@ import UserTask from '../components/UserTask'
 import NewsPage from "../components/NewsPage";
 import HacatonPage from '../components/HacatonPage'
 import HackathonRegulations from '../components/HackathonRegulations'
+// import OpenDay from '../components/OpenDay'
 
 export const router = createRouter({
     routes: [
@@ -31,6 +32,10 @@ export const router = createRouter({
             path: '/hackathon',
             component: HacatonPage,
         },
+        // {
+        //     path: '/open-day',
+        //     component: OpenDay,
+        // },
         {
             path: '/hackathon-regulations',
             component: HackathonRegulations,

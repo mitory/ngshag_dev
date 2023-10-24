@@ -31,9 +31,11 @@ async function invitingTeam(code) {
                                 this.$store.dispatch('auth/logout', true);
                             }
                         })
-                    } else if (error.response && error.response.status === 400) {
+                    } else if (error.response && [400, 403].includes(error.response.status)) {
+                        console.log('yes')
                         reject({ status: 400, error: error.response.data.error })
                     } else {
+                        console.log('no')
                         reject(error);
                     }
                 })
@@ -88,7 +90,7 @@ async function registerTeam(team, event_id) {
                         this.$store.dispatch('auth/logout', true);
                     }
                 })
-            } else if (error.response && error.response.status === 400) {
+            } else if (error.response && [400, 403].includes(error.response.status)) {
                 reject({ status: 400, error: error.response.data.error })
             } else {
                 reject(error);
