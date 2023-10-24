@@ -31,11 +31,12 @@ export default {
         next:'',
         results:[],
       },
-      current_page: '',
+      current_page: 1,
+      page_size: 4,
     }
   },
   created() {
-    publicService.getNews().then(response => {
+    publicService.getNews(this.page_size).then(response => {
       this.news = response
     })
     this.current_page = 1
@@ -60,7 +61,7 @@ export default {
       //выполнением запроса и нажатием на кнопку, можно нажать на кнопку ещё разок и
       //УМЕРЕТЬ, поэтому нулю
       this.news.next = null
-      publicService.getNews(this.current_page).then(response => {
+      publicService.getNews(this.page_size, this.current_page).then(response => {
         this.news.next = response.next
         for (let i =0; i < response.results.length; ++i){
           this.news.results.push(response.results[i])
