@@ -9,11 +9,12 @@
         <p class="mb-0">
             В этот день любой желающий может прийти на площадку и попробовать свои силы в решении интересных задач.
             <br>Достаточно нажать на кнопку "Я участвую", чтобы записаться на мероприятие!
+            <span v-if="isEmailNonAuth" class="text-danger"><br>Подтверди свою почту для участия</span>
         </p>
         <p class="fs-6 text-primary mt-0"><em>Количество мест может быть ограничено</em></p>
-        <div class="d-flex justify-content-center">
+        <div v-if="isNonActive != undefined" class="d-flex justify-content-center">
             <button class="btn" :class="{ 'btn-primary': isNonActive, 'btn-secondary': !isNonActive }"
-                @click="isNonActive = !isNonActive">
+                @click="setNonActive">
                 {{ isNonActive ? 'Я участвую!' : 'Я не приду' }}
             </button>
         </div>
@@ -21,16 +22,60 @@
 </template>
 
 <script>
+import { userService } from '../services/user.service'
+
 export default {
     data() {
         return {
-            isNonActive: true
+            isNonActive: undefined,
+            isEmailNonAuth: false
         }
     },
     components: {
 
     },
+    created() {
+        userService.getUserEvent(3).then((response => {
+            this.isNonActive = !response.data
+        })).catch(error => {
+            if (error.status && [400, 403].includes(error.status)) {
+                this.$store.dispatch('alert/sendMessage', { message: error.error, type: 'Danger' });
+                if (error.status == 403) {
+                    this.isEmailNonAuth = true
+                }
+            } else {
+                this.$store.dispatch('alert/sendMessage', { message: 'Непредвиденная ошибка', type: 'Danger' });
+            }
+            this.isNonActive = undefined
+
+        })
+    },
     methods: {
+        setNonActive() {
+            if (this.isNonActive) {
+                userService.postUserEvent(3).then(() => {
+                    this.isNonActive = false
+                    this.$store.dispatch('alert/sendMessage', { message: 'Мы ждем тебя!', type: 'Success' })
+                }).catch((error) => {
+                    if (error.status && error.status == 400) {
+                        this.$store.dispatch('alert/sendMessage', { message: error.error, type: 'Danger' });
+                    } else {
+                        this.$store.dispatch('alert/sendMessage', { message: 'Непредвиденная ошибка', type: 'Danger' });
+                    }
+                })
+            } else {
+                userService.deleteUserEvent(3).then(() => {
+                    this.isNonActive = true
+                    this.$store.dispatch('alert/sendMessage', { message: 'Очень жаль', type: 'Success' })
+                }).catch((error) => {
+                    if (error.status && error.status == 400) {
+                        this.$store.dispatch('alert/sendMessage', { message: error.error, type: 'Danger' });
+                    } else {
+                        this.$store.dispatch('alert/sendMessage', { message: 'Непредвиденная ошибка', type: 'Danger' });
+                    }
+                })
+            }
+        }
 
     }
 }

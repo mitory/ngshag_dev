@@ -32,10 +32,8 @@ async function invitingTeam(code) {
                             }
                         })
                     } else if (error.response && [400, 403].includes(error.response.status)) {
-                        console.log('yes')
                         reject({ status: 400, error: error.response.data.error })
                     } else {
-                        console.log('no')
                         reject(error);
                     }
                 })
