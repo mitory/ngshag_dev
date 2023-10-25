@@ -45,7 +45,6 @@ async function getNominations() {
         const response = await axios.get(API_URL + 'nomination/', {
             headers: { 'ngrok-skip-browser-warning': '69420' }
         });
-        console.log(response.data)
         return response.data;
     } catch (err) {
         return { message: err.response.data.Error }

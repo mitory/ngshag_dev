@@ -45,6 +45,9 @@
           </div>
         </form>
       </div>
+      <div class="col-sm-4 mx-auto px-2 bg-dark bg-gradient text-white text-center text-align-center mt-5 rounded">
+        <p>Почта для связи: <a href="mailto:nwstep@internet.ru" target="_blank">nwstep@internet.ru</a></p>
+      </div>
     </div>
   </div>
 </template>

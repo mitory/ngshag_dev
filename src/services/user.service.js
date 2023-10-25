@@ -11,7 +11,8 @@ export const userService = {
     getLkInfo, getUnivers, getFacults, getTeams,
     getSpecialty, getSkills, postSkills, getVerificeAcc,
     changePassword, sendEducationReport, getTasks, getTask,
-    postTaskFile, getTaskStatus, putTaskFile, getFile
+    postTaskFile, getTaskStatus, putTaskFile, getFile, postUserEvent,
+    deleteUserEvent, getUserEvent
 };
 
 function sendEducationReport(source) {
@@ -188,6 +189,87 @@ async function postTaskFile(formData) {
 
     })
 }
+
+async function postUserEvent(id_event) {
+    return new Promise((resolve, reject) => {
+        axios.post(API_URL + `event_user/`, { event: id_event }, {
+            headers: authHeader(),
+        }).then(response => {
+            resolve(response.data);
+        }).catch(error => {
+            if (error.response && error.response.status === 401) {
+                authService.refresh().then(response => {
+                    if (response) {
+                        return postUserEvent(id_event).then(data => resolve(data))
+                            .catch(error => reject(error));
+                    } else {
+                        this.$store.dispatch('auth/logout', true);
+                    }
+                })
+            } else if (error.response && [400, 403].includes(error.response.status)) {
+                reject({ status: 400, error: error.response.data.error })
+            } else {
+                reject(error);
+            }
+        })
+
+    })
+}
+
+async function getUserEvent(id_event) {
+    return new Promise((resolve, reject) => {
+        axios.get(API_URL + 'event_user/' + id_event + '/',
+            {
+                headers: authHeader(),
+            }).then(response => {
+                resolve({ data: response.data, status: true });
+
+            }).catch(error => {
+                if (error.response && error.response.status === 401) {
+                    authService.refresh().then(response => {
+                        if (response) {
+                            return getUserEvent(id_event).then(data => resolve(data))
+                                .catch(error => reject(error));
+                        } else {
+                            this.$store.dispatch('auth/logout', true);
+                        }
+                    })
+                } else if (error.response && [400, 403].includes(error.response.status)) {
+                    reject({ error: error.response.data.error, status: error.response.status })
+                } else {
+                    reject({ status: false })
+                }
+            });
+    })
+}
+
+async function deleteUserEvent(id_event) {
+    return new Promise((resolve, reject) => {
+        axios.delete(API_URL + `event_user/`, {
+            data: { event: id_event },
+            headers: authHeader(),
+        }).then(response => {
+            resolve(response.data);
+        }).catch(error => {
+            if (error.response && error.response.status === 401) {
+                authService.refresh().then(response => {
+                    if (response) {
+                        return deleteUserEvent(id_event).then(data => resolve(data))
+                            .catch(error => reject(error));
+                    } else {
+                        this.$store.dispatch('auth/logout', true);
+                    }
+                })
+            } else if (error.response && [400, 403].includes(error.response.status)) {
+                reject({ status: 400, error: error.response.data.error })
+            } else {
+                reject(error);
+            }
+        })
+
+    })
+}
+
 
 async function putTaskFile(formData) {
     return new Promise((resolve, reject) => {
