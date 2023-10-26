@@ -11,36 +11,23 @@ export const teamService = {
 };
 
 async function invitingTeam(code) {
-    return new Promise((resolve, reject) => {
-        axios
+    try {
+        await axios
             .post(API_URL + 'team_join/',
                 {
                     invitation_code: code
                 },
                 {
                     headers: authHeader(),
-                }).then(() => {
-                    resolve({ message: 'Вы присоединились к команде!', status: true })
-                }).catch(error => {
-                    if (error.response && error.response.status === 401) {
-                        authService.refresh().then(response => {
-                            if (response) {
-                                return invitingTeam(code).then(data => resolve(data))
-                                    .catch(error => reject(error));
-                            } else {
-                                this.$store.dispatch('auth/logout', true);
-                            }
-                        })
-                    } else if (error.response && [400, 403].includes(error.response.status)) {
-                        console.log('yes')
-                        reject({ status: 400, error: error.response.data.error })
-                    } else {
-                        console.log('no')
-                        reject(error);
-                    }
                 })
-
-    })
+        return { message: 'Вы присоединились к команде!', status: true }
+    } catch (err) {
+        if (err.response.status == 401) {
+            return { message: 'Пользователь не авторизован', status: false }
+        } else {
+            return { message: err.response.data.error, status: false }
+        }
+    }
 }
 
 async function getTeam(id_team) {
@@ -61,8 +48,8 @@ async function getTeam(id_team) {
                             this.$store.dispatch('auth/logout', true);
                         }
                     })
-                } else if (error.response && error.response.status === 404) {
-                    reject({ status: 404, error: error.response.data.error })
+                } else if (error.response && error.response.status === 400) {
+                    reject({ status: 400, error: error.response.data.error })
                 } else {
                     reject(error);
                 }
@@ -90,7 +77,7 @@ async function registerTeam(team, event_id) {
                         this.$store.dispatch('auth/logout', true);
                     }
                 })
-            } else if (error.response && [400, 403].includes(error.response.status)) {
+            } else if (error.response && error.response.status === 400) {
                 reject({ status: 400, error: error.response.data.error })
             } else {
                 reject(error);
