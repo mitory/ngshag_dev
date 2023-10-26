@@ -29,9 +29,9 @@ async function getSendEmailForChangePass(email) {
     }
 }
 
-async function getNews(page = 1) {
+async function getNews(page_size = 1, page = 1) {
     try {
-        const response = await axios.get(API_URL + 'news/' +'?page_size=' + page, {
+        const response = await axios.get(API_URL + 'news/' + '?page=' + page + '&page_size=' + page_size, {
             headers: { 'ngrok-skip-browser-warning': '69420' }
         });
         return response.data;
@@ -58,7 +58,7 @@ async function getEvent(id_event) {
         });
         return response.data;
     } catch (err) {
-        this.$store.dispatch('alert/sendMessage', { message: 'Не удалось получить информацию по мероприятию', type: 'Danger' });
+        return err
     }
 }
 

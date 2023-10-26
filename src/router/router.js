@@ -5,7 +5,7 @@ import MainPage from '../components/MainPage'
 import RegPage from '../components/RegPage'
 // import EventPage from '../components/EventPage'
 import RegTeamPage from '../components/RegTeamPage'
-// import InviteToTeamPage from '../components/InviteToTeamPage'
+import InviteToTeamPage from '../components/InviteToTeamPage'
 import TeamPage from '../components/TeamPage'
 import LK from '../components/LK'
 import UserTeams from '../components/UserTeams'
@@ -68,10 +68,10 @@ export const router = createRouter({
             name: 'regTeamPage',
             component: RegTeamPage
         },
-        // {
-        //     path: '/invite-to-team',
-        //     component: InviteToTeamPage
-        // },
+        {
+            path: '/invite-to-team',
+            component: InviteToTeamPage
+        },
         {
             path: '/about-project',
             component: AboutProject
@@ -136,7 +136,7 @@ router.beforeEach((to, from, next) => {
         window.scrollTo(0, 0);
     }
     if (!authRequired && !loggedIn) {
-        next('/reg');
+        next('/login');
     } else {
         next();
     }

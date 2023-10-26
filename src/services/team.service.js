@@ -59,8 +59,8 @@ async function getTeam(id_team) {
                             this.$store.dispatch('auth/logout', true);
                         }
                     })
-                } else if (error.response && error.response.status === 400) {
-                    reject({ status: 400, error: error.response.data.error })
+                } else if (error.response && error.response.status === 404) {
+                    reject({ status: 404, error: error.response.data.error })
                 } else {
                     reject(error);
                 }
@@ -88,7 +88,7 @@ async function registerTeam(team, event_id) {
                         this.$store.dispatch('auth/logout', true);
                     }
                 })
-            } else if (error.response && error.response.status === 400) {
+            } else if (error.response && [400, 403].includes(error.response.status)) {
                 reject({ status: 400, error: error.response.data.error })
             } else {
                 reject(error);

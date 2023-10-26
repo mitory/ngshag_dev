@@ -76,6 +76,8 @@ export default {
             } else {
               this.$store.dispatch('alert/sendMessage', { message: 'Непредвиденная ошибка', type: 'Danger' });
             }
+            this.team_name = ''
+            this.isCorrect.team_name = true
           })
       }
 

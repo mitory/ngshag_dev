@@ -2,9 +2,9 @@
     <div class=''>
         <div v-if="tasks != null">
             <p v-if="user_name"><em>{{ user_name }}, начался отборочный этап мероприятия, теперь ты можешь приступить к
-                    выполнению задач. <br>Отправлять решения можно до 22.10.2023</em></p>
+                    выполнению задач. <br>Отправлять решения можно до 25.10.2023 включительно</em></p>
             <p v-else><em>Уважаемый пользователь! начался отборочный этап мероприятия, теперь ты можешь приступить к
-                    выполнению задач. <br>Отправлять решения можно до 22.10.2023</em></p>
+                    выполнению задач. <br>Отправлять решения можно до 25.10.2023 включительно</em></p>
             <h2 class="text-center mb-5">Задачи для отбора участников по направлениям:</h2>
 
             <div v-for="task in tasks" :value="task.id" :key="task.id" class="mb-2 border-bottom pb-1"
@@ -79,15 +79,21 @@ export default {
                             if (response.data) {
                                 this.tasks[i]['status'] = response.data.is_accepted_display
                                 this.tasks[i]['is_accepted'] = response.data.is_accepted
-                                if (this.tasks[i]['is_accepted'] == 'C' || this.tasks[i]['is_accepted'] == 'О') {
-                                    this.tasks[i]['button_text'] = "Перейти к условию";
+                                if (this.tasks[i].is_end_date_passed) {
+                                    if (this.tasks[i]['is_accepted'] == 'C' || this.tasks[i]['is_accepted'] == 'О') {
+                                        this.tasks[i]['button_text'] = "Перейти к условию";
+                                    }
                                 }
+
                                 // if (this.tasks[i]['is_accepted'] == 'П' || this.tasks[i]['is_accepted'] == 'Н') {
                                 //     this.tasks[i]['button_text'] = null;
                                 // }
                             }
                         } else {
-                            this.tasks[i]['button_text'] = "Приступить к выполнению";
+                            if (this.tasks[i].is_end_date_passed) {
+                                this.tasks[i]['button_text'] = "Приступить к выполнению";
+                            }
+
                         }
                     })
                 }
@@ -133,13 +139,18 @@ export default {
         },
         setTextButton() {
             for (let i = 0; i < this.tasks.length; ++i) {
-                if (this.tasks[i].is_accepted == 'C' || this.tasks[i].is_accepted == 'О') {
-                    this.tasks[i]['button_text'] = "Перейти к условию";
-                } else if (this.tasks[i].is_accepted == 'П' || this.tasks[i].is_accepted == 'Н') {
+                if (!this.tasks[i].is_end_date_passed) {
                     this.tasks[i]['button_text'] = null;
                 } else {
-                    this.tasks[i]['button_text'] = "Приступить к выполнению";
+                    if (this.tasks[i].is_accepted == 'C' || this.tasks[i].is_accepted == 'О') {
+                        this.tasks[i]['button_text'] = "Перейти к условию";
+                    } else if (this.tasks[i].is_accepted == 'П' || this.tasks[i].is_accepted == 'Н') {
+                        this.tasks[i]['button_text'] = null;
+                    } else {
+                        this.tasks[i]['button_text'] = "Приступить к выполнению";
+                    }
                 }
+
 
             }
 

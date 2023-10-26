@@ -5,7 +5,7 @@
       <p>{{ event_data.text }}</p>
       <p>Начало мероприятия: {{ event_data.start_date }}</p>
       <p>Окончание мероприятия: {{ event_data.end_date }}</p>
-<!--      <p>Максимальное количество участников в команде: {{ event_data.team_size }}</p>
+      <!--      <p>Максимальное количество участников в команде: {{ event_data.team_size }}</p>
       <p>Максимальное количество участников в мероприятии: {{ event_data.max_members }}</p>-->
       <button class="btn btn-primary m-3">
         <router-link :to="{ name: 'regTeamPage', params: { id_event: this.$route.params.id_event } }">
