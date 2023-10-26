@@ -36,6 +36,7 @@
 <script>
 import { validateService } from '../services/validate.service'
 import { teamService } from '../services/team.service'
+import { userService } from '../services/user.service'
 import BackLink from './mini-components/BackLink.vue'
 
 export default {
@@ -63,7 +64,12 @@ export default {
         teamService.registerTeam({ team_name: this.team_name, team_password: '111' }, this.$route.params.id_event)
           .then(response => {
             this.$store.dispatch('alert/sendMessage', { message: response.ok, type: 'Success' })
-            this.$router.push("/LK/my-teams");
+            userService.postUserEvent(1).then(() => {
+              this.$router.push("/LK/my-teams");
+            }).catch((error) => {
+              console.log(error)
+              this.$router.push("/LK/my-teams");
+            })
           }).catch(error => {
             if (error.status && error.status == 400) {
               this.$store.dispatch('alert/sendMessage', { message: error.error, type: 'Danger' });

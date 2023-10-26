@@ -38,10 +38,10 @@ async function refresh() {
                 localStorage.setItem('user', JSON.stringify(response.data));
                 return true;
             } else {
-                return false
+                logout()
             }
         } catch {
-            return false
+            logout()
         }
     } else {
         logout()
