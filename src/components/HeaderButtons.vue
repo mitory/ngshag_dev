@@ -56,6 +56,10 @@
           <router-link @click="liClicked" :class="{ 'active': this.$route.path === '/' }"
             class="custom__link text-decoration-none" to="/">Главная</router-link>
         </li>
+        <li :class="{ 'active': this.$route.path === '/news' }">
+          <router-link @click="liClicked" :class="{ 'active': this.$route.path === '/news' }"
+            class="custom__link text-decoration-none" to="/news">Новости</router-link>
+        </li>
         <li :class="{ 'active': this.$route.path === '/policies-and-procedures' }">
           <router-link @click="liClicked" :class="{ 'active': this.$route.path === '/policies-and-procedures' }"
             class="custom__link text-decoration-none" to="/policies-and-procedures">Правила</router-link>
@@ -299,5 +303,6 @@ body {
 
 .custom__link:hover {
   color: #225384;
-}</style>
+}
+</style>
   

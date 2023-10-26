@@ -433,5 +433,3 @@ async function getVerificeAcc(id, token) {
 //         }
 //     }
 // }
-
-

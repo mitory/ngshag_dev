@@ -27,6 +27,7 @@
 
 <script>
 import { teamService } from '../services/team.service'
+import { userService } from '../services/user.service'
 import { validateService } from '../services/validate.service'
 
 export default {
@@ -52,7 +53,12 @@ export default {
             if (this.isCorrect.team_code) {
                 teamService.invitingTeam(this.team_code).then(response => {
                     this.$store.dispatch('alert/sendMessage', { message: response.message, type: 'Success' })
-                    this.$router.push("/LK/my-teams");
+                    userService.postUserEvent(1).then(() => {
+                        this.$router.push("/LK/my-teams");
+                    }).catch((error) => {
+                        console.log(error)
+                        this.$router.push("/LK/my-teams");
+                    })
                 }).catch(error => {
                     if (error.status && error.status == 400) {
                         this.$store.dispatch('alert/sendMessage', { message: error.error, type: 'Danger' });

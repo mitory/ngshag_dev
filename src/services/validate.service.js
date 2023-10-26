@@ -25,7 +25,6 @@ function checkIsOnlyNumbers(str) {
 }
 
 function checkIsEmptyStr(str) {
-    str = str.trim()
     return str === '' || str === null || str === undefined;
 }
 

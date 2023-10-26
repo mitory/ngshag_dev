@@ -8,6 +8,7 @@
           <p>{{ format_date(news_item.publish_date) }}</p>
         </div>
       </div>
+      <router-link class="text-dark cursor" to="/news">Все новости</router-link>
     </div>
   </article>
 </template>
