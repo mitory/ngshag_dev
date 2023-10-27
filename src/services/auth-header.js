@@ -4,7 +4,8 @@ export default function authHeader() {
     if (user && user.access) {
         return {
             Authorization: 'Bearer ' + user.access,
-            'ngrok-skip-browser-warning': '69420'
+            'ngrok-skip-browser-warning': '69420',
+            "Cache-Control": "no-cache, no-store, must-revalidate"
         };
     } else {
         return {};
