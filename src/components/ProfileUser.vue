@@ -1,6 +1,7 @@
 <template>
     <div>
-        <div v-if="!user.error">
+        <h1>Ведутся технические работы</h1>
+        <!-- <div v-if="!user.error">
             <h1 v-if="user.first_name && user.last_name" class="mb-4">{{ user.first_name + ' ' + user.last_name }}</h1>
             <div v-if="user.categories != null && user.categories.length == 0"
                 class="mb-3 text-center text-white bg-primary p-2 rounded">
@@ -56,7 +57,7 @@
         </div>
         <div v-else>
             <h3>{{ user.error }}</h3>
-        </div>
+        </div> -->
     </div>
 </template>
 
