@@ -20,7 +20,7 @@
             </button>
           </div>
         </div>
-        <div v-else>
+        <div v-else class="col-7 mx-auto text-center">
           <h3>{{ message }}</h3>
         </div>
       </div>
