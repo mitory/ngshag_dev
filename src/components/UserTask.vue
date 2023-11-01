@@ -139,7 +139,7 @@ export default {
             this.selectedFile = event.target.files[0];
         },
         uploadFile() {
-            if (!this.selectedFile) {
+            if (!this.$refs.fileInput.value) {
                 this.$store.dispatch('alert/sendMessage', { message: 'Файл не загружен', type: 'Danger' });
                 return;
             } else {
