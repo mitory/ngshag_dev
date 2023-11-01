@@ -52,28 +52,6 @@
         <div class='menu-button'></div>
       </label>
       <ul class="menu">
-        <li :class="{ 'active': this.$route.path === '/' }">
-          <router-link @click="liClicked" :class="{ 'active': this.$route.path === '/' }"
-            class="custom__link text-decoration-none" to="/">Главная</router-link>
-        </li>
-        <li :class="{ 'active': this.$route.path === '/news' }">
-          <router-link @click="liClicked" :class="{ 'active': this.$route.path === '/news' }"
-            class="custom__link text-decoration-none" to="/news">Новости</router-link>
-        </li>
-        <li :class="{ 'active': this.$route.path === '/policies-and-procedures' }">
-          <router-link @click="liClicked" :class="{ 'active': this.$route.path === '/policies-and-procedures' }"
-            class="custom__link text-decoration-none" to="/policies-and-procedures">Правила</router-link>
-        </li>
-        <li :class="{ 'active': this.$route.path === '/about-project' }">
-          <router-link @click="liClicked" :class="{ 'active': this.$route.path === '/about-project' }"
-            class="custom__link text-decoration-none" to="/about-project">О проекте</router-link>
-        </li>
-        <li :class="{ 'active': this.$route.path === '/LK' }">
-          <router-link @click="liClicked" :class="{ 'active': this.$route.path === '/LK' }"
-            v-if="loggedIn /*&& this.routes.isProfilePage*/" class="custom__link text-decoration-none" to="/LK">
-            Личный кабинет
-          </router-link>
-        </li>
         <li><router-link v-if="loggedIn" class="custom__link text-decoration-none" to="/login">Выйти</router-link></li>
       </ul>
     </section>

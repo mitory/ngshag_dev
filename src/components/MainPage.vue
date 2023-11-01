@@ -1,121 +1,36 @@
 <template>
   <div class="container">
     <div class="row d-flex justify-content-between">
-      <div class="col-lg-8">
+      <div>
         <h1 class="fs-3 text-center mb-4">Студенческий фестиваль ИТ-профессий<br>«Новый шаг-2023»</h1>
-        <p class="fs-6 text-primary"><em>Проводится с 3 по 7 ноября 2023 года</em></p>
-
-        <!-- <p class="mb-3 text-center text-white bg-primary p-2 rounded">
-          Для дальнейшего участия необходимо выбрать номинацию и пройти отборочный этап, представив свои решения задач
-          комиссии.
-          Приём решений заканчивается 25.10.2023 23:59.
-          Лучшие участники по решению отборочной комиссии будут допущены к очному этапу мероприятия.
-          При проведении очного этапа допускается участие в нескольких номинациях, если соревнования по каждой из них не
-          проходят одновременно.
-        </p> -->
-
-        <p class="mb-3 text-center text-white bg-primary p-2 rounded">
-          Оргкомитет принял решение о свободном доступе к конкурсу по первым пяти номинациям. Это значит, что каждый может
-          принять участие в очном этапе.<br> Для этого переходи <router-link class="text-white"
-            to="/cps-cup">сюда</router-link> и выбери номинации, в которых ты бы хотел принять участие.
-          <br>Ожидаем твоего отклика до 31.10.2023 г. включительно.
+        <p v-if="user" class="col-8 mx-auto text-center text-primary mb-5">
+          <em>{{ user.first_name }}, добро пожаловать на чемпионат! Можешь приступать к выполнению задач. <br>Выложись по
+            полной,
+            мы верим в тебя!</em>
         </p>
+        <div v-if="tasks != null && load" class="col-8 mx-auto">
+          <div v-for="task in tasks" :value="task.id" :key="task.id"
+            class="mb-2 border-bottom pb-1 d-flex justify-content-between" :id="task.nomination">
+            <h5 class="mb-1 fs-6">Номинация: <span class="task__title">{{ task.nomination_name }}</span></h5>
+            <button class="btn btn-primary" @click="postTask(task.id, task.is_accepted)"
+              :class="{ 'd-none': task.is_accepted == 'П' || task.is_accepted == 'Н' }">
 
-        <h4 class="mb-3 d-none">Расписание проведения мероприятий:</h4>
-        <div class="mb-4 d-none">
-          <div class="mb-3 p-2 border border-primary rounded">
-            <h5 class="text-center">3 ноября</h5>
-            <ul>
-              <li class="mb-1">
-                с 9:00 до 15:00 Чемпионат Тверской области по спортивному программированию. <br>
-                Дисциплина <em>«Алгоритмическое программирование»</em>
-              </li>
-              <li class="mb-1">
-                с 15:00 до 17:30 Кубок НИИ «Центрпрограммсистем» по ИТ-дисциплинам – 2023. <br>
-                Направление: <em>DigitalArt</em>
-              </li>
-            </ul>
-          </div>
-          <div class="mb-3 p-2 border border-primary rounded">
-            <h5 class="text-center">4-5 ноября:</h5>
-            <ul>
-              <li class="mb-1">
-                с 10:00 4.10 до 10:00 5.10 Чемпионат Тверской области по спортивному программированию. <br> Дисциплина
-                <em>«Продуктовое программирование»</em>
-              </li>
-              <li class="mb-1">
-                с 12:00 до 14:30 Кубок НИИ «Центрпрограммсистем» по ИТ-дисциплинам – 2023. <br>
-                Направление: <em>Компьютерные сети</em>
-              </li>
-            </ul>
-          </div>
-          <div class="mb-3 p-2 border border-primary rounded">
-            <h5 class="text-center">7 ноября:</h5>
-            <ul>
-              <li class="mb-1">
-                с 9:00 до 17:30 Кубок НИИ «Центрпрограммсистем» по ИТ-дисциплинам – 2023. <br>
-                Направления: <em>программирование, математическое моделирование</em>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="mb-4">
-          <h4 class="mb-3">Текущие номинации:</h4>
-          <ul class="list-group list-group-flush mb-2">
-            <router-link class="link-underline-none" v-for="nomination in nominations" :key="nomination.id"
-              :to="{ name: 'tasks', params: { hash: nomination.id } }" v-scroll-to="'#' + nomination.id">
-              <li class="list-group-item link-nomination">
-                {{ nomination.id }}. {{ nomination.name }}
-              </li>
-            </router-link>
-          </ul>
-          <!-- <div class="d-flex justify-content-end">
-            <router-link class="btn btn-primary text-white" to="/LK/my-tasks">Перейти к задачам</router-link>
-          </div> -->
-        </div>
-        <div class="mb-4">
-          <div class="mb-1">
-            <h4>Организаторы</h4>
-          </div>
-          <p class="mb-1">
-            Главный организатор: Научно-исследовательский институт «<a href="https://cps.tver.ru"
-              target="_blank">Центрпрограммсистем</a>»
-          </p>
-          <p>При поддержке:
-            <a href="https://fsp-russia.com/" target="_blank">
-              Федерации спортивного программирования по Тверской области
-            </a>
-          </p>
-          <p>Соорганизаторы:</p>
-          <ul>
-            <li>Региональный оператор связи группа компаний «<a href="https://www.an-net.ru" target="_blank">Аннет</a>»
-            </li>
-            <li>Российский производитель электроники Научно-производственное объединение «<a href="https://npoavk.ru/"
-                target="_blank">Автоматизированные вычислительные комплексы</a>»</li>
-          </ul>
-        </div>
-        <div>
-          Место проведения:
-          <a class="text-dark" target="_blank"
-            href="https://yandex.ru/maps/14/tver/house/prospekt_nikolaya_korytkova_3b/Z0wYfgZnTUIDQFtsfXR1d3xrYg==/?ll=35.817475%2C56.846086&z=16">
-            БЦ
-            «Октябрьский», проспект Н. Корыткова, д. 3б,</a> помещение № 247 (2 этаж)
+              {{ task['button_text'] }}
 
+            </button>
+          </div>
         </div>
-      </div>
-      <div class="col-lg-3">
-        <NewsBar class="mb-2 mb-lg-5"></NewsBar>
-        <EventsBar></EventsBar>
+        <div v-else>
+          <h3>{{ message }}</h3>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-// import { publicService } from '../services/public.service'
-import NewsBar from './NewsBar.vue'
-import EventsBar from './EventsBar.vue'
 import { publicService } from '../services/public.service'
+import { userService } from '../services/user.service'
 
 export default {
 
@@ -123,26 +38,102 @@ export default {
   data() {
     return {
       events: [],
-      pages: [
-        { title: 'Мероприятия', id: 1 },
-        { title: 'Новости', id: 2 }
-      ],
-      nominations: []
+      nominations: [],
+      tasks: null,
+      message: '',
+      ids_nomination: [],
+      load: false,
+      user: null
     }
   },
-  components: {
-    NewsBar, EventsBar
-  },
-  created() {
-    this.$store.commit('routes/toMainPage')
-    publicService.getNominations().then(response => {
-      this.nominations = response
-    })
-    // publicService.getEventsList().then(response => {
-    //   this.events = response;
-    // })
+  async created() {
+
+    const user_data = JSON.parse(localStorage.getItem('user_data'));
+
+    if (user_data) {
+      this.user = user_data
+    } else {
+      userService.getLkInfo().then(data => {
+        this.user = data;
+      }).catch(() => {
+        this.user = null
+      })
+    }
+
+    try {
+      this.$store.commit('routes/toMainPage')
+
+      const eventList = await publicService.getEventsList();
+      this.events = eventList;
+      const response = await userService.getTasks()
+      if (response.status) {
+        this.tasks = response.data;
+      } else {
+        this.tasks = null
+        this.message = response.message
+        return;
+      }
+
+      for (let i = 0; i < this.events.length; ++i) {
+        const userEvent = await userService.getUserEvent(this.events[i].id);
+        if (!userEvent.data) {
+          const event = await publicService.getEvent(this.events[i].id)
+          this.tasks = this.tasks.filter(x => x.nomination != Number(event.text))
+        }
+      }
+      this.load = true
+
+      if (response.status) {
+        this.tasks.sort((a, b) => a.nomination - b.nomination);
+
+        for (let i = 0; i < this.tasks.length; ++i) {
+          userService.getTaskStatus(this.tasks[i].id).then(response => {
+            if (response.status) {
+              if (response.data) {
+                this.tasks[i]['status'] = response.data.is_accepted_display
+                this.tasks[i]['is_accepted'] = response.data.is_accepted
+                if (this.tasks[i].is_end_date_passed) {
+                  if (this.tasks[i]['is_accepted'] == 'C' || this.tasks[i]['is_accepted'] == 'О') {
+                    this.tasks[i]['button_text'] = "Перейти к условию";
+                  }
+                }
+              }
+            } else {
+              if (this.tasks[i].is_end_date_passed) {
+                this.tasks[i]['button_text'] = "Приступить к выполнению";
+              }
+
+            }
+          })
+        }
+
+        if (this.tasks.length == 0) {
+          this.tasks = null
+          this.message = 'Задач не найдено'
+        }
+      }
+    } catch {
+      this.message = 'Что-то пошло не так, попробуйте обновить страницу и перезайти в аккаунт. Если это не помогло, позовите организатора.'
+    }
   },
   methods: {
+    postTask(id, is_accepted) {
+      if (!is_accepted) {
+        const formData = new FormData();
+        formData.append('task_id', id);
+
+        userService.postTaskFile(formData).then(() => {
+          this.$store.dispatch('alert/sendMessage', { message: 'Вы приступили к выполнению!', type: 'Success' })
+          this.$router.push("/my-tasks/" + id);
+        }).catch(error => {
+          this.$store.dispatch('alert/sendMessage', { message: error.response.data.error, type: 'Danger' });
+        })
+      } else {
+        this.$router.push("/my-tasks/" + id);
+      }
+
+
+    }
   }
 }
 </script>

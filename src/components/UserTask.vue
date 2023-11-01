@@ -1,27 +1,15 @@
 <template>
-    <div class=''>
-        <BackLink link="/LK/my-tasks" text="вернуться к списку задач" />
-        <!-- <div class="mb-2">
-            <router-link to="/LK/my-tasks">
-                <img src="../assets/img/arrow_back.svg" alt="Вернуться к полному списку" style="width: 20px" />
-                <span class="text-dark link_svg_text">вернуться к списку задач</span>
-            </router-link>
-        </div> -->
-
-        <!-- <h5 class="mb-1 fs-6">Номинация: <span class="task__title">{{ task.nomination_name }}</span></h5>
-        <p class="p-0 m-0 pb-1">Задача: <em class="text-primary task__title">{{ task.name }}</em></p> -->
+    <div class='col-8 mx-auto'>
+        <BackLink link="/" text="вернуться к выбору номинации" />
 
         <h3 class="task__title">{{ task.nomination_name }}</h3>
         <p>Задача: <em class="text-primary task__title">{{ task.name }}</em></p>
 
-        <!-- <h3 class="task__title">{{ task.name }}</h3>
-        <p>Номинация: <em class="text-primary">{{ task.nomination_name }}</em></p> -->
         <div class="mb-2">
             <h5>Описание задачи</h5>
             <p v-for="descr, index in task.description" :key="index" class="mb-1" v-html="descr"></p>
             <a v-if="task.file" :href="'/api/download-file/' + this.$route.params.id + '/'" download class="text-dark"
                 style="text-decoration: underline;">Скачать приложение</a>
-            <!-- <button @click="downloadFile">Скачать файл</button> -->
         </div>
         <div class="mb-2">
             <h5>Критерии оценки</h5>
@@ -139,7 +127,8 @@ export default {
             this.selectedFile = event.target.files[0];
         },
         uploadFile() {
-            if (!this.selectedFile) {
+            //this.updateFile()
+            if (!this.$refs.fileInput.value) {
                 this.$store.dispatch('alert/sendMessage', { message: 'Файл не загружен', type: 'Danger' });
                 return;
             } else {

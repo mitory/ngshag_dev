@@ -38,9 +38,6 @@
               </div>
             </div>
 
-            <router-link class="btn mb-2" to="/reg">
-              Еще нет аккаунта? Тогда зарегистрируйся!
-            </router-link>
             <div class="d-flex justify-content-between">
               <router-link to="/forgot-password" class="btn btn-secondary">Забыл пароль</router-link>
               <button type="submit" class="btn btn-primary">Войти</button>
