@@ -25,7 +25,7 @@
                 }">
                     {{ task.status }}
                 </p>
-                <div class="d-flex justify-content-end">
+                <div v-if="false" class="d-flex justify-content-end">
                     <button class="btn btn-primary" @click="postTask(task.id, task.is_accepted)" v-if="task['button_text']"
                         :class="{ 'd-none': task.is_accepted == 'П' || task.is_accepted == 'Н' }">
 

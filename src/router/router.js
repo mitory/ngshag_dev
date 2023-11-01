@@ -16,7 +16,7 @@ import SettingPage from '../components/SettingPage'
 import PasswordChange from '../components/PasswordChange'
 import ForgotPasswordPage from '../components/ForgotPasswordPage'
 import UserTaskList from '../components/UserTaskList'
-import UserTask from '../components/UserTask'
+// import UserTask from '../components/UserTask'
 import NewsPage from "../components/NewsPage";
 import HacatonPage from '../components/HacatonPage'
 import HackathonRegulations from '../components/HackathonRegulations'
@@ -97,11 +97,11 @@ export const router = createRouter({
                     component: TeamPage
                 },
                 { path: 'my-tasks', component: UserTaskList },
-                {
-                    path: 'my-tasks/:id',
-                    name: 'task',
-                    component: UserTask
-                },
+                // {
+                //     path: 'my-tasks/:id',
+                //     name: 'task',
+                //     component: UserTask
+                // },
                 {
                     path: 'my-tasks/:hash',
                     name: 'tasks',
