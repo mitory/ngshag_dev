@@ -44,7 +44,7 @@
             </div>
           </form>
         </div>
-        <NewsBar class="col-sm-3 mb-3 mb-sm-0"></NewsBar>
+        <div class="col-sm-3 mb-3 mb-sm-0"></div>
       </div>
       <div class="col-sm-4 mx-auto px-2 bg-dark bg-gradient text-white text-center text-align-center mt-5 rounded">
         <p>Почта для связи: <a href="mailto:nwstep@internet.ru" target="_blank">nwstep@internet.ru</a></p>
@@ -56,7 +56,6 @@
 <script>
 import { validateService } from '../services/validate.service'
 import { publicService } from '../services/public.service'
-import NewsBar from "@/components/NewsBar";
 
 export default {
   name: 'LoginPage',
@@ -72,9 +71,6 @@ export default {
       email_changed: false,
       password_changed: false,
     }
-  },
-  components: {
-    NewsBar
   },
   created() {
     this.$store.dispatch('auth/logout');
