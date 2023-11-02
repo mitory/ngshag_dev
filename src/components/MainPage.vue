@@ -3,7 +3,7 @@
     <div class="row d-flex justify-content-between">
       <div class="col-lg-8">
         <h1 class="fs-3 text-center mb-4">Студенческий фестиваль ИТ-профессий<br>«Новый шаг-2023»</h1>
-        <p class="fs-6 text-primary"><em>Проводится с 3 по 7 ноября 2023 года</em></p>
+        <p class="fs-6 text-primary"><em>Проводится с 5 по 7 ноября 2023 года</em></p>
 
         <!-- <p class="mb-3 text-center text-white bg-primary p-2 rounded">
           Для дальнейшего участия необходимо выбрать номинацию и пройти отборочный этап, представив свои решения задач
@@ -15,51 +15,26 @@
         </p> -->
 
         <p class="mb-3 text-center text-white bg-primary p-2 rounded">
-          Оргкомитет принял решение о свободном доступе к конкурсу по первым пяти номинациям. Это значит, что каждый может
-          принять участие в очном этапе.<br> Для этого переходи <router-link class="text-white"
-            to="/cps-cup">сюда</router-link> и выбери номинации, в которых ты бы хотел принять участие.
-          <br>Ожидаем твоего отклика до 31.10.2023 г. включительно.
+          Всем участникам было прислано письмо с датой проведения Кубка НИИ «Центрпрограммсистем» по ИТ-дисциплинам
+          и адресом площадки проведения,
+          а также с персональным временем прибытия на площадку. Пожалуйста, проверьте свою электронную почту, на которую
+          был зарегестрирован аккаунт.
         </p>
 
-        <h4 class="mb-3 d-none">Расписание проведения мероприятий:</h4>
-        <div class="mb-4 d-none">
+        <h5 class="mb-3">Расписание Кубка НИИ «Центрпрограммсистем» по ИТ-дисциплинам</h5>
+        <div class="mb-4">
           <div class="mb-3 p-2 border border-primary rounded">
-            <h5 class="text-center">3 ноября</h5>
+            <h5 class="text-center">5 ноября</h5>
             <ul>
-              <li class="mb-1">
-                с 9:00 до 15:00 Чемпионат Тверской области по спортивному программированию. <br>
-                Дисциплина <em>«Алгоритмическое программирование»</em>
-              </li>
-              <li class="mb-1">
-                с 15:00 до 17:30 Кубок НИИ «Центрпрограммсистем» по ИТ-дисциплинам – 2023. <br>
-                Направление: <em>DigitalArt</em>
-              </li>
-            </ul>
-          </div>
-          <div class="mb-3 p-2 border border-primary rounded">
-            <h5 class="text-center">4-5 ноября:</h5>
-            <ul>
-              <li class="mb-1">
-                с 10:00 4.10 до 10:00 5.10 Чемпионат Тверской области по спортивному программированию. <br> Дисциплина
-                <em>«Продуктовое программирование»</em>
-              </li>
-              <li class="mb-1">
-                с 12:00 до 14:30 Кубок НИИ «Центрпрограммсистем» по ИТ-дисциплинам – 2023. <br>
-                Направление: <em>Компьютерные сети</em>
-              </li>
-            </ul>
-          </div>
-          <div class="mb-3 p-2 border border-primary rounded">
-            <h5 class="text-center">7 ноября:</h5>
-            <ul>
-              <li class="mb-1">
-                с 9:00 до 17:30 Кубок НИИ «Центрпрограммсистем» по ИТ-дисциплинам – 2023. <br>
-                Направления: <em>программирование, математическое моделирование</em>
+              <li class="mb-1" v-for="nomination, index in nominations" :key="nomination.id">
+                c {{ timepoint[index].start }} до {{ timepoint[index].end }} {{ nomination.name }}
               </li>
             </ul>
           </div>
         </div>
-        <div class="mb-4">
+
+
+        <!-- <div class="mb-4 d-none">
           <h4 class="mb-3">Текущие номинации:</h4>
           <ul class="list-group list-group-flush mb-2">
             <router-link class="link-underline-none" v-for="nomination in nominations" :key="nomination.id"
@@ -68,11 +43,11 @@
                 {{ nomination.id }}. {{ nomination.name }}
               </li>
             </router-link>
-          </ul>
-          <!-- <div class="d-flex justify-content-end">
+          </ul> -->
+        <!-- <div class="d-flex justify-content-end">
             <router-link class="btn btn-primary text-white" to="/LK/my-tasks">Перейти к задачам</router-link>
           </div> -->
-        </div>
+        <!-- </div> -->
         <div class="mb-4">
           <div class="mb-1">
             <h4>Организаторы</h4>
@@ -127,7 +102,15 @@ export default {
         { title: 'Мероприятия', id: 1 },
         { title: 'Новости', id: 2 }
       ],
-      nominations: []
+      nominations: [],
+      timepoint: [
+        { start: '9:00', end: '13:00' },
+        { start: '9:00', end: '12:00' },
+        { start: '12:00', end: '14:00' },
+        { start: '15:00', end: '18:00' },
+        { start: '14:00', end: '15:00' },
+        { start: '15:00', end: '17:00' },
+      ]
     }
   },
   components: {
