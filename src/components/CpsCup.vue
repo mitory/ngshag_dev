@@ -73,7 +73,7 @@ export default {
                     const response = await userService.getUserEvent(event.id);
                     this.isNonActive.push(!response.data);
                     if (response.data) {
-                        this.nominations.push(event.title)
+                        this.nominations.push(event.name)
                     }
                 } catch (error) {
                     if (error.status && [400, 403].includes(error.status)) {
