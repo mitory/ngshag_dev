@@ -1,17 +1,18 @@
 <template>
     <div class=''>
         <div v-if="tasks != null">
-            <p v-if="user_name"><em>{{ user_name }}, начался отборочный этап мероприятия, теперь ты можешь приступить к
+            <!-- <p v-if="user_name"><em>{{ user_name }}, начался отборочный этап мероприятия, теперь ты можешь приступить к
                     выполнению задач. <br>Отправлять решения можно до 31.10.2023 включительно</em></p>
             <p v-else><em>Уважаемый пользователь! начался отборочный этап мероприятия, теперь ты можешь приступить к
-                    выполнению задач. <br>Отправлять решения можно до 31.10.2023 включительно</em></p>
-            <h2 class="text-center mb-5">Задачи для отбора участников по направлениям:</h2>
+                    выполнению задач. <br>Отправлять решения можно до 31.10.2023 включительно</em></p> -->
+            <h2 class="text-center mb-5">Задачи</h2>
 
             <div v-for="task in tasks" :value="task.id" :key="task.id" class="mb-2 border-bottom pb-1"
                 :id="task.nomination">
                 <!-- <h5 class="mb-1 fs-6">Задача: <span class="task__title">{{ task.name }}</span></h5> -->
-                <h5 class="mb-1 fs-6">Номинация: <span class="task__title">{{ task.nomination_name }}</span></h5>
-                <p class="p-0 m-0 pb-1">Задача: <em class="text-primary task__title">{{ task.name }}</em></p>
+                <!-- <h5 class="mb-1 fs-6">Номинация: <span class="task__title">{{ task.nomination_name }}</span></h5> -->
+                <h5 class="mb-1 fs-6"><span class="task__title">{{ task.name }}</span></h5>
+                <!-- <p class="p-0 m-0 pb-1">Задача: <em class="text-primary task__title">{{ task.name }}</em></p> -->
                 <!-- <p class="p-0 m-0 pb-1">Номинация: <em class="text-primary">{{ task.nomination_name }}</em></p> -->
                 <p v-if="task.is_user_category && !task.is_accepted" class="text-warning">
                     Рекомендовано
@@ -25,7 +26,7 @@
                 }">
                     {{ task.status }}
                 </p>
-                <div v-if="false" class="d-flex justify-content-end">
+                <div v-if="task['button_text']" class="d-flex justify-content-end">
                     <button class="btn btn-primary" @click="postTask(task.id, task.is_accepted)" v-if="task['button_text']"
                         :class="{ 'd-none': task.is_accepted == 'П' || task.is_accepted == 'Н' }">
 
@@ -34,9 +35,6 @@
                     </button>
                 </div>
             </div>
-            <p class="mb-2">Чем больше сведений о твоих компетенциях, чем больше ты смог решить присланных заданий, чем
-                быстрее это получилось сделать (да, время учитывается, но это не повод торопиться, сделай всё вдумчиво и
-                внимательно!), тем больше возможностей и бонусов по итогам Чемпионата.</p>
         </div>
         <div v-else>
             <h3>{{ message }}</h3>
