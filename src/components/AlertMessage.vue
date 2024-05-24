@@ -54,5 +54,6 @@ export default {
     bottom: 0;
     left: 0;
     width: 320px;
+    z-index: 2;
 }
 </style>

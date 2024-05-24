@@ -1,16 +1,15 @@
 <template>
     <div class="mb-2">
-        <router-link :to="link">
-            <img src="../../assets/img/arrow_back.svg" :alt="text" style="width: 20px" />
-            <span class="text-dark link_svg_text">{{ text }}</span>
-        </router-link>
+        <div class="cursor" @click="this.$router.back()">
+            <img src="../../assets/img/arrow_back.svg" alt="назад" style="width: 20px" />
+            <span class="text-white link_svg_text">{{ text }}</span>
+        </div>
     </div>
 </template>
 
 <script>
 export default {
     props: {
-        link: String,
         text: String
     },
     data() {

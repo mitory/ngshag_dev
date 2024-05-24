@@ -42,6 +42,7 @@ export const auth = {
             );
         },
         logout({ commit }, redirect = false) {
+            console.log(redirect)
             authService.logout(redirect);
             commit('logout');
         },
@@ -50,8 +51,6 @@ export const auth = {
                 response => {
                     commit('registerSuccess');
                     return response;
-                }).catch(() => {
-                    commit('registerFailure');
                 })
         }
     }

@@ -1,30 +1,38 @@
 <template>
   <article>
     <div class='text-white'>
-      <h4 class="text-dark text-center">Новости</h4>
-      <div v-for="news_item in news.results" :key="news_item.id">
-        <div class="news__item p-2 bg-primary bg-gradient rounded mb-2">
+      <h4 class="text-center">{{ newsText.header }}</h4>
+      <div class="d-flex align-items-stretch text-center justify-content-center" :class="classes">
+        <div v-for="news_item in news.results" :key="news_item.id" class="m-1 p-2 templ-item__bg mb-2">
           <h6>{{ news_item.title }}</h6>
           <p>{{ format_date(news_item.publish_date) }}</p>
         </div>
       </div>
-      <router-link class="text-dark cursor" to="/news">Все новости</router-link>
+      <div class="text-center">
+        <router-link class="text-decoration-underline text-white link hover-btn" to="/news">{{ newsText.all_news_button }}</router-link>
+      </div>
     </div>
   </article>
 </template>
 
 <script>
 import { publicService } from "@/services/public.service";
+import { newsText } from '../texts/news.text'
 
 export default {
+  props: {
+    classes: String
+  },
   data() {
     return {
       news: {
         results: [],
       },
+      newsText: {}
     }
   },
   created() {
+    this.newsText = newsText;
     publicService.getNews(2).then(response => {
       this.news = response
     })

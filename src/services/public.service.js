@@ -1,15 +1,62 @@
 import axios from 'axios';
 import config from '../config'
+import authHeader from './auth-header';
 
 const API_URL = config.apiURL;
 
 export const publicService = {
-    getEventsList, getEvent, sendSourse, getSendEmailForChangePass, getNominations, getNews
+    getActualEventsList, getEvent, sendSourse, getSendEmailForChangePass, getNominations, getNews,
+    getMainMessge, getPageContent, getNominationsFromEvent, getSchedule, getEducationType, checkEmail
 };
 
-async function getEventsList() {
+//УБРАТЬ
+async function getEducationType() {
     try {
-        const response = await axios.get(API_URL + 'event/', {
+        const response = await axios.get(API_URL + 'education_type/', {
+            headers: { 'ngrok-skip-browser-warning': '69420' }
+        });
+        return response.data;
+    } catch (err) {
+        return { text: "Что-то пошло не так...Попробуйте обновить страницу!" }
+    }
+}
+
+async function getSchedule() {
+    try {
+        const response = await axios.get(API_URL + 'schedule/', {
+            headers: { 'ngrok-skip-browser-warning': '69420' }
+        });
+        return response.data;
+    } catch (err) {
+        return { text: "Что-то пошло не так...Попробуйте обновить страницу!" }
+    }
+}
+
+async function getPageContent(name) {
+    try {
+        const response = await axios.get(API_URL + 'page_static/' + name + '/', {
+            headers: { 'ngrok-skip-browser-warning': '69420' }
+        });
+        return response.data;
+    } catch (err) {
+        return { content: "Что-то пошло не так...Попробуйте обновить страницу!" }
+    }
+}
+
+async function getMainMessge() {
+    try {
+        const response = await axios.get(API_URL + 'main_message/', {
+            headers: { 'ngrok-skip-browser-warning': '69420' }
+        });
+        return response.data[0];
+    } catch (err) {
+        return { text: "Что-то пошло не так...Попробуйте обновить страницу!" }
+    }
+}
+
+async function getActualEventsList() {
+    try {
+        const response = await axios.get(API_URL + 'event_actual/', {
             headers: { 'ngrok-skip-browser-warning': '69420' }
         });
         return response.data;
@@ -25,8 +72,34 @@ async function getSendEmailForChangePass(email) {
         });
         return response.data;
     } catch (err) {
-        return { ok: 'no', message: err.response.data.Error }
+        if(err.response.status !== 500){
+             return { ok: 'no', message: err.response.data.Error }
+        } else {
+            return { ok: 'no', message: 'Сервер не отвечает, попробуйте позднее' }
+        }
+       
     }
+}
+
+function checkEmail(email, state_autorize) {
+
+    const head = state_autorize ? authHeader(): { 'ngrok-skip-browser-warning': '69420' };
+
+    return new Promise((resolve) => {
+        axios.post(API_URL + `check_email/`, {
+            email: email,
+        }, {
+            headers: head
+        }).then(() => {
+            resolve({ status: true });
+        }).catch(error => {
+            if (error.response && error.response.status === 500) {
+                resolve({ status: false, message: 'Сервер не отвечает, попробуйте позднее' })
+            } else {
+                resolve({ status: false, message: error.response.data.message })
+            }
+        });
+    })
 }
 
 async function getNews(page_size = 1, page = 1) {
@@ -48,6 +121,17 @@ async function getNominations() {
         return response.data;
     } catch (err) {
         return { message: err.response.data.Error }
+    }
+}
+
+async function getNominationsFromEvent(id_event) {
+    try {
+        const response = await axios.get(API_URL + 'nomination/' + id_event + '/', {
+            headers: { 'ngrok-skip-browser-warning': '69420' }
+        });
+        return response.data;
+    } catch (err) {
+        return err
     }
 }
 

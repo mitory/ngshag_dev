@@ -1,14 +1,41 @@
 import axios from 'axios';
 import authHeader from './auth-header';
 import config from '../config'
+import store from '../store/store'
 import { authService } from '../services/auth.service'
 
 const API_URL = config.apiURL;
 
 
 export const teamService = {
-    registerTeam, invitingTeam, getTeam
+    registerTeam, invitingTeam, getTeam, leaveTeam
 };
+
+async function leaveTeam(team_id) {
+    return new Promise((resolve, reject) => {
+        axios
+            .delete(API_URL + `team_leave/${team_id}/`,
+                {
+                    headers: authHeader(),
+                }).then((response) => {
+                    resolve(response.data)
+                }).catch(error => {
+                    if (error.response && error.response.status === 401) {
+                        authService.refresh().then(response => {
+                            if (response) {
+                                return leaveTeam(team_id).then(data => resolve(data))
+                                    .catch(error => reject(error));
+                            } else {
+                                store.dispatch('auth/logout', true);
+                            }
+                        })
+                    } else {
+                        reject(error);
+                    }
+                })
+
+    })
+}
 
 async function invitingTeam(code) {
     return new Promise((resolve, reject) => {
@@ -28,7 +55,7 @@ async function invitingTeam(code) {
                                 return invitingTeam(code).then(data => resolve(data))
                                     .catch(error => reject(error));
                             } else {
-                                this.$store.dispatch('auth/logout', true);
+                                store.dispatch('auth/logout', true);
                             }
                         })
                     } else if (error.response && [400, 403].includes(error.response.status)) {
@@ -56,7 +83,7 @@ async function getTeam(id_team) {
                             return getTeam(id_team).then(data => resolve(data))
                                 .catch(error => reject(error));
                         } else {
-                            this.$store.dispatch('auth/logout', true);
+                            store.dispatch('auth/logout', true);
                         }
                     })
                 } else if (error.response && error.response.status === 404) {
@@ -85,7 +112,7 @@ async function registerTeam(team, event_id) {
                         return registerTeam(team, event_id).then(data => resolve(data))
                             .catch(error => reject(error));
                     } else {
-                        this.$store.dispatch('auth/logout', true);
+                        store.dispatch('auth/logout', true);
                     }
                 })
             } else if (error.response && [400, 403].includes(error.response.status)) {

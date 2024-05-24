@@ -1,5 +1,5 @@
 export const validateService = {
-    checkNamesInput, checkIsEmail, checkIsOnlyRussianLetter, checkIsEmptyStr, checkAgeBetween, checkPhoneNumber, checkIsOnlyNumbers
+    checkNamesInput, checkIsEmail, checkIsOnlyRussianLetter, checkIsEmptyStr, checkAgeBetween, checkPhoneNumber, checkIsOnlyNumbers, correctiongTel, toStringDate
 };
 
 function checkNamesInput(field) {
@@ -12,9 +12,31 @@ function checkPhoneNumber(field) {
     return /^\+7\d{10}$/.test(field)
 }
 
-function checkIsEmail(str) {
-    return /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(str);
+function correctiongTel(phone) {
+    let new_phone = phone;
+    if (new_phone.length < 2 || !new_phone.startsWith('+7')) {
+        new_phone = '+7'
+    }
+    if (!/^[0-9+]+$/.test(new_phone)) {
+        new_phone = '+7';
+    }
+    if (new_phone.length > 12) {
+        new_phone = new_phone.substring(0, 12)
+    }
+    return new_phone;
 }
+
+function checkIsEmail(str) {
+    return !validateService.checkIsEmptyStr(str) && /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(str);
+}
+
+// function checkIsEmail(str) {
+//     return /(^$|^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([а-яА-Яa-zA-Z\-0-9]+\.)+[а-яА-Яa-zA-Z]{2,}))$)/.test(str);
+// }
+
+// function checkIsEmail(str) {
+//     return str;
+// }
 
 function checkIsOnlyRussianLetter(str) {
     return /^[а-яёА-ЯЁ]+(?:-[а-яёА-ЯЁ]+)*$/.test(str);
@@ -26,6 +48,9 @@ function checkIsOnlyNumbers(str) {
 
 function checkIsEmptyStr(str) {
     return str === '' || str === null || str === undefined;
+}
+function toStringDate(date){
+    return `${('0'+ (date.getDate() + 1)).slice(-2)}.${('0'+ (date.getMonth() + 1)).slice(-2)} ${date.getHours() < 10 ? '0' + date.getHours(): date.getHours()}:${date.getMinutes() < 10 ? '0' + date.getMinutes(): date.getMinutes()}`
 }
 
 function checkAgeBetween(field, start, end) {

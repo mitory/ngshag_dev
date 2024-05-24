@@ -3,24 +3,19 @@ import LoginPage from '../components/LoginPage'
 import ProfileUser from '../components/ProfileUser'
 import MainPage from '../components/MainPage'
 import RegPage from '../components/RegPage'
-// import EventPage from '../components/EventPage'
-import RegTeamPage from '../components/RegTeamPage'
-import InviteToTeamPage from '../components/InviteToTeamPage'
+import EventPage from '../components/EventPage'
 import TeamPage from '../components/TeamPage'
 import LK from '../components/LK'
 import UserTeams from '../components/UserTeams'
 import SetUserSkills from '../components/SetUserSkills'
-import AboutProject from '../components/AboutProject'
-import PoliciesAndProcedures from "../components/PoliciesAndProcedures";
 import SettingPage from '../components/SettingPage'
 import PasswordChange from '../components/PasswordChange'
 import ForgotPasswordPage from '../components/ForgotPasswordPage'
 import UserTaskList from '../components/UserTaskList'
 import UserTask from '../components/UserTask'
 import NewsPage from "../components/NewsPage";
-import HacatonPage from '../components/HacatonPage'
-import HackathonRegulations from '../components/HackathonRegulations'
-import CpsCup from '../components/CpsCup'
+import TemplatePage from '../components/TemplatePage'
+import CallBackForm from '../components/CallBackForm'
 
 export const router = createRouter({
     routes: [
@@ -29,16 +24,10 @@ export const router = createRouter({
             component: MainPage,
         },
         {
-            path: '/hackathon',
-            component: HacatonPage,
-        },
-        {
-            path: '/cps-cup',
-            component: CpsCup,
-        },
-        {
-            path: '/hackathon-regulations',
-            component: HackathonRegulations,
+            path: '/call-back',
+            component: CallBackForm,
+            name: 'callBackForm',
+            props: true
         },
         {
             path: '/login',
@@ -58,23 +47,15 @@ export const router = createRouter({
             component: RegPage,
             props: (route) => ({ source: route.query.source })
         },
-        // {
-        //     path: '/event/:id_event',
-        //     name: 'eventPage',
-        //     component: EventPage
-        // },
         {
-            path: '/reg-team/:id_event',
-            name: 'regTeamPage',
-            component: RegTeamPage
+            path: '/page/:name',
+            component: TemplatePage,
+            name: 'templatePage'
         },
         {
-            path: '/invite-to-team',
-            component: InviteToTeamPage
-        },
-        {
-            path: '/about-project',
-            component: AboutProject
+            path: '/event/:id',
+            name: 'eventPage',
+            component: EventPage
         },
         {
             path: '/LK',
@@ -111,10 +92,6 @@ export const router = createRouter({
             ]
         },
         {
-            path: '/policies-and-procedures',
-            component: PoliciesAndProcedures
-        },
-        {
             path: '/news',
             component: NewsPage
         },
@@ -127,9 +104,15 @@ export const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    const publicPages = ['/reg', '/login', '/setting-page-verifice-acc', '/forgot-password'];
+    const publicPages = [
+        '/reg', '/login', '/setting-page-verifice-acc', 
+        '/forgot-password', '/call-back', '/news'
+    ];
+    const publicRoutes = [
+        '/page/'
+    ];
     // const publicStartPath = ['/event/'];
-    const authRequired = publicPages.includes(to.path);
+    const authRequired = publicPages.includes(to.path) || publicRoutes.find(el => to.path.startsWith(el));
     const loggedIn = localStorage.getItem('user');
     // && publicStartPath.filter(str => to.path.startsWith(str)).length == 0
     if (!to.hash) {

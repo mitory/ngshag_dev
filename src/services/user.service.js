@@ -2,7 +2,7 @@ import axios from 'axios';
 import authHeader from './auth-header';
 import config from '../config'
 import { authService } from './auth.service'
-// import store from '../store/store'
+import store from '../store/store'
 // import router from '../router/router'
 
 const API_URL = config.apiURL;
@@ -11,14 +11,68 @@ export const userService = {
     getLkInfo, getUnivers, getFacults, getTeams,
     getSpecialty, getSkills, postSkills, getVerificeAcc,
     changePassword, sendEducationReport, getTasks, getTask,
-    postTaskFile, getTaskStatus, putTaskFile, getFile, postUserEvent,
-    deleteUserEvent, getUserEvent
+    postTaskFile, getTaskStatus, putTaskFile, getFile, postUserNomination,
+    deleteUserNomination, getUserNomination, getUserEventStageList, getTasksFromNomination,
+    getUserNominations, getTaskStatusAll
 };
 
-function sendEducationReport(source) {
+async function getUserNomination(id_nom) {
+    const param = id_nom ? `?nomination_id=${id_nom}`: '';
+    return new Promise((resolve, reject) => {
+        axios.get(API_URL + 'event_user/' + param,
+            {
+                headers: authHeader(),
+            }).then(response => {
+                resolve(response.data);
+
+            }).catch(error => {
+                if (error.response && error.response.status === 401) {
+                    authService.refresh().then(response => {
+                        if (response) {
+                            return getUserNomination(id_nom).then(data => resolve(data))
+                                .catch(error => reject(error));
+                        } else {
+                            store.dispatch('auth/logout', true);
+                        }
+                    })
+                } else if (error.response && [400, 403].includes(error.response.status)) {
+                    reject({ error: error.response.data.error, status: error.response.status })
+                } else {
+                    reject(false)
+                }
+            });
+    })
+}
+
+function getUserNominations(event_id){
+    const param = event_id ? `?event=${event_id}`: '';
+    return new Promise((resolve) => {
+        axios.get(API_URL + 'event_all/' + param, {
+            headers: authHeader()
+        }).then(response => {
+            resolve(response.data);
+        }).catch(error => {
+            if (error.response && error.response.status === 401) {
+                authService.refresh().then(response => {
+                    if (response) {
+                        return getUserNominations(event_id).then(data => resolve(data))
+                            .catch(error => resolve(error));
+                    } else {
+                        store.dispatch('auth/logout', true);
+                    }
+                })
+            } else {
+                resolve(error)
+            }
+        });
+    })
+}
+
+function sendEducationReport(source, category) {
     return new Promise((resolve) => {
         axios.post(API_URL + `education_report/`, {
-            source: source
+            source: source,
+            category: category
         }, {
             headers: authHeader()
         }).then(() => {
@@ -27,10 +81,10 @@ function sendEducationReport(source) {
             if (error.response && error.response.status === 401) {
                 authService.refresh().then(response => {
                     if (response) {
-                        return getTasks().then(data => resolve(data))
+                        return sendEducationReport(source, category).then(data => resolve(data))
                             .catch(error => resolve(error));
                     } else {
-                        this.$store.dispatch('auth/logout', true);
+                        store.dispatch('auth/logout', true);
                     }
                 })
             } else {
@@ -50,10 +104,10 @@ async function getTeams() {
             if (error.response && error.response.status === 401) {
                 authService.refresh().then(response => {
                     if (response) {
-                        return getTasks().then(data => resolve(data))
+                        return getTeams().then(data => resolve(data))
                             .catch(error => resolve(error));
                     } else {
-                        this.$store.dispatch('auth/logout', true);
+                        store.dispatch('auth/logout', true);
                     }
                 })
             } else {
@@ -64,7 +118,7 @@ async function getTeams() {
 }
 
 async function getTasks() {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         axios.get(API_URL + 'task/', {
             headers: authHeader()
         }).then(response => {
@@ -76,11 +130,11 @@ async function getTasks() {
                         return getTasks().then(tasksData => resolve(tasksData))
                             .catch(error => resolve(error));
                     } else {
-                        this.$store.dispatch('auth/logout', true);
+                        store.dispatch('auth/logout', true);
                     }
                 })
             } else {
-                resolve({ message: error.response.data.error, status: false })
+                reject({ message: error.response.data.error, status: false })
             }
         });
     })
@@ -101,7 +155,7 @@ async function getTask(id_task) {
                             return getTask(id_task).then(data => resolve(data))
                                 .catch(error => reject(error));
                         } else {
-                            this.$store.dispatch('auth/logout', true);
+                            store.dispatch('auth/logout', true);
                         }
                     })
                 } else if (error.response && error.response.status == 404) {
@@ -114,32 +168,60 @@ async function getTask(id_task) {
 }
 
 async function getFile(id_task) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         axios.get(API_URL + 'download-file/' + id_task + '/',
             {
                 headers: authHeader(),
             }).then(response => {
-                resolve({ data: response.data, status: true });
+                resolve(response.data);
 
             }).catch(error => {
                 if (error.response && error.response.status === 401) {
                     authService.refresh().then(response => {
                         if (response) {
-                            return getTask(id_task).then(data => resolve(data))
-                                .catch(error => resolve(error));
+                            return getFile(id_task).then(data => resolve(data))
+                                .catch(error => reject(error));
                         } else {
-                            this.$store.dispatch('auth/logout', true);
+                            store.dispatch('auth/logout', true);
                         }
                     })
                 } else {
-                    resolve({ message: error.response.data.error, status: false })
+                    reject(false)
                 }
             });
     })
 }
 
+async function getTaskStatusAll() {
+    return new Promise((resolve, reject) => {
+        axios.get(API_URL + 'task_status_all/',
+            {
+                headers: authHeader(),
+            }).then(response => {
+                resolve(response.data);
+
+            }).catch(error => {
+                if (error.response && error.response.status === 401) {
+                    authService.refresh().then(response => {
+                        if (response) {
+                            return getTaskStatusAll().then(data => resolve(data))
+                                .catch(error => reject(error));
+                        } else {
+                            store.dispatch('auth/logout', true);
+                        }
+                    })
+                } else if (error.response && error.response.status === 404) {
+                    reject(false)
+                } else {
+                    reject(false)
+                }
+            });
+
+    })
+}
+
 async function getTaskStatus(id_task) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         axios.get(API_URL + 'task_status/' + id_task + '/',
             {
                 headers: authHeader(),
@@ -151,15 +233,15 @@ async function getTaskStatus(id_task) {
                     authService.refresh().then(response => {
                         if (response) {
                             return getTaskStatus(id_task).then(data => resolve(data))
-                                .catch(error => resolve(error));
+                                .catch(error => reject(error));
                         } else {
-                            this.$store.dispatch('auth/logout', true);
+                            store.dispatch('auth/logout', true);
                         }
                     })
                 } else if (error.response && error.response.status === 404) {
-                    resolve({ status: false })
+                    reject({ status: false })
                 } else {
-                    resolve({ message: error.response.data.error, status: false })
+                    reject({ message: error.response.data.error, status: false })
                 }
             });
 
@@ -179,7 +261,7 @@ async function postTaskFile(formData) {
                         return postTaskFile(formData).then(data => resolve(data))
                             .catch(error => reject(error));
                     } else {
-                        this.$store.dispatch('auth/logout', true);
+                        store.dispatch('auth/logout', true);
                     }
                 })
             } else {
@@ -190,9 +272,35 @@ async function postTaskFile(formData) {
     })
 }
 
-async function postUserEvent(id_event) {
+// async function postUserEvent(id_event) {
+//     return new Promise((resolve, reject) => {
+//         axios.post(API_URL + `event_user/`, { event: id_event }, {
+//             headers: authHeader(),
+//         }).then(response => {
+//             resolve(response.data);
+//         }).catch(error => {
+//             if (error.response && error.response.status === 401) {
+//                 authService.refresh().then(response => {
+//                     if (response) {
+//                         return postUserEvent(id_event).then(data => resolve(data))
+//                             .catch(error => reject(error));
+//                     } else {
+//                         store.dispatch('auth/logout', true);
+//                     }
+//                 })
+//             } else if (error.response && [400, 403].includes(error.response.status)) {
+//                 reject({ status: 400, error: error.response.data.error })
+//             } else {
+//                 reject(error);
+//             }
+//         })
+
+//     })
+// }
+
+async function postUserNomination(id_nom) {
     return new Promise((resolve, reject) => {
-        axios.post(API_URL + `event_user/`, { event: id_event }, {
+        axios.post(API_URL + `event_user/`, { nomination: id_nom }, {
             headers: authHeader(),
         }).then(response => {
             resolve(response.data);
@@ -200,10 +308,10 @@ async function postUserEvent(id_event) {
             if (error.response && error.response.status === 401) {
                 authService.refresh().then(response => {
                     if (response) {
-                        return postUserEvent(id_event).then(data => resolve(data))
+                        return postUserNomination(id_nom).then(data => resolve(data))
                             .catch(error => reject(error));
                     } else {
-                        this.$store.dispatch('auth/logout', true);
+                        store.dispatch('auth/logout', true);
                     }
                 })
             } else if (error.response && [400, 403].includes(error.response.status)) {
@@ -216,25 +324,25 @@ async function postUserEvent(id_event) {
     })
 }
 
-async function getUserEvent(id_event) {
+async function getUserEventStageList() {
     return new Promise((resolve, reject) => {
-        axios.get(API_URL + 'event_user/' + id_event + '/',
+        axios.get(API_URL + 'event_stage/',
             {
                 headers: authHeader(),
             }).then(response => {
-                resolve({ data: response.data, status: true });
+                resolve({ data: response.data });
 
             }).catch(error => {
                 if (error.response && error.response.status === 401) {
                     authService.refresh().then(response => {
                         if (response) {
-                            return getUserEvent(id_event).then(data => resolve(data))
+                            return getUserEventStageList().then(data => resolve(data))
                                 .catch(error => reject(error));
                         } else {
-                            this.$store.dispatch('auth/logout', true);
+                            store.dispatch('auth/logout', true);
                         }
                     })
-                } else if (error.response && [400, 403].includes(error.response.status)) {
+                } else if (error.response) {
                     reject({ error: error.response.data.error, status: error.response.status })
                 } else {
                     reject({ status: false })
@@ -243,10 +351,10 @@ async function getUserEvent(id_event) {
     })
 }
 
-async function deleteUserEvent(id_event) {
+async function deleteUserNomination(id_nom) {
     return new Promise((resolve, reject) => {
         axios.delete(API_URL + `event_user/`, {
-            data: { event: id_event },
+            data: { nomination: id_nom },
             headers: authHeader(),
         }).then(response => {
             resolve(response.data);
@@ -254,10 +362,10 @@ async function deleteUserEvent(id_event) {
             if (error.response && error.response.status === 401) {
                 authService.refresh().then(response => {
                     if (response) {
-                        return deleteUserEvent(id_event).then(data => resolve(data))
+                        return deleteUserNomination(id_nom).then(data => resolve(data))
                             .catch(error => reject(error));
                     } else {
-                        this.$store.dispatch('auth/logout', true);
+                        store.dispatch('auth/logout', true);
                     }
                 })
             } else if (error.response && [400, 403].includes(error.response.status)) {
@@ -285,7 +393,7 @@ async function putTaskFile(formData) {
                         return putTaskFile(formData).then(data => resolve(data))
                             .catch(error => reject(error));
                     } else {
-                        this.$store.dispatch('auth/logout', true);
+                        store.dispatch('auth/logout', true);
                     }
                 })
             } else {
@@ -312,7 +420,7 @@ async function changePassword(old_pass, new_pass) {
                         return changePassword(old_pass, new_pass).then(data => resolve(data))
                             .catch(error => reject(error));
                     } else {
-                        this.$store.dispatch('auth/logout', true);
+                        store.dispatch('auth/logout', true);
                     }
                 })
             } else {
@@ -335,7 +443,7 @@ async function postSkills(skills) {
                         return postSkills(skills).then(data => resolve(data))
                             .catch(error => reject(error));
                     } else {
-                        this.$store.dispatch('auth/logout', true);
+                        store.dispatch('auth/logout', true);
                     }
                 })
             } else if (error.response && error.response.status === 403) {
@@ -363,7 +471,7 @@ function getLkInfo() {
                                 return getLkInfo().then(data => resolve(data))
                                     .catch(error => reject(error));
                             } else {
-                                this.$store.dispatch('auth/logout', true);
+                                store.dispatch('auth/logout', true);
                             }
                         })
                     } else {
@@ -373,25 +481,26 @@ function getLkInfo() {
     })
 }
 
-
-async function getUnivers() {
+// УБРАТЬ
+async function getUnivers(id) {
     try {
-        const response = await axios.get(API_URL + 'institutions/', {
+        const response = await axios.get(API_URL + 'institutions/' + id + '/', {
             headers: { 'ngrok-skip-browser-warning': '69420' }
         });
         return response.data;
     } catch (err) {
-        this.$store.dispatch('alert/sendMessage', { message: 'Не удалось получить ответ от сервера', type: 'Danger' })
+        store.dispatch('alert/sendMessage', { message: 'Не удалось получить ответ от сервера', type: 'Danger' })
     }
 }
 
+//Убрать
 async function getFacults(id) {
     const response = await axios.get(API_URL + `faculties/${id}/`, {
         headers: { 'ngrok-skip-browser-warning': '69420' }
     });
     return response.data;
 }
-
+//Убрать
 async function getSpecialty(id_inst, id_facult) {
     const response = await axios.get(API_URL + `specialty/${id_inst}/${id_facult}/`, {
         headers: { 'ngrok-skip-browser-warning': '69420' }
@@ -401,6 +510,13 @@ async function getSpecialty(id_inst, id_facult) {
 
 async function getSkills() {
     const response = await axios.get(API_URL + `skill/`, {
+        headers: { 'ngrok-skip-browser-warning': '69420' }
+    });
+    return response.data;
+}
+
+async function getTasksFromNomination(id, stage) {
+    const response = await axios.get(API_URL + `nomination_programs/${id}/${stage}/`, {
         headers: { 'ngrok-skip-browser-warning': '69420' }
     });
     return response.data;

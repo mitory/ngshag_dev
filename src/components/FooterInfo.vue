@@ -1,19 +1,34 @@
 <template>
-  <footer v-if="!is_none">
-    <div class="mt-2 p-2 bg-dark bg-gradient">
-      <div class="container d-flex flex-column flex-lg-row">
-        <div class="text-white col-lg-4 mb-2 mb-lg-0 align-self-center">©️ НИИ "Центрпрограммсистем", 2023г.</div>
-        <div class="text-white d-flex justify-content-end container">
-          <div class="d-flex flex-column">
-            <div>
-              <p>Почта для связи: <a href="mailto:nwstep@internet.ru" target="_blank">nwstep@internet.ru</a></p>
-            </div>
-            <div>
-              <p class="me-3 my-auto">
-                Телеграм-канал проекта: <a href="https://t.me/tverchamp" target="_blank">@tverchamp</a>
-              </p>
-              <img style="height: 50px;" src="../assets/img/tg_qr_code.png" alt="telegram qr-code">
-            </div>
+  <footer v-if="!is_none" class="bg_blue">
+    <div class="py-2 pb-3 pb-lg-0">
+      <div class="container d-flex flex-column-reverse flex-lg-row justify-content-lg-between align-items-center">
+        <div class="">
+          <a class="text-white link hover-btn" href="https://cps.tver.ru/" target="_blank">
+            <img src="../assets/img/logo-cps.png" style="max-width: 300px">
+            <!-- ©️ НИИ "Центрпрограммсистем", 2023г. -->
+          </a>
+        </div>
+        <div class="d-none d-md-block">
+          <img style="width: 100px;" src="../assets/img/tg_qr_code.png" alt="telegram qr-code">
+        </div>
+        <div class="text-white d-flex flex-column gap-2 py-2">
+          <div>
+            <p class="m-0">Почта для связи: <a class="text-white link hover-btn" href="mailto:nwstep@internet.ru" target="_blank">nwstep@internet.ru</a></p>
+          </div>
+          <div class="">
+              <router-link class="text-white link hover-btn" to='/call-back'>
+                  Форма обратной связи
+              </router-link>
+          </div>
+          <div>
+            <router-link class="text-white link hover-btn" to="/page/privacy">
+              Политика обработки персональных данных
+            </router-link>
+          </div>
+          <div>
+            <p class="">
+              Телеграм-канал проекта: <a class="text-white link hover-btn" href="https://t.me/tverchamp" target="_blank">@tverchamp</a>
+            </p>
           </div>
         </div>
       </div>
@@ -22,7 +37,17 @@
 </template>
 
 <script>
+import { loginText } from '../texts/login.text'
 export default {
+  data() {
+    return {
+      loginText: {}
+    }
+    
+  },
+  created(){
+    this.loginText = loginText;
+  },
   methods: {
   },
   computed: {
@@ -38,4 +63,5 @@ export default {
 
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

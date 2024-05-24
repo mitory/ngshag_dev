@@ -6,11 +6,11 @@
 
 <script>
 import { userService } from '../services/user.service'
+import { settingsText } from '../texts/settings.text'
 
 export default {
     data() {
         return {
-
         }
     },
     props: {
@@ -27,7 +27,7 @@ export default {
                 this.$store.dispatch('alert/sendMessage', { message: error.data.message, type: 'Danger' })
                 this.$router.push("/");
             } else {
-                this.$store.dispatch('alert/sendMessage', { message: 'Непредвиденная ошибка', type: 'Danger' })
+                this.$store.dispatch('alert/sendMessage', { message: settingsText.unexpected_error, type: 'Danger' })
                 this.$router.push("/");
             }
 

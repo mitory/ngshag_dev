@@ -1,82 +1,44 @@
 
 <template>
-  <!--  <header v-if="!is_none" class="mb-5 p-2 bg-primary bg-gradient">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary bg-gradient ">
-      <div class="container-fluid d-lg-flex justify-lg-content-between col-lg-10">
-        <a class="navbar-brand" href="#"><img style="height: 2em;" src="../assets/img/main_logo.svg"
-            alt="Новый Шаг" /></a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
-          aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse d-md-flex justify-content-md-center gap-md-5 justify-content-lg-end"
-          id="navbarTogglerDemo02">
-          <ul class="navbar-nav text-center my-lg-auto mx-lg-auto">
-            <li class="nav-item me-lg-3 my-auto">
-              <router-link :class="{ 'active': this.$route.path === '/' }" class=" custom__link text-decoration-none"
-                to="/">Главная</router-link>
-            </li>
-            <li class="nav-item  me-lg-3">
-              <router-link :class="{ 'active': this.$route.path === '/policies-and-procedures' }"
-                class="custom__link text-decoration-none" to="/policies-and-procedures">Правила</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link :class="{ 'active': this.$route.path === '/about-project' }"
-                class="custom__link text-decoration-none" to="/about-project">О проекте</router-link>
-            </li>
-          </ul>
-          <ul
-            class="navbar navbar-nav navbar-right d-flex flex-row flex-md-column-reverse flex-lg-row justify-content-center">
-            <li>
-              <router-link v-if="loggedIn && this.routes.isProfilePage" class="btn btn-light me-3" to="/LK">
-                Личный кабинет
-              </router-link>
-            </li>
-            <li>
-              <router-link v-if="loggedIn" class="btn btn-light mb-md-3 mb-0 mb-lg-0" to="/login">Выйти</router-link>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-  </header>-->
-  <header v-if="!is_none">
-    <section class="top-nav">
-      <div>
-        <router-link class="navbar-brand" to="/">
-          <img style="height: 2em;" src="../assets/img/main_logo2.svg" alt="Новый Шаг" />
-        </router-link>
-      </div>
-      <input id="menu-toggle" type="checkbox" />
-      <label class='menu-button-container' for="menu-toggle">
-        <div class='menu-button'></div>
-      </label>
-      <ul class="menu">
-        <li :class="{ 'active': this.$route.path === '/' }">
-          <router-link @click="liClicked" :class="{ 'active': this.$route.path === '/' }"
-            class="custom__link text-decoration-none" to="/">Главная</router-link>
-        </li>
-        <li :class="{ 'active': this.$route.path === '/news' }">
-          <router-link @click="liClicked" :class="{ 'active': this.$route.path === '/news' }"
-            class="custom__link text-decoration-none" to="/news">Новости</router-link>
-        </li>
-        <li :class="{ 'active': this.$route.path === '/policies-and-procedures' }">
-          <router-link @click="liClicked" :class="{ 'active': this.$route.path === '/policies-and-procedures' }"
-            class="custom__link text-decoration-none" to="/policies-and-procedures">Правила</router-link>
-        </li>
-        <li :class="{ 'active': this.$route.path === '/about-project' }">
-          <router-link @click="liClicked" :class="{ 'active': this.$route.path === '/about-project' }"
-            class="custom__link text-decoration-none" to="/about-project">О проекте</router-link>
-        </li>
-        <li :class="{ 'active': this.$route.path === '/LK' }">
-          <router-link @click="liClicked" :class="{ 'active': this.$route.path === '/LK' }"
-            v-if="loggedIn /*&& this.routes.isProfilePage*/" class="custom__link text-decoration-none" to="/LK">
-            Личный кабинет
+  <header v-if="!is_none" class="header__wrapper">
+    <div class="header">
+      <section class="top-nav">
+        <div>
+          <router-link class="navbar-brand" to="/">
+            <img style="height: 2em;" src="../assets/img/main_logo2.svg" alt="Новый Шаг" />
           </router-link>
-        </li>
-        <li><router-link v-if="loggedIn" class="custom__link text-decoration-none" to="/login">Выйти</router-link></li>
-      </ul>
-    </section>
+        </div>
+        <input id="menu-toggle" type="checkbox" />
+        <label class='menu-button-container' for="menu-toggle">
+          <div class='menu-button'></div>
+        </label>
+        <ul class="menu">
+          <li :class="{ 'active': this.$route.path === '/' }">
+            <router-link @click="liClicked" :class="{ 'active': this.$route.path === '/' }"
+              class="custom__link text-decoration-none" to="/">Главная</router-link>
+          </li>
+          <li :class="{ 'active': this.$route.path === '/news' }">
+            <router-link @click="liClicked" :class="{ 'active': this.$route.path === '/news' }"
+              class="custom__link text-decoration-none" to="/news">Новости</router-link>
+          </li>
+          <li :class="{ 'active': this.$route.path === '/page/regulations-project' }">
+            <router-link @click="liClicked" :class="{ 'active': this.$route.path === '/page/regulations-project' }"
+              class="custom__link text-decoration-none" to="/page/regulations-project">Правила</router-link>
+          </li>
+          <li :class="{ 'active': this.$route.path === '/page/about-project' }">
+            <router-link @click="liClicked" :class="{ 'active': this.$route.path === '/page/about-project' }"
+              class="custom__link text-decoration-none" to="/page/about-project">О проекте</router-link>
+          </li>
+          <li :class="{ 'active': this.$route.path.includes('/LK') }">
+            <router-link @click="liClicked" :class="{ 'active': this.$route.path.includes('/LK') }"
+              class="custom__link text-decoration-none" to="/LK">
+              Личный кабинет
+            </router-link>
+          </li>
+          <li><router-link v-if="loggedIn" class="custom__link text-decoration-none" to="/login">Выйти</router-link></li>
+        </ul>
+      </section>
+    </div>
   </header>
 </template>
 
@@ -104,7 +66,7 @@ export default {
       return this.$store.state.auth.status.loggedIn
     },
     is_none() {
-      return !this.loggedIn || this.$route.path === 'LK/set-user-skills' || this.$route.path === '/reg'
+      return !this.loggedIn
     }
   }
 }
@@ -112,9 +74,8 @@ export default {
 </script>
 <style scoped>
 header {
-  margin-bottom: 3em;
-  background: rgb(47, 130, 253);
-  background: linear-gradient(180deg, rgba(47, 130, 253, 1) 22%, rgba(22, 116, 253, 1) 71%);
+  background: #00d4ff;
+  /* background: linear-gradient(180deg, rgba(47, 130, 253, 1) 22%, rgba(22, 116, 253, 1) 71%); */
 }
 
 h2 {
@@ -142,6 +103,7 @@ body {
   color: #FFF;
   height: 50px;
   padding: 2em;
+
 }
 
 .menu {
@@ -208,6 +170,17 @@ body {
 }
 
 @media (max-width: 992px) {
+  .header__wrapper {
+    margin-bottom: 64px;
+    z-index: 1;
+  }
+  .header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 2;
+    background: #00d4ff;
+  }
   .menu-button-container {
     display: flex;
   }
@@ -221,6 +194,7 @@ body {
     width: 100%;
     justify-content: center;
     align-items: center;
+    z-index: 1;
   }
 
   #menu-toggle~.menu li {
@@ -244,7 +218,7 @@ body {
     margin: 0;
     padding: 0.5em 0;
     width: 100%;
-    background: #1674FD;
+    background: var(--color-second-blue);
     /*background: linear-gradient(180deg, rgba(47,130,253,1) 22%, rgba(22,116,253,1) 71%);*/
   }
 

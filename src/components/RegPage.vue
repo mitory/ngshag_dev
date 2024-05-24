@@ -1,702 +1,489 @@
-<style scoped></style>
-
 <template>
-    <div class="container">
-        <div class="row" style="min-height: 100vh">
-            <div class="col-sm-8 m-auto ">
-                <form @submit.prevent="registration" novalidate>
+    <div class="templ_bg bg__blue">
+        <div class = 'container'>
+            <div class="row" style="min-height: 100vh">
+                <form v-if="step !== -1" @submit.prevent="registration" novalidate class="m-auto form-template">
                     <transition name="slide-fade">
-                        <div v-show="step === 1" class="step">
-                            <h2 class="d-none d-lg-block text-primary mb-3 text-center mt-3">
-                                НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
-                            </h2>
-                            <h2 class="d-none d-lg-none d-md-block text-primary mb-3 text-center fs-4 mt-3">
-                                НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
-                            </h2>
-                            <h2 class="d-md-none d-block text-primary mb-3 text-center fs-6 mt-3">
-                                НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
-                            </h2>
+                        <div v-show="step === 1" class="step mt-2">
+                            <h2 class="mb-1 text-blue text-center fs-6 pt-3 pb-3" v-html="generalText.header"></h2>
                             <div>
-                                <p class="text-lg-center mx-auto">Привет! Это верный адрес, отсюда начинается твоё
-                                    будущее<br class="d-none d-lg-inline"> в
-                                    профессиональных информационных технологиях.</p>
-                                <div class="col-9 mx-lg-auto typewriter mb-3 p-1 border border-dark bg-secondary">
-                                    <p class="line m-0 pb-0 text-center text-mobile">
-                                        Давай знакомиться:
+                                <p class="text-center mx-auto">
+                                    {{ regText.hello_text1 }}
+                                </p>
+                                <div class="mx-lg-auto  mb-3">
+                                    <p class="line m-0 pb-0 text-center">
+                                        {{ regText.hello_text2 }}
                                     </p>
                                 </div>
                             </div>
-                            <div class="d-flex flex-column flex-lg-row justify-content-evenly mb-5">
-                                <div class="d-flex flex-column me-lg-4">
-                                    <div class="mb-3 col-ms-2">
-                                        <label for="last_name" class="form-label">Фамилия <span
-                                                class="text-danger">*</span></label>
-                                        <input @change="lastNameChanged" v-model="userData.last_name" type="text"
-                                            class="form-control"
-                                            v-bind:class="{ 'border-danger': !(isCorrect.last_name) && utility.firstStep.last_name_changed }"
-                                            id="last_name">
-                                        <div v-if="!(isCorrect.last_name) && utility.firstStep.last_name_changed"
-                                            id="last_name" class="form-text text-danger">
-                                            Введи свою фамилию <br class="d-none d-lg-inline">(Кириллица)
-                                        </div>
-                                    </div>
 
-                                    <div class="mb-3">
-                                        <label for="first_name" class="form-label">Имя <span
-                                                class="text-danger">*</span></label>
-                                        <input @change="firstNameChanged" v-model="userData.first_name" type="text"
-                                            class="form-control"
-                                            v-bind:class="{ 'border-danger': !(isCorrect.first_name) && utility.firstStep.first_name_changed }"
-                                            id="first_name">
+                            <FirstStepInputs :userData="userData" :isCorrect="isCorrect" ref="FirstStepComponent"/>
+                            <FooterReg :step="step" @next-step="nextStep" @back-step="backStep"/>
 
-                                        <div v-if="!(isCorrect.first_name) && utility.firstStep.first_name_changed"
-                                            id="first_name" class="form-text text-danger">
-                                            Введи своё имя <br class="d-none d-lg-inline">(Кириллица)
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label for="middle_name" class="form-label">Отчество</label>
-                                        <input @change="middleNameChanged" v-model="userData.middle_name" type="text"
-                                            class="form-control"
-                                            v-bind:class="{ 'border-danger': !(isCorrect.middle_name) && utility.firstStep.middle_name_chaged }"
-                                            id="middle_name">
-                                        <div v-if="!(isCorrect.middle_name) && utility.firstStep.middle_name_chaged"
-                                            id="middle_name" class="form-text text-danger">
-                                            Введи своё отчество <br class="d-none d-lg-inline">(Кириллица)
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="d-flex flex-column">
-
-                                    <div class="mb-3">
-                                        <label for="phone_number" class="form-label">Телефон <span
-                                                class="text-danger">*</span></label>
-                                        <input @input="checkFirstLetter" @change="phoneChanged"
-                                            v-model="userData.phone_number" maxlength="12" type="text" class="form-control"
-                                            v-bind:class="{ 'border-danger': !(isCorrect.phone_number) && utility.firstStep.phone_changed }"
-                                            id="phone_number" placeholder="+7XXXXXXXXXX">
-                                        <div v-if="!(isCorrect.phone_number) && utility.firstStep.phone_changed"
-                                            id="phone_number" class="form-text text-danger">
-                                            Введи свой номер телефона <br class="d-none d-lg-inline">например: +79998887766
-                                        </div>
-                                    </div>
-
-                                    <div class="">
-                                        <p>Пол</p>
-                                        <div class="d-flex justify-content-lg-evenly justify-content-center">
-                                            <div class="form-check me-5 me-lg-0">
-                                                <input v-model="userData.sex" class="form-check-input" type="radio"
-                                                    name="sex" id="M" value="M" checked>
-                                                <label class="form-check-label" for="M">
-                                                    Мужской
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input v-model="userData.sex" class="form-check-input" type="radio"
-                                                    name="sex" id="F" value="F">
-                                                <label class="form-check-label" for="F">
-                                                    Женский
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-center mb-2">
-                                <router-link class="btn" to="/login">
-                                    Уже есть аккаунт?
-                                </router-link>
-                                <button @click="nextStep" type="button" class="btn btn-primary">Следующий шаг</button>
-                            </div>
                         </div>
                     </transition>
+
                     <transition name="slide-fade">
-                        <div v-show="step === 2" class="step col-sm-8 mx-auto">
-                            <h4 class="d-none d-lg-block text-primary mb-3 text-center mt-3">
+                        <div v-show="step === 2" class="step mt-2">
+                            <!-- <h2 class="mb-1 text-primary text-center fs-6 pt-3 pb-3">
                                 НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
-                            </h4>
-                            <h4 class="d-none d-lg-none d-md-block text-primary mb-3 text-center fs-4 mt-3">
-                                НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
-                            </h4>
-                            <h4 class="d-md-none d-block text-primary mb-3 text-center fs-6 mt-3">
-                                НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
-                            </h4>
-                            <div class="d-flex typewriter mb-3 p-1 border border-dark bg-secondary">
-                                <p class="mb-0">Где ты учишься?</p>
-                            </div>
+                            </h2> -->
+                            <h2 class="mb-1 text-blue text-center fs-6 pt-3 pb-3" v-html="generalText.header"></h2>
                             <div>
-                                <select @change="getFacults(); universityChanged(); checkNotAnOption(); getSpecialty();"
-                                    class="form-select mb-3" v-model="userData.current_university"
-                                    v-bind:class="{ 'border-danger': !(this.isCorrect.current_university) && utility.secondStep.university_changed }">
-                                    <option value="-1" selected>Выбери учебное заведение</option>
-                                    <option v-for="uviver in utility.secondStep.univers" :value="uviver.id"
-                                        :key="uviver.id">
-                                        {{ uviver.institution_name }}
-                                    </option>
-                                </select>
-
-                                <div v-show="utility.secondStep.not_an_option.univers">
-                                    <div class="mb-3">
-                                        <label for="custom_univers" class="form-label">Напиши название учебного
-                                            заведения<span class="text-danger">*</span></label>
-                                        <input @change="customUniversChanged" v-model="utility.secondStep.custom_univers"
-                                            type="text" class="form-control"
-                                            v-bind:class="{ 'border-danger': !(isCorrect.custom_univers) && utility.secondStep.custom_univers_changed }"
-                                            id="custom_univers">
-                                    </div>
-                                </div>
-
-                                <select @change="getSpecialty(); facultyChanged(); checkNotAnOption();"
-                                    v-show="!utility.secondStep.not_an_option.univers" class="form-select mb-3"
-                                    v-model="userData.current_faculty"
-                                    v-bind:class="{ 'border-danger': !(this.isCorrect.current_faculty) && utility.secondStep.faculty_changed }">
-                                    <option value="-1" selected>Выбери Факультет</option>
-                                    <option v-for="facult in utility.secondStep.facults" :value="facult.id"
-                                        :key="facult.id">
-                                        {{ facult.faculty_name }}
-                                    </option>
-                                </select>
-
-                                <div
-                                    v-show="utility.secondStep.not_an_option.facults || utility.secondStep.not_an_option.univers">
-                                    <div class="mb-3">
-                                        <label for="custom_facults" class="form-label">Напиши название факультета<span
-                                                class="text-danger">*</span></label>
-                                        <input @change="customFacultsChanged" v-model="utility.secondStep.custom_facults"
-                                            type="text" class="form-control"
-                                            v-bind:class="{ 'border-danger': !(isCorrect.custom_facults) && utility.secondStep.custom_facults_changed }"
-                                            id="custom_facults">
-                                    </div>
-                                </div>
-
-                                <select @change="specialtyChanged(); checkNotAnOption();"
-                                    v-show="!utility.secondStep.not_an_option.univers && !utility.secondStep.not_an_option.facults && !utility.secondStep.not_an_option.specialty"
-                                    class="form-select mb-3" v-model="userData.current_specialty"
-                                    v-bind:class="{ 'border-danger': !(this.isCorrect.current_specialty) && utility.secondStep.specialty_changed }">
-                                    <option value="-1" selected>Выбери Специальность</option>
-                                    <option v-for="specialty in utility.secondStep.specialties" :value="specialty.id"
-                                        :key="specialty.id">
-                                        {{ specialty.specialty_name }}
-                                    </option>
-                                </select>
-
-                                <div
-                                    v-show="utility.secondStep.not_an_option.facults || utility.secondStep.not_an_option.univers || utility.secondStep.not_an_option.specialty">
-                                    <div class="mb-3">
-                                        <label for="custom_specialty" class="form-label">Напиши название специальности<span
-                                                class="text-danger">*</span></label>
-                                        <input @change="customSpecialtyChanged"
-                                            v-model="utility.secondStep.custom_specialty" type="text" class="form-control"
-                                            v-bind:class="{ 'border-danger': !(isCorrect.custom_specialty) && utility.secondStep.custom_specialty_changed }"
-                                            id="custom_specialty">
-                                    </div>
-                                </div>
-
-
-                                <div class="mb-3">
-                                    <label for="year" class="form-label">Курс<span class="text-danger">*</span></label>
-                                    <input @input="checkCorrectYear" @change="yearChanged" v-model="userData.year"
-                                        inputmode="numeric" pattern="\d*" maxlength="2" type="number" class="form-control"
-                                        v-bind:class="{ 'border-danger': !(isCorrect.year) && utility.secondStep.year_changed }"
-                                        id="year" style="width: 5em;">
-                                    <div v-if="!(isCorrect.year) && utility.secondStep.year_changed" id="year"
-                                        class="form-text text-danger">
-                                        Введи курс, на котором ты учишься.
-                                    </div>
+                                <div class="mx-lg-auto  mb-3">
+                                    <p class="line m-0 pb-0 text-center">
+                                        {{ regText.where_you_study }}
+                                    </p>
                                 </div>
                             </div>
-                            <div class="d-flex justify-content-center">
-                                <button @click="backStep" type="button" class="me-2 btn btn-light">Назад</button>
-                                <button @click="nextStep" type="button" class="btn btn-primary">Следующий шаг</button>
+
+                            <SecondStepInputs :userData="userData" :out_utility="utility" :isCorrect="isCorrect" ref="SecondStepComponent"/>
+
+                            <div class="d-flex justify-content-center my-3">
+                                <button @click="step = 3; selectedInst = false" type="button" class="link text-white hover-btn mx-auto">
+                                    {{ regText.button_to_hand_stduy }}
+                                </button>
                             </div>
+
+                            <FooterReg :step="step" @next-step="nextStep" @back-step="backStep"/>
                         </div>
                     </transition>
+
                     <transition name="slide-fade">
-                        <div v-show="step === 3" class="step col-sm-8 mx-auto">
-                            <h4 class="d-none d-lg-block text-primary mb-3 text-center mt-3">
-                                НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
-                            </h4>
-                            <h4 class="d-none d-lg-none d-md-block text-primary mb-3 text-center fs-4 mt-3">
-                                НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
-                            </h4>
-                            <h4 class="d-md-none d-block text-primary mb-3 text-center fs-6 mt-3">
-                                НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
-                            </h4>
-                            <div class="d-flex typewriter mb-3 p-1 border border-dark bg-secondary">
-                                <p class="mb-0">Осталось еще немного...</p>
-                            </div>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input @change="emailChanged" v-model="userData.email" type="email" class="form-control"
-                                    id="email"
-                                    v-bind:class="{ 'border-danger': !(isCorrect.email) && utility.thirdStep.email_changed }">
-                                <div v-if="!(isCorrect.email) && utility.thirdStep.email_changed" id="email"
-                                    class="form-text text-danger">
-                                    Введи корректный email. Например test@mail.ru
+                        <div v-show="step === 3" class="step mt-2">
+                            <h2 class="mb-1 text-blue text-center fs-6 pt-3 pb-3" v-html="generalText.header"></h2>
+                            <div>
+                                <div class="mx-lg-auto  mb-3">
+                                    <p class="line m-0 pb-0 text-center">
+                                        {{ regText.where_you_study }}
+                                    </p>
                                 </div>
                             </div>
 
-                            <div class="mb-3 pass-eye">
-                                <label for="password" class="form-label">Пароль</label>
-                                <input @change="passwordChanged" v-model="userData.password"
-                                    :type="utility.thirdStep.isShowPass ? 'text' : 'password'"
-                                    class="form-control pass-eye__inp" id="password"
-                                    v-bind:class="{ 'border-danger': !this.isCorrect.password }">
+                            <ThirdStepInputs :userData="userData" :isCorrect="isCorrect" ref="ThirdStepComponent"/>
 
-                                <span @click="utility.thirdStep.isShowPass = !utility.thirdStep.isShowPass"
-                                    class="pass-eye__btn" :class="{ 'active': utility.thirdStep.isShowPass }"></span>
+                            <p class="text-danger fw-bold">
+                                {{ regText.warning_about_fake_study }}
+                            </p>
 
+                            <div class="d-flex justify-content-center my-3">
+                                <button @click="step = 2; selectedInst = true" type="button" class="link text-white hover-btn mx-auto">
+                                    {{ regText.button_to_auto_study }}
+                                </button>
                             </div>
-                            <div class="mb-3 pass-eye">
-                                <label for="passwordConfirm" class="form-label">Повторите пароль</label>
-                                <input @change="passwordConfirmChanged" v-model="utility.thirdStep.passwordConfirm"
-                                    :type="utility.thirdStep.isShowConfirmPass ? 'text' : 'password'"
-                                    class="form-control pass-eye__inp" id="passwordConfirm"
-                                    v-bind:class="{ 'border-danger': !(isCorrect.password) && utility.thirdStep.password_confirm_changed }">
 
-                                <span @click="utility.thirdStep.isShowConfirmPass = !utility.thirdStep.isShowConfirmPass"
-                                    class="pass-eye__btn"
-                                    :class="{ 'active': utility.thirdStep.isShowConfirmPass, 'spacing-minus': !(isCorrect.password) && utility.thirdStep.password_confirm_changed }"></span>
+                            <FooterReg :step="step" @next-step="nextStep" @back-step="backStep"/>
+                        </div>
+                    </transition>
 
-                                <div v-if="!(isCorrect.password) && utility.thirdStep.password_confirm_changed"
-                                    id="password" class="form-text text-danger">
-                                    Убедись, что ты правильно повторил пароль
+                    <transition name="slide-fade">
+                        <div v-show="step === 4" class="step mt-2">
+                            <h2 class="mb-1 text-blue text-center fs-6 pt-3 pb-3" v-html="generalText.header"></h2>
+                            <div>
+                                <div class="mx-lg-auto  mb-3">
+                                    <p class="line m-0 pb-0 text-center">
+                                        {{ regText.run_to_finaly }}
+                                    </p>
                                 </div>
+                            </div>
+
+                            <FourStepInputs :userData="userData" :isCorrect="isCorrect" ref="FourStepComponent"/>
+                            
+
+                            <FooterReg :step="step" @back-step="backStep"/>
+                        </div>
+                    </transition>
+                </form>
+                <form v-else @submit.prevent="reg_hand" novalidate class="m-auto form-template">
+                    <transition name="slide-fade">
+                        <div class="step mt-2">
+                            <h2 class="mb-1 text-blue text-center fs-6 pt-3 pb-3" v-html="generalText.header"></h2>
+                            <div>
+                                <p class="text-center mx-auto">
+                                    {{ regText.about_auto_reg }}
+                                </p>
+                            </div>
+
+                            <FirstStepInputs :isCorrect="isCorrectAutoReg" ref="FirstStepComponentAutoReg"/>
+                            <ThirdStepInputs :isCorrect="isCorrectAutoReg" ref="ThirdStepComponentAutoReg"/>
+
+                            <div class="mb-3 input-box">
+                                <label for="email" class="form-label">Email <span
+                                    class="text-danger">*</span></label>
+                                <input v-model="autoReg.email" type="email" class="input"
+                                    id="email" style="width: 100%;">
                             </div>
 
                             <div class="form-check mb-3">
-                                <input @change="confirmPersonalDataChanged" v-model="this.confirm_personal_data"
-                                    v-bind:class="{ 'border-danger': !(this.isCorrect.confirm_personal_data) && utility.thirdStep.confirm_personal_data_changed }"
+                                <input @change="confirmPersonalDataChanged" v-model="autoReg.confirm_personal_data"
                                     class="form-check-input" type="checkbox" id="confirm_person_data">
                                 <label class="form-check-label" for="confirm_person_data">
-                                    Согласен на обработку своих персональных данных в соответствии
-                                    с Федеральным законом Российской Федерации от 27 июля 2006 года
-                                    № 152-ФЗ "О персональных данных", а также информирование для участия в цифровых
-                                    студенческих мероприятиях с использованием
-                                    платформы "Новый шаг".
+                                    {{ regText.personal_data_about }}
+                                    <router-link class="text-white link hover-btn" to="/page/privacy">{{regText.personal_data_link}}</router-link>
                                 </label>
                             </div>
 
-                            <div class="d-flex justify-content-center">
-                                <button @click="backStep" type="button" class="me-2 btn btn-light">Назад</button>
-                                <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+
+                            <div class="d-flex justify-content-center mb-2">
+                                <button type="submit" class="btn btn-primary mx-auto">{{ regText.button_reg }}</button>
                             </div>
+                            
+                            <FooterReg :step="step" @next-step="nextStep"/>
                         </div>
                     </transition>
                 </form>
             </div>
-            <transition name="slide-fade">
-                <div v-if="step === 4" class="">
-                    <h4 class="d-none d-lg-block text-primary mb-3 text-center mt-3">
-                        НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
-                    </h4>
-                    <h4 class="d-none d-lg-none d-md-block text-primary mb-3 text-center fs-4 mt-3">
-                        НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
-                    </h4>
-                    <h4 class="d-md-none d-block text-primary mb-3 text-center fs-6 mt-3">
-                        НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
-                    </h4>
-                    <div class="col-md-10 col-lg-8 col-xl-8 col-xxl-8 mx-auto">
-                        <div class="col-5 col-md-3 typewriter p-1 border border-dark bg-secondary mb-3">
-                            <p class="line m-0 pb-0 text-center fs-sm-5 text-mobile">
-                                Поздравляем
-                            </p>
-                        </div>
-                        <p class="text-md-start text-center mb-3">
-                            с успешной регистрацией на платформе для проведения цифровых мероприятий! Это не только
-                            действенный способ усилить свои компетенции, но и возможность получить классные бонусы и
-                            предложение на работу в крупную ИТ-компанию.
-                        </p>
-                        <p class="text-md-start text-center mb-3">
-                            С 3 по 7 ноября 2023 на площадке
-                            ДЦ «Октябрьский» состоится студенческий чемпионат
-                            в области информационных технологий.
-                            Извещение о твоих последующих действиях и отборочных
-                            заданиях придёт на указанный адрес электронной почты
-                            и в личный кабинет.
-                        </p>
-                        <p class="text-md-start text-center">
-                            Далее необходимо выяснить направления, по которым ты будешь участвовать в Чемпионате.
-                            Чтобы приступить к выполнению заданий, переходи в личный кабинет -> "Мои задания" и
-                            приступай к участию.
-                        </p>
-                    </div>
-                    <div class="d-flex justify-content-center mt-2">
-                        <button @click="nextStep" type="button" class="btn btn-primary">Продолжить</button>
-                    </div>
-                </div>
-            </transition>
         </div>
-    </div>
+   </div>
 </template>
 
 <script>
-import '@vuepic/vue-datepicker/dist/main.css'
+import FirstStepInputs from './RegStepComponents/FirstStepInputs.vue';
+import SecondStepInputs from './RegStepComponents/SecondStepInputs.vue';
+import ThirdStepInputs from './RegStepComponents/ThirdStepInputs.vue';
+import FourStepInputs from './RegStepComponents/FourStepInputs.vue';
+import FooterReg from './RegStepComponents/FooterReg.vue';
+
 import { userService } from '../services/user.service'
 import { publicService } from '../services/public.service'
-import { validateService } from '../services/validate.service'
+import { regText } from '../texts/reg.text'
+import { generalText } from '../texts/general.text'
+import { reportConst } from '../consts/report.const'
 
 export default {
-    name: 'RegPage',
+    props: {
+        source: String
+    },
     data() {
         return {
-            step: 1,
-            userData: {
+            regText: {},
+            generalText: {},
+            autoReg: {
                 last_name: '',
                 first_name: '',
                 middle_name: '',
-                phone_number: '+7',
-                sex: 'M',
-                current_university: '-1',
-                current_faculty: '-1',
-                current_specialty: '-1',
+                phone_number: '',
+                sex: 'М',
+                TypeInst: '',
+                Inst: '',
+                Facult: '',
+                Spec: '',
+                year: 1,
                 email: '',
-                password: '',
-                year: '',
+                confirm_personal_data: false
             },
-            confirm_personal_data: false,
+            step: 1,
+            userData: {
+            },
+            isCorrectAutoReg: {
+                last_name: true,
+                first_name: true,
+                middle_name: true,
+                phone_number: true,
+                currentTypeInst: true,
+                currentInst: true,
+                currentFacult: true,
+                currentSpec: true,
+                currentTypeInst_third: true,
+                inst_name: true,
+                email: true,
+                password: true,
+                confirm_personal_data: true
+            },
             isCorrect: {
                 last_name: true,
                 first_name: true,
                 middle_name: true,
                 phone_number: true,
-                current_university: true,
-                current_faculty: true,
-                current_specialty: true,
+                currentTypeInst: true,
+                currentInst: true,
+                currentFacult: true,
+                currentSpec: true,
+                currentTypeInst_third: true,
+                inst_name: true,
                 email: true,
                 password: true,
-                confirm_personal_data: true,
-                year: true,
-                custom_univers: true,
-                custom_specialty: true,
-                custom_facults: true,
-                unlock: false,
+                confirm_personal_data: true
             },
             utility: {
-                firstStep: {
-                    last_name_changed: false,
-                    first_name_changed: false,
-                    phone_changed: false,
-                    middle_name_chaged: false,
-                },
-                secondStep: {
-                    univers: {},
-                    facults: {},
-                    specialties: {},
-                    university_changed: false,
-                    faculty_changed: false,
-                    specialty_changed: false,
-                    year_changed: false,
-                    not_an_option: {
-                        univers: false,
-                        facults: false,
-                        specialty: false
-                    },
-                    custom_univers: '',
-                    custom_univers_changed: false,
-                    custom_specialty: '',
-                    custom_specialty_changed: false,
-                    custom_facults: '',
-                    custom_facults_changed: false
-                },
-                thirdStep: {
-                    passwordConfirm: '',
-                    regStatus: '',
-                    email_changed: false,
-                    password_changed: false,
-                    password_confirm_changed: false,
-                    confirm_personal_data_changed: false,
-                    isShowPass: false,
-                    isShowConfirmPass: false
-                },
-            }
+                isShowPass: false,
+                isShowConfirmPass: false
+            },
+            selectedInst: true,
         }
     },
-    props: {
-        source: String
+    components: {
+        FirstStepInputs, FooterReg, SecondStepInputs, ThirdStepInputs, FourStepInputs
     },
+    created(){
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+        window.addEventListener('resize', () => {
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        });
 
-    created() {
         if (this.source !== undefined) {
             publicService.sendSourse(this.source);
             this.$router.push("/reg");
         }
+
         this.$store.dispatch('auth/logout');
-        userService.getUnivers().then(response => {
-            this.utility.secondStep.univers = response;
-        })
-    },
-    mounted() {
+        this.getDataLocalStorage();
+
+        this.regText = regText;
+        this.generalText = generalText;
     },
     methods: {
-        customUniversChanged() {
-            this.utility.secondStep.custom_univers_changed = true;
-            this.isCorrect.custom_univers = !validateService.checkIsEmptyStr(this.utility.secondStep.custom_univers)
-        },
-        customFacultsChanged() {
-            this.utility.secondStep.custom_facults_changed = true;
-            this.isCorrect.custom_facults = !validateService.checkIsEmptyStr(this.utility.secondStep.custom_facults)
-        },
-        customSpecialtyChanged() {
-            this.utility.secondStep.custom_specialty_changed = true;
-            this.isCorrect.custom_specialty = !validateService.checkIsEmptyStr(this.utility.secondStep.custom_specialty)
-        },
-        checkNotAnOption() {
-            this.utility.secondStep.not_an_option.univers = this.userData.current_university == '1';
-            if (this.utility.secondStep.not_an_option.univers) {
-                this.userData.current_faculty = -2
-                this.userData.current_specialty = -2
-            }
+        reg_hand() {
+            Object.assign(this.autoReg, this.$refs.FirstStepComponentAutoReg.getData());
 
-            this.utility.secondStep.not_an_option.facults = this.userData.current_faculty == '-2';
+            const data = this.$refs.ThirdStepComponentAutoReg.getData().userData;
 
-            if (this.utility.secondStep.not_an_option.facults) {
-                this.userData.current_specialty = -2
-            }
+            this.autoReg.TypeInst = this.$refs.ThirdStepComponentAutoReg.getType();
+            this.autoReg.Inst = data.inst_name;
+            this.autoReg.Facult = data.faculty_name;
+            this.autoReg.Spec = data.spec_name;
+            this.autoReg.year = data.year_third;
 
-            this.utility.secondStep.not_an_option.specialty = this.userData.current_specialty == '-2';
-
-        },
-        checkCorrectYear() {
-            if (this.userData.year === '') {
+            if(!(this.autoReg.last_name !== '' && this.autoReg.first_name !== ''
+            && this.autoReg.phone_number !== '' && this.autoReg.Inst !== ''
+            && this.autoReg.email !== '' && this.autoReg.confirm_personal_data)){
+                this.$store.dispatch('modal/openModal', this.regText.error_fill_all_fields);
                 return;
             }
-            if (this.userData.year < 1) {
-                this.userData.year = 1
-            } else {
-                if (this.userData.year > 6) {
-                    this.userData.year = 6
-                }
-            }
-        },
-        checkFirstLetter() {
-            if (this.userData.phone_number.length < 2 || !this.userData.phone_number.startsWith('+7')) {
-                this.userData.phone_number = '+7'
-            }
-        },
-        yearChanged() {
-            this.utility.secondStep.year_changed = true;
-            this.isCorrect.year = validateService.checkIsOnlyNumbers(this.userData.year) && ((this.userData.year <= 6 &&
-                this.userData.year > 0) || this.userData.year === '');
-        },
-        emailChanged() {
-            this.utility.thirdStep.email_changed = true;
-            this.isCorrect.email = validateService.checkIsEmail(this.userData.email)
-        },
-        passwordChanged() {
-            this.utility.thirdStep.password_changed = true;
-            this.isCorrect.password = (this.userData.password == this.utility.thirdStep.passwordConfirm
-                && !validateService.checkIsEmptyStr(this.userData.password)) || !(this.utility.thirdStep.password_confirm_changed)
-        },
-        passwordConfirmChanged() {
-            this.isCorrect.password = this.userData.password == this.utility.thirdStep.passwordConfirm
-                && !validateService.checkIsEmptyStr(this.userData.password)
-            this.utility.thirdStep.password_confirm_changed = true;
-        },
-        confirmPersonalDataChanged() {
-            this.isCorrect.confirm_personal_data = this.confirm_personal_data
-            this.utility.thirdStep.confirm_personal_data_changed = true;
-        },
-        universityChanged(finale_check = false) {
-            this.utility.secondStep.university_changed = true;
-            this.isCorrect.current_university = this.userData.current_university != '-1';
-            if (this.isCorrect.current_university) {
-                this.isCorrect.current_faculty = '-1'
-                this.isCorrect.current_specialty = '-1'
-            }
-            if (this.userData.current_university != 1 && !finale_check) {
-                this.utility.secondStep.custom_univers = '';
-                this.utility.secondStep.custom_facults = '';
-                this.utility.secondStep.custom_specialty = '';
-                this.utility.secondStep.not_an_option.specialty = false
-            }
-            if (this.userData.current_university != 1 && !finale_check) {
-                this.userData.current_faculty = -1;
-                this.userData.current_specialty = -1;
-            }
-        },
-        facultyChanged(finale_check = false) {
-            this.utility.secondStep.faculty_changed = true;
-            this.isCorrect.current_faculty = this.userData.current_faculty != '-1';
 
-            if (this.isCorrect.current_faculty) {
-                this.isCorrect.current_specialty = '-1'
-            }
-            if (this.userData.current_faculty != -2 && !finale_check) {
-                this.utility.secondStep.custom_facults = '';
-                this.utility.secondStep.custom_specialty = '';
-            }
-            if (this.userData.current_faculty == -1) {
-                this.userData.current_specialty = -1
-            }
-        },
-        specialtyChanged(finale_check = false) {
-            this.utility.secondStep.specialty_changed = true;
-            this.isCorrect.current_specialty = this.userData.current_specialty != '-1';
-            if (this.userData.current_specialty != -2 && !finale_check) {
-                this.utility.secondStep.custom_specialty = '';
-            }
-        },
-        lastNameChanged() {
-            this.utility.firstStep.last_name_changed = true;
-            this.userData.last_name = this.userData.last_name.trim()
-            this.isCorrect.last_name = validateService.checkNamesInput(this.userData.last_name)
-        },
-        firstNameChanged() {
-            this.utility.firstStep.first_name_changed = true;
-            this.userData.first_name = this.userData.first_name.trim()
-            this.isCorrect.first_name = validateService.checkNamesInput(this.userData.first_name)
-        },
-        phoneChanged() {
-            this.utility.firstStep.phone_changed = true;
-            this.isCorrect.phone_number = validateService.checkPhoneNumber(this.userData.phone_number)
-        },
-        middleNameChanged() {
-            this.utility.firstStep.middle_name_chaged = true;
-            this.userData.middle_name = this.userData.middle_name.trim()
-            this.isCorrect.middle_name = validateService.checkIsOnlyRussianLetter(this.userData.middle_name) || validateService.checkIsEmptyStr(this.userData.middle_name)
-        },
-        nextStep() {
-            if (this.step === 1 && !this.checkFirstStep()) {
-                return false;
-            }
-            if (this.step === 2 && !this.checkSecondStep()) {
-                return false
-            }
-            if (this.step === 4) {
-                this.$router.push("/");
-            }
-            this.step++
-        },
-        backStep() {
-            this.step--
-        },
-        registration() {
+            const report = `Фамилия: ${this.autoReg.last_name}\n
+                            Имя: ${this.autoReg.first_name}\n
+                            Отчество: ${this.autoReg.middle_name}\n
+                            Номер телефона: ${this.autoReg.phone_number}\n
+                            Пол: ${this.autoReg.sex}\n
+                            Тип УЗ: ${this.autoReg.TypeInst}\n
+                            Название УЗ: ${this.autoReg.Inst}\n
+                            Факультет: ${this.autoReg.Facult}\n
+                            Специальность: ${this.autoReg.Spec}\n
+                            Курс: ${this.autoReg.year}\n
+                            Почта пользователя: ${this.autoReg.email}`;
 
-            const resort = {
-                university: this.utility.secondStep.custom_univers ?
-                    this.utility.secondStep.custom_univers :
-                    `id: ${this.userData.current_university}`,
-                faculty: this.utility.secondStep.custom_facults ?
-                    this.utility.secondStep.custom_facults :
-                    `id: ${this.userData.current_faculty}`,
-                speciality: this.utility.secondStep.custom_specialty ?
-                    this.utility.secondStep.custom_specialty :
-                    `id: ${this.userData.current_specialty}`
-            }
 
-            const sendingEducationResort = `Вуз ${resort.university} \n
-                                            Факультет ${resort.faculty} \n
-                                            Специальность ${resort.speciality}`
+            userService.sendEducationReport(report, reportConst.auto_reg).then(
+                response => {
+                    if (response.status) {
+                        this.$store.dispatch('modal/openModal', this.regText.auto_reg_request_ok);
+                        this.$router.push("/login");
+                        
+                    } else {
+                        // const attr = `<h5 class="text-center py-5">Не удалось отправить заявку на регистрацию. Возможны неполадки на сервере, попробуй позднее.</h5>`
+                        this.$store.dispatch('modal/openModal', this.regText.auto_reg_request_fail);
+                    }
 
-            let is_resort = false
-            if (this.isCorrect.custom_univers ||
-                this.isCorrect.custom_facults || this.isCorrect.custom_specialty) {
-                is_resort = true
-                this.userData.current_university = 1
-                this.userData.current_faculty = '';
-                this.userData.current_specialty = '';
-            }
-
-            if (!this.checkThirdStep()) {
-                return false;
-            }
-
-            const user = this.userData;
-            this.$store.dispatch('auth/register', user).then(response => {
-                if (response.status) {
-                    this.$store.dispatch('alert/sendMessage', { message: response.message, type: 'Success' })
-                    const { email, password } = user;
-                    this.$store.dispatch("auth/login", { email, password }).then(
-                        () => {
-
-                            if (is_resort) {
-                                userService.sendEducationReport(sendingEducationResort).then(
-                                    response => {
-                                        if (response.status) {
-                                            this.$store.dispatch('alert/sendMessage', { message: response.message, type: 'Success' })
-                                        } else {
-                                            this.$store.dispatch('alert/sendMessage', { message: response.message, type: 'Danger' })
-                                        }
-
-                                    })
-                            }
-                            this.step = 4
-                        })
-
-                } else {
-                    this.$store.dispatch('alert/sendMessage', { message: response.message[0], type: 'Danger' })
-                }
             })
+
+
+
+            // if('last_name' in this.autoReg && 'first_name' in this.autoReg && 'middle_name' in this.autoReg &&
+            // 'phone_number' in this.autoReg && 'sex' in this.autoReg && 'TypeInst' in this.autoReg &&
+            // 'Inst' in this.autoReg && 'Facult' in this.autoReg && 'Spec' in this.autoReg &&
+            // 'year' in this.autoReg && 'email' in this.autoReg && 'confirm_personal_data' in this.autoReg) {
+
+            // }
         },
-
-        checkFirstStep() {
-
-            this.middleNameChanged()
-            this.firstNameChanged()
-            this.lastNameChanged()
-            this.phoneChanged()
-
-            return (this.isCorrect.last_name &&
-                this.isCorrect.first_name &&
-                this.isCorrect.middle_name &&
-                this.isCorrect.phone_number) || this.isCorrect.unlock
-        },
-
-        checkSecondStep() {
-            this.universityChanged(true)
-            this.facultyChanged(true)
-            this.specialtyChanged(true)
-            this.yearChanged()
-            this.customUniversChanged()
-            this.customFacultsChanged()
-            this.customSpecialtyChanged()
-
-            this.isCorrect.current_university = this.userData.current_university != '1' &&
-                this.userData.current_university != '-1';
-            this.isCorrect.current_faculty = this.userData.current_faculty != '-2' &&
-                this.userData.current_faculty != '-1';
-            this.isCorrect.current_specialty = this.userData.current_specialty != '-2' &&
-                this.userData.current_specialty != '-1'
-
-            const result = ((this.isCorrect.current_university && this.isCorrect.current_faculty) && (this.isCorrect.current_specialty || this.isCorrect.custom_specialty)) || ((this.isCorrect.custom_facults && this.isCorrect.custom_specialty) && (this.isCorrect.current_university || this.isCorrect.custom_univers))
-            return (result && this.isCorrect.year) || this.isCorrect.unlock;
-        },
-
-        checkThirdStep() {
-            this.emailChanged()
-            this.passwordChanged()
-            this.passwordConfirmChanged()
-            this.confirmPersonalDataChanged()
-
-            return this.isCorrect.email && this.isCorrect.password && this.isCorrect.confirm_personal_data
-        },
-
-        getFacults: function () {
-            if (this.userData.current_university != -1 && this.userData.current_university != 1) {
-                userService.getFacults(this.userData.current_university).then(response => {
-                    this.utility.secondStep.facults = response;
-                    this.utility.secondStep.facults.unshift({ id: -2, faculty_name: 'Нет в списке' })
-                })
-            } else {
-                this.utility.secondStep.facults = [];
+        getDataLocalStorage(){
+            const data = JSON.parse(localStorage.getItem('register'));
+            if(data) {
+                this.step = data.step;
+                this.userData = data.userData;
+                this.utility = data.utility;
+                this.selectedInst = data.selectedInst;
             }
-            this.userData.current_faculty = -1
-
         },
-        getSpecialty: function () {
-            if (this.userData.current_faculty != -1 && this.userData.current_faculty != -2) {
-                userService.getSpecialty(this.userData.current_university, this.userData.current_faculty).then(response => {
-                    this.utility.secondStep.specialties = response;
-                    this.utility.secondStep.specialties.unshift({ id: -2, specialty_name: 'Нет в списке' })
-                })
-            } else {
-                this.utility.secondStep.specialties = [];
+        setDataLocalStorage() {
+            localStorage.setItem('register', JSON.stringify({
+                step: this.step, 
+                userData: this.userData, 
+                utility: this.utility, 
+                selectedInst: this.selectedInst
+            }));
+        },
+        nextStep(){
+            if(this.step === -1) {
+                this.step = 1;
+                return;
             }
-            this.userData.current_specialty = -1
-        }
+            if(this.step === 1){
+                Object.assign(this.userData, this.$refs.FirstStepComponent.getData());
+                
+                if(this.checkEmpty('last_name') & 
+                    this.checkEmpty('first_name') &  
+                    this.checkEmpty('phone_number') & this.checkPhone()) {
+                        if(this.selectedInst){
+                            this.step = 2
+                        } else {
+                            this.step = 3 
+                        }
+                        
+                }
+
+                this.setDataLocalStorage()
+                return;
+            }
+            if(this.step === 2){
+                const { userData, utility } = this.$refs.SecondStepComponent.getData();
+                Object.assign(this.userData, userData);
+                this.utility = utility;
+             
+                if(this.checkSelect('currentTypeInst') & 
+                    this.checkSelect('currentInst') & 
+                    this.checkSelectUpp('currentFacult', 'listFacult') & 
+                    this.checkSelectUpp('currentSpec', 'listSpec')) {
+                        this.step = 4
+                }
+
+                this.setDataLocalStorage()
+                return;
+            }
+            if(this.step === 3){
+                const { userData, utility } = this.$refs.ThirdStepComponent.getData();
+                Object.assign(this.userData, userData);
+                this.utility = utility;
+             
+                if(this.checkSelect('currentTypeInst_third') & 
+                    this.checkEmpty('inst_name') ) {
+                        this.step = 4
+                }
+
+                this.setDataLocalStorage()
+                return;
+            }
+        },
+        registration(){
+            Object.assign(this.userData, this.$refs.FourStepComponent.getData());
+            this.setDataLocalStorage()
+
+            if(this.checkEmpty('email') &
+                this.checkEmpty('password') & 
+                this.checkCheckBox('confirm_personal_data')) {
+                    if(this.userData.password !== this.userData.passwordConfirm){
+                        this.$store.dispatch('alert/sendMessage', { message: this.regText.dont_confirm_pass, type: 'Danger' })
+                        this.isCorrect.password = false
+                        this.isCorrect.passwordConfirm = false
+                        return;
+                    }
+
+                    let report = ''
+
+                    if(!this.selectedInst){
+                        this.userData.currentInst = 1;
+                        this.userData.currentFacult = '';
+                        this.userData.currentSpec = '';
+
+                        report = `Тип: ${this.utility.listTypeInst.find(x => x.id === this.userData.currentTypeInst_third).name}\n
+                                    Учебное заведение: ${this.userData.inst_name}\n
+                                    Факультет: ${this.userData.faculty_name}\n
+                                    Специальность: ${this.userData.spec_name}\n
+                                    Год обучения: ${this.userData.year_third}\n
+                                    Почта пользователя: ${this.userData.email}`;
+                    }
+
+                    const user = this.userData;
+                    this.$store.dispatch('auth/register', user).then(response => {
+                        if (response.status) {
+                            this.$store.dispatch('alert/sendMessage', { message: response.message, type: 'Success' })
+                            if (!this.selectedInst) {
+                                userService.sendEducationReport(report, reportConst.new_institution).then(
+                                    response => {
+                                        if (response.status) { 
+                                            this.$store.dispatch('modal/openModal', this.regText.edu_report_ok);
+                                        } else {
+                                            // const attr = `<h5 class="text-center py-5">Не удалось отправить заявку на добавление учебного заведения. После авторизации перейди в личный кабинет -> "Добавить учебное заведение"</h5>`
+                                            this.$store.dispatch('modal/openModal', this.regText.edu_report_fail);
+                                        }
+                                        const unwatch = this.$store.watch(
+                                            (state) => state.modal.isOpen,
+                                            (isOpen) => {
+                                                if (!isOpen) {
+                                                    this.$store.dispatch('modal/openModal', this.regText.register_ok);
+                                                    localStorage.removeItem('register')
+                                                    this.$router.push("/login");
+                                                    unwatch();
+                                                }
+                                            }
+                                        );
+
+                                })
+                            } else {
+                                this.$store.dispatch('modal/openModal', this.regText.register_ok);
+                                localStorage.removeItem('register')
+                                this.$router.push("/login");
+                            }
+                        }
+                    }).catch(error => {
+                        if(!error.status){
+                            let attr = this.regText.header_reg_fail;
+                            for (let key in error.message){
+                                attr += `<li>${key}<ul>`
+                                for(let el in error.message[key]){
+                                    attr += `<li>${error.message[key][el]}</li>`
+                                }
+                                attr += '</ul></li>'
+                            }
+                            attr += '</ul>'
+                            this.$store.dispatch('modal/openModal', attr);
+                        } else {
+                            const attr = `<h5 class="text-center py-5">${error.message}</h5>`
+                            this.$store.dispatch('modal/openModal', attr);
+                        }
+                    })
+            }
+        },
+        checkEmpty(key) {
+            const isValid = key in this.userData && this.userData[key] && !!this.userData[key].length;
+            this.isCorrect[key] = isValid;
+            return isValid;
+        },
+        checkPhone(){
+            this.isCorrect['phone_number'] = this.userData['phone_number'].length === 12;
+            return this.isCorrect['phone_number']
+        },
+        checkCheckBox(key){
+            this.isCorrect[key] = this.userData[key]
+            return this.userData[key]
+        },
+        checkSelect(key) {
+            const isValid = this.userData[key] !== '-1';
+            this.isCorrect[key] = isValid;
+            return isValid;
+        },
+
+        checkSelectUpp(key1, key2) {
+            const isValid = !(this.userData[key1] === '-1' && this.utility[key2].length > 0);
+            this.isCorrect[key1] = isValid;
+            return isValid;
+        },
+
+        backStep(){
+            if(this.step === 1) {
+                this.step = -1;
+            }
+            if(this.step === 2 || this.step === 3){
+                this.step = 1
+            }
+            if(this.step === 4) {
+                if(this.selectedInst){
+                    this.step = 2
+                } else {
+                    this.step = 3
+                }
+            }
+        },
+       
+
     }
 }
-
 </script>
+
+<style scoped>
+</style>
+
+<style>
+</style>

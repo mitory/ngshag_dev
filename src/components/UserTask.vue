@@ -1,27 +1,14 @@
 <template>
     <div class=''>
-        <BackLink link="/LK/my-tasks" text="вернуться к списку задач" />
-        <!-- <div class="mb-2">
-            <router-link to="/LK/my-tasks">
-                <img src="../assets/img/arrow_back.svg" alt="Вернуться к полному списку" style="width: 20px" />
-                <span class="text-dark link_svg_text">вернуться к списку задач</span>
-            </router-link>
-        </div> -->
+        <BackLink text="назад" />
 
-        <!-- <h5 class="mb-1 fs-6">Номинация: <span class="task__title">{{ task.nomination_name }}</span></h5>
-        <p class="p-0 m-0 pb-1">Задача: <em class="text-primary task__title">{{ task.name }}</em></p> -->
+        <h4 class="mx-auto text-center mb-4">{{ task.name }}</h4>
 
-        <h3 class="task__title">{{ task.nomination_name }}</h3>
-        <p>Задача: <em class="text-primary task__title">{{ task.name }}</em></p>
-
-        <!-- <h3 class="task__title">{{ task.name }}</h3>
-        <p>Номинация: <em class="text-primary">{{ task.nomination_name }}</em></p> -->
         <div class="mb-2">
             <h5>Описание задачи</h5>
             <p v-for="descr, index in task.description" :key="index" class="mb-1" v-html="descr"></p>
-            <a v-if="task.file" :href="'/api/download-file/' + this.$route.params.id + '/'" download class="text-dark"
-                style="text-decoration: underline;">Скачать приложение</a>
-            <!-- <button @click="downloadFile">Скачать файл</button> -->
+            <a v-if="task.file" :href="task.link" download 
+                class="text-white link hover-btn text-decoration-underline">Скачать приложение</a>
         </div>
         <div class="mb-2">
             <h5>Критерии оценки</h5>
@@ -42,34 +29,27 @@
 
             </p>
         </div>
-        <div v-if="status && status.is_accepted && (status.is_accepted == 'C' || status.is_accepted == 'О')" class="">
-            <label for="formFile" class="form-label" v-html="inputLabel(status.is_accepted)">
+        <div v-if="status">
+            <div v-if="['C', 'О'].includes(status.is_accepted)" 
+                class="mb-2">
+                <label for="formFile" class="form-label" v-html="inputLabel(status.is_accepted)"></label>
+                <div class="d-flex justify-content-between align-items-end">
+                    <input class="form-control file-input" type="file" id="formFile" ref="fileInput" @change="updateFile">
 
-            </label>
-            <input class="form-control mb-2" type="file" id="formFile" ref="fileInput" @change="updateFile">
-
-            <p v-if="status" class="mb-2" :class="{
-                'text-secondary': status.is_accepted == 'О',
-                'text-success': status.is_accepted == 'П',
-                'text-danger': status.is_accepted == 'Н',
-                'd-none': status.is_accepted == 'C'
-            }">
-                {{ status.is_accepted_display }}
-            </p>
-
-            <div class="d-flex justify-content-end">
-                <button class="btn btn-primary" @click="uploadFile">
-                    Отправить решение {{ status.is_accepted == 'О' ? 'повторно' : '' }}
-                </button>
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-primary" @click="uploadFile">
+                            Отправить решение {{ status.is_accepted == 'О' ? 'повторно' : '' }}
+                        </button>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div v-else>
-            <p v-if="status" class="mb-2" :class="{
-                'text-secondary': status.is_accepted == 'О',
-                'text-success': status.is_accepted == 'П',
-                'text-danger': status.is_accepted == 'Н',
-                'd-none': status.is_accepted == 'C'
-            }">
+            <p class="mb-2" 
+                :class="{
+                    'text-secondary': status.is_accepted == 'О',
+                    'text-success': status.is_accepted == 'П',
+                    'text-danger': status.is_accepted == 'Н',
+                    'd-none': status.is_accepted == 'C'
+                }">
                 {{ status.is_accepted_display }}
             </p>
         </div>
@@ -78,8 +58,10 @@
 
 <script>
 import { userService } from '../services/user.service'
-import config from '../config'
 import BackLink from './mini-components/BackLink.vue'
+
+import config from '../config'
+const API_URL = config.apiURL;
 
 export default {
     data() {
@@ -95,40 +77,38 @@ export default {
     },
     created() {
         this.setStatus()
-        this.link = config.apiURL.replace('api/', '')
         userService.getTask(this.$route.params.id).then(response => {
             if (response.status) {
                 this.task = response.data;
+
                 this.task.description = this.task.description.split('|')
                 this.task.criteria_score = this.task.criteria_score.split('|')
                 this.task.must_contain = this.task.must_contain.split('|')
                 this.task.additional_requirements = this.task.additional_requirements.split('|')
+
+                if(this.task.file){
+                    this.task.link = `${API_URL}download-file/${this.task.id}/`;
+                }
             }
         }).catch(err => {
-            if (err.status && err.status == 404) {
-                this.$store.dispatch('alert/sendMessage', { message: err.error, type: 'Danger' });
-            } else {
-                this.$store.dispatch('alert/sendMessage', { message: 'Непредвиденная ошибка', type: 'Danger' });
-            }
+            this.$store.dispatch('alert/sendMessage', { 
+                message: err.status && err.status == 404 ? err.error: 'Непредвиденная ошибка', 
+                type: 'Danger' 
+            });
             this.$router.push("/LK/my-tasks");
         })
     },
     methods: {
-        downloadFile() {
-            window.location.href = 'https//nwstep.ru/api/download-file/' + this.$route.params.id + '/';
-        },
         inputLabel(is_accepted) {
             return is_accepted == 'C' ? 'Загрузи архив с решением!' :
-                'Если нет уверенности в решении, архив можно отправить <em class="text-primary">повторно</em>. <br>Учитывается только последнее загруженное решение.'
+                'Если нет уверенности в решении, архив можно отправить <em class="text-second-blue">повторно</em>. <br>Учитывается только последнее загруженное решение.'
         },
         setStatus() {
             userService.getTaskStatus(this.$route.params.id).then(response => {
                 if (response.status) {
-                    if (response.data) {
-                        this.status = response.data
-                        if (this.status.is_accepted == 'Н' || this.status.is_accepted == 'П') {
-                            this.$router.push("/LK/my-tasks");
-                        }
+                    this.status = response.data
+                    if (['Н', 'П'].includes(this.status.is_accepted)) {
+                        this.$router.push("/LK/my-tasks");
                     }
                 } else {
                     this.$router.push("/");
@@ -142,18 +122,17 @@ export default {
             if (!this.$refs.fileInput.value) {
                 this.$store.dispatch('alert/sendMessage', { message: 'Файл не загружен', type: 'Danger' });
                 return;
-            } else {
-                const split_name = this.selectedFile.name.split('.')
-                if (split_name[split_name.length - 1] != this.task.file_format) {
-                    this.$store.dispatch('alert/sendMessage', { message: 'Неверный формат', type: 'Danger' });
-                    this.$refs.fileInput.value = null;
-                    return;
-                }
-                if (this.selectedFile.size > this.task.max_file_size * 1048576) {
-                    this.$store.dispatch('alert/sendMessage', { message: 'Превышен максимальный размер файла', type: 'Danger' });
-                    this.$refs.fileInput.value = null;
-                    return;
-                }
+            }
+            const split_name = this.selectedFile.name.split('.')
+            if (split_name[split_name.length - 1] != this.task.file_format) {
+                this.$store.dispatch('alert/sendMessage', { message: 'Неверный формат', type: 'Danger' });
+                this.$refs.fileInput.value = null;
+                return;
+            }
+            if (this.selectedFile.size > this.task.max_file_size * 1048576) {
+                this.$store.dispatch('alert/sendMessage', { message: 'Превышен максимальный размер файла', type: 'Danger' });
+                this.$refs.fileInput.value = null;
+                return;
             }
             const formData = new FormData();
             formData.append('file', this.selectedFile);
@@ -173,7 +152,7 @@ export default {
 </script>
 
 <style scoped>
-a {
-    text-decoration: none;
-}
+    .file-input {
+        max-width: 300px;
+    }
 </style>

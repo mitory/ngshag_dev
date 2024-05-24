@@ -1,32 +1,22 @@
 <template>
-    <div class="container">
-        <div class="d-flex flex-column justify-content-center" style="height: 100vh">
-            <div class="col-sm-8 mx-auto mb-2 mb-lg-5 ">
-                <h2 class="d-none d-lg-block text-primary mb-3 text-center">
-                    НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
-                </h2>
-                <h2 class="d-none d-lg-none d-md-block text-primary mb-3 text-center fs-4">
-                    НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
-                </h2>
-                <h2 class="d-md-none d-block text-primary mb-3 text-center fs-6">
-                    НОВЫЙ ШАГ: НАЧАЛО ТВОЕГО ПУТИ<br>В ЦИФРОВЫХ ПРОФЕССИЯХ
-                </h2>
-            </div>
-            <p class="mx-auto">Введи свой email, мы вышлем на него временный пароль</p>
-            <div class="col-sm-4 mx-auto">
-                <form @submit.prevent="forgotPassword" novalidate>
-                    <div class="mb-3">
+    <div class="templ_bg bg__blue">
+        <div class="container">
+            <div class="row d-flex align-items-center justify-content-evenly" style="min-height: 100vh">
+                <form @submit.prevent="forgotPassword" novalidate class="my-auto form-template py-2">
+                    <BackLink text='назад' />
+                    <h2 class="mb-1 text-blue text-center fs-6 pt-3 pb-3" v-html="generalText.header"></h2>
+                    <p class="text-center mx-auto">
+                       {{ forgotPasswordText.change_pass_about }}
+                    </p>
+                    <div class="mb-3 input-box">
                         <label for="email" class="form-label">Email</label>
-                        <input @change="emailChanged" v-model="email" type="text" class="form-control" id="email"
-                            v-bind:class="{ 'border-danger': !(isCorrect.email) && email_changed }">
-                        <div v-if="!(isCorrect.email) && email_changed" id="email" class="form-text text-danger">
-                            Введи корректный email. Например test@mail.ru
-                        </div>
+                        <input v-model="email" type="email" class="input"
+                                id="email"
+                                v-bind:class="{ 'border-danger': !(isCorrect.email)}" style="width: 100%;">
                     </div>
 
-                    <div class="d-flex justify-content-between">
-                        <router-link to="/login" class="btn btn-secondary">Назад</router-link>
-                        <button type="submit" class="btn btn-primary">Отправить</button>
+                    <div class="d-flex justify-content-center mb-2">
+                        <button type="submit" class="btn btn-primary">{{ forgotPasswordText.change_pass_button }}</button>
                     </div>
                 </form>
             </div>
@@ -37,6 +27,10 @@
 <script>
 import { validateService } from '../services/validate.service'
 import { publicService } from '../services/public.service'
+import { generalText } from '../texts/general.text'
+import { forgotPasswordText } from '../texts/login.text'
+
+import BackLink from './mini-components/BackLink.vue'
 
 export default {
     data() {
@@ -45,23 +39,24 @@ export default {
             isCorrect: {
                 email: true,
             },
-            email_changed: false
+            generalText: {},
+            forgotPasswordText: {}
         }
     },
     created() {
         this.$store.dispatch('auth/logout');
+        this.generalText = generalText;
+        this.forgotPasswordText = forgotPasswordText;
     },
     components: {
-
+        BackLink
     },
     methods: {
         forgotPassword() {
-
-            this.emailChanged()
-            if (this.isCorrect.email) {
+            if (this.isCorrectEmail()) {
                 publicService.getSendEmailForChangePass(this.email).then(response => {
                     if (response.Ok === 'Ok') {
-                        this.$store.dispatch('alert/sendMessage', { message: 'Новый пароль вылан на почту', type: 'Success' })
+                        this.$store.dispatch('modal/openModal', forgotPasswordText.change_pass_susses);
                         this.$router.push("/login");
                     } else {
                         this.$store.dispatch('alert/sendMessage', { message: response.message, type: 'Danger' });
@@ -69,15 +64,13 @@ export default {
                 })
             }
         },
-        emailChanged() {
-            this.isCorrect.email = this.checkEmail(this.email);
-            this.email_changed = true;
-        },
-        checkEmail(str) {
-            return !validateService.checkIsEmptyStr(str) && validateService.checkIsEmail(str)
+        isCorrectEmail() {
+            this.isCorrect.email = validateService.checkIsEmail(this.email);
+            return this.isCorrect.email;
         },
     }
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

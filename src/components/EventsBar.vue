@@ -1,15 +1,11 @@
 <template>
-    <article>
+    <article v-if="event_list">
         <div class="">
-            <h4 class="text-dark text-center">Текущие мероприятия</h4>
-            <div class="p-2 border border-dark rounded mb-2">
-                <p class="fs-6">Кубок НИИ «Центрпрограммсистем» по ИТ-дисциплинам, 2023</p>
-                <router-link class="text-dark cursor" to="/cps-cup">Читать подробнее</router-link>
-            </div>
-            <div class="p-2 border border-dark rounded mb-2">
-                <p class="fs-6">Хакатон "Защита в действии"<br>
-                    Дисциплина «Продуктовое программирование»</p>
-                <router-link class="text-dark cursor" to="/hackathon">Читать подробнее</router-link>
+            <h4 class="text-white text-center">{{title ? title: 'Текущие мероприятия'}}</h4>
+            <div v-for="event in event_list" :key="event.id" class="p-2 templ-item__bg mb-2 text-center">
+                <p class="fs-6" v-html="event.name"></p>
+                <router-link v-if="event.link_name" class="text-white link hover-btn" :to="'/event/' + event.id">Читать
+                    подробнее</router-link>
             </div>
         </div>
     </article>
@@ -17,6 +13,10 @@
 
 <script>
 export default {
+    props: {
+        event_list: Array,
+        title: String
+    },
     data() {
         return {
 

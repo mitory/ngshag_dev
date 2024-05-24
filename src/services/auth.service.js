@@ -1,6 +1,7 @@
 import axios from 'axios';
 import config from '../config'
 import { router } from '../router/router'
+import store from '../store/store';
 
 export const authService = {
     login, logout, register, refresh
@@ -23,7 +24,7 @@ function login(user) {
             }
         },
             error => {
-                throw error.response.data.detail;
+                throw error.response.data.error;
             });
 }
 
@@ -38,13 +39,25 @@ async function refresh() {
                 localStorage.setItem('user', JSON.stringify(response.data));
                 return true;
             } else {
-                logout()
+                store.dispatch('auth/logout', true)
+                // logout()
             }
         } catch {
-            logout()
+            store.dispatch('auth/logout', true)
+            // logout()
         }
     } else {
-        logout()
+        store.dispatch('auth/logout', true)
+        // logout()
+    }
+
+}
+
+function logout(redirect = false) {
+    localStorage.removeItem('user');
+    localStorage.removeItem('user_data');
+    if (redirect) {
+        router.push("/");
     }
 
 }
@@ -86,33 +99,54 @@ async function refresh() {
 
 // }
 
-function logout(redirect = false) {
-    localStorage.removeItem('user');
-    localStorage.removeItem('user_data');
-    if (redirect) {
-        router.push("/");
-    }
+// function register(user) {
+//     return axios.post(API_URL + 'register/', {
+//         email: user.email,
+//         password: user.password,
+//         first_name: user.first_name,
+//         last_name: user.last_name,
+//         middle_name: user.middle_name,
+//         sex: user.sex,
+//         birth_date: '1000-01-01',
+//         institution: user.currentInst,
+//         faculty: user.currentFacult,
+//         specialty: user.currentSpec,
+//         phone_number: user.phone_number,
+//         year: user.year,
+//     }).then(() => {
+//         return { status: true, message: 'Регистрация прошла успешно' };
 
-}
+//     }).catch(err => {
+//         return { status: false, message: err.response.data }
+//     });
+// }
 
-function register(user) {
-    return axios.post(API_URL + 'register/', {
-        email: user.email,
-        password: user.password,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        middle_name: user.middle_name,
-        sex: user.sex,
-        birth_date: '1000-01-01',
-        institution: user.current_university,
-        faculty: user.current_faculty,
-        specialty: user.current_specialty,
-        phone_number: user.phone_number,
-        year: user.year,
-    }).then(() => {
-        return { status: true, message: 'Регистрация прошла успешно' };
+async function register(user) {
+    return new Promise((resolve, reject) => {
+        axios.post(API_URL + 'register/', {
+            email: user.email,
+            password: user.password,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            middle_name: user.middle_name,
+            sex: user.sex,
+            birth_date: '1000-01-01',
+            institution: user.currentInst,
+            faculty: user.currentFacult,
+            specialty: user.currentSpec,
+            phone_number: user.phone_number,
+            year: user.year,
+        }).then(() => {
+            resolve({ status: true, message: 'Регистрация прошла успешно' });
+        }).catch(error => {
+            if (error.response && error.response.status === 500) {
+                reject({ status: true, 
+                            message: 'Похоже, что на сервере неполадки, пожалуйста, попробуйте позднее'
+                        });
+            } else {
+                reject({ status: false, message: error.response.data });
+            }
+        })
 
-    }).catch(err => {
-        return { status: false, message: err.response.data.email }
-    });
+    })
 }

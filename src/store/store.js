@@ -1,13 +1,13 @@
 import { createStore } from "vuex";
 import { auth } from "./auth.module";
-import { routes } from './routes.modul'
 import { alert } from './alert.module'
+import { modal } from './modal.module'
+import { modalCreateTeam } from './modalCreateTeam.module'
+import { modalJoinTeam } from './modalJoinTeam.module'
 
 const store = createStore({
     modules: {
-        auth,
-        routes,
-        alert
+        auth, alert, modal, modalCreateTeam, modalJoinTeam
     },
 });
 
