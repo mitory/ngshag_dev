@@ -6,8 +6,8 @@
             <em v-if="event_data.link_name">
                 <router-link 
                 class="text-white link hover-btn" 
-                :to="'/event/' + event_data.id" v-html="event_data.name">
-                
+                :to="'/event/' + event_data.id">
+                <span v-html="event_data.name"></span>
             </router-link>
             </em>
             <em v-else class="text-second-blue" v-html="event_name"></em>
@@ -25,13 +25,13 @@
             </div>
         </div>
 
-        <p class="text-center p-2 templ-item__bg bg_blue text-white" v-if="team_members.length < event_data.team_size">
+        <p class="text-center p-2 templ-item__bg bg_blue text-white" v-if="team_members.length + 1 < event_data.team_size">
             Передай этот код своим друзьям, с которыми ты будешь участвовать в мероприятии.
             Им нужно перейти на страницу соревнования, нажать "Присоединиться к команде" и использовать код для
             присоединения к команде.
         </p>
 
-        <div v-if="team_members.length < event_data.min_team_size">
+        <div v-if="team_members.length + 1 < event_data.min_team_size">
             <p class="mb-0">
                 Минимальное количество участников в команде: {{ event_data.min_team_size }}
             </p>

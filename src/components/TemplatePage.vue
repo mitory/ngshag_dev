@@ -1,7 +1,5 @@
 <template>
-    <div class='py-5 pb-2 bg__blue text-white' v-html="content">
-
-    </div>
+    <div class='py-5 pb-2 bg__blue text-white' v-html="content"></div>
 </template>
 
 <script>
