@@ -101,6 +101,7 @@ export default {
       this.$store.dispatch("auth/login", { email, password }).then(
         () => {
           this.$store.dispatch('alert/sendMessage', { message: 'Авторизация прошла успешно', type: 'Success' })
+          this.$store.dispatch("notify/start")
           this.$router.push("/");
         }).catch(err => {
           this.$store.dispatch('alert/sendMessage', { message: err, type: 'Danger' });

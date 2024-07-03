@@ -16,6 +16,7 @@ import UserTask from '../components/UserTask'
 import NewsPage from "../components/NewsPage";
 import TemplatePage from '../components/TemplatePage'
 import CallBackForm from '../components/CallBackForm'
+import UserNotify from '../components/UserNotify'
 
 export const router = createRouter({
     routes: [
@@ -32,6 +33,10 @@ export const router = createRouter({
         {
             path: '/login',
             component: LoginPage
+        },
+        {
+            path: '/notify',
+            component: UserNotify
         },
         {
             path: '/forgot-password',

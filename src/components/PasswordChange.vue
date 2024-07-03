@@ -24,6 +24,12 @@
                             <div class="answer" :title=regText.password_ruls @click="tooltipVisible = !tooltipVisible;" :class="{ 'ans-active': tooltipVisible  }">
                                 ?
                             </div>
+                            <div class="d-flex align-items-start" style="margin-top: 2px">
+                                <img class="cursor"
+                                    src="../assets/icons/settings.svg" 
+                                    @click="genPassword" 
+                                    title="Сгенерировать пароль" alt="Сгенерировать пароль" style="width: 20px" />
+                            </div>
                         </div>
                         <input v-model="password"
                             :type="isShowPass ? 'text' : 'password'"
@@ -51,6 +57,8 @@
                             class="pass-eye__btn" :class="{ 'active': isShowConfirmPass }"></span>
                     </div>
 
+                    <RecaptchaGoodle class="mb-2" @verified="onRecaptchaVerified" @expired="onRecaptchaExpired" :recaptchaId="'recaptcha-4'"/>
+
                     <button type="submit" class="btn btn-primary">Сменить пароль</button>
                 </form>
             </div>
@@ -59,10 +67,13 @@
 </template>
 
 <script>
+import RecaptchaGoodle from './Recaptcha.vue';
+
 import { regText } from '../texts/reg.text'
 
 import { validateService } from '../services/validate.service'
 import { userService } from '../services/user.service'
+import { publicService } from '../services/public.service'
 
 import BackLink from './mini-components/BackLink.vue'
 
@@ -86,16 +97,32 @@ export default {
                 confirm_password: true
             },
 
-            tooltipVisible: false
+            tooltipVisible: false,
+
+            captcha_token: false
         }
     },
     components: {
-        BackLink
+        BackLink, RecaptchaGoodle
     },
     created() {
         this.regText = regText;
     },
     methods: {
+        genPassword(){
+            publicService.genPass().then(response => {
+                this.password = response;
+                this.isShowPass = true;
+            }).catch( () => {
+                this.$store.dispatch('alert/sendMessage', { message: 'Возникла ошибка при генерации пароля', type: 'Danger' })
+            })
+        },
+        onRecaptchaExpired() {
+            this.captcha_token = false;
+        },
+        onRecaptchaVerified(response) {
+            this.captcha_token = response;
+        },
         passwordOldChanged() {
             this.isCorrect.old_password = !validateService.checkIsEmptyStr(this.old_password);
         },
@@ -113,7 +140,7 @@ export default {
             this.passwordConfirmChanged()
 
             if (this.isCorrect.old_password && this.isCorrect.password && this.isCorrect.confirm_password) {
-                userService.changePassword(this.old_password, this.password).then(response => {
+                userService.changePassword(this.old_password, this.password, this.captcha_token).then(response => {
                     this.$store.dispatch('alert/sendMessage', { message: response.ok, type: 'Success' })
                     this.$router.push("/login");
                 }).catch(error => {

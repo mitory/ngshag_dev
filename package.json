@@ -4,7 +4,10 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "save-git": "cmd /c \"\"C:\\Program Files\\Git\\bin\\bash.exe\" save-git.sh\"",
+    "restore-git": "cmd /c \"\"C:\\Program Files\\Git\\bin\\bash.exe\" restore-git.sh\"",
+    "git-push-prod": "cmd /c \"\"C:\\Program Files\\Git\\bin\\bash.exe\" git-push-prod.sh\"",
+    "build": "npm run save-git && vue-cli-service build && npm run restore-git && npm run git-push-prod",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -26,6 +29,7 @@
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
+    "@vue/compiler-sfc": "^3.2.13",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3"
   },

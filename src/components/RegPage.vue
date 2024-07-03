@@ -89,6 +89,7 @@
 
                             <FourStepInputs :userData="userData" :isCorrect="isCorrect" ref="FourStepComponent"/>
                             
+                            <RecaptchaGoodle class="mb-2" @verified="onRecaptchaVerified" @expired="onRecaptchaExpired" :recaptchaId="'recaptcha-1'"/>
 
                             <FooterReg :step="step" @back-step="backStep"/>
                         </div>
@@ -123,6 +124,7 @@
                                 </label>
                             </div>
 
+                            <RecaptchaGoodle class="mb-2" @verified="onRecaptchaVerifiedHand" @expired="onRecaptchaExpiredHand" :recaptchaId="'recaptcha-2'"/>
 
                             <div class="d-flex justify-content-center mb-2">
                                 <button type="submit" class="btn btn-primary mx-auto">{{ regText.button_reg }}</button>
@@ -138,6 +140,8 @@
 </template>
 
 <script>
+import RecaptchaGoodle from './Recaptcha.vue';
+
 import FirstStepInputs from './RegStepComponents/FirstStepInputs.vue';
 import SecondStepInputs from './RegStepComponents/SecondStepInputs.vue';
 import ThirdStepInputs from './RegStepComponents/ThirdStepInputs.vue';
@@ -210,10 +214,13 @@ export default {
                 isShowConfirmPass: false
             },
             selectedInst: true,
+            captcha_token: false,
+            captcha_token_hand: false
         }
     },
     components: {
-        FirstStepInputs, FooterReg, SecondStepInputs, ThirdStepInputs, FourStepInputs
+        FirstStepInputs, FooterReg, SecondStepInputs, 
+        ThirdStepInputs, FourStepInputs, RecaptchaGoodle
     },
     created(){
         let vh = window.innerHeight * 0.01;
@@ -235,6 +242,18 @@ export default {
         this.generalText = generalText;
     },
     methods: {
+        onRecaptchaExpired() {
+            this.captcha_token = false;
+        },
+        onRecaptchaVerified(response) {
+            this.captcha_token = response;
+        },
+        onRecaptchaExpiredHand() {
+            this.captcha_token_hand = false;
+        },
+        onRecaptchaVerifiedHand(response) {
+            this.captcha_token_hand = response;
+        },
         reg_hand() {
             Object.assign(this.autoReg, this.$refs.FirstStepComponentAutoReg.getData());
 
@@ -253,6 +272,10 @@ export default {
                 return;
             }
 
+            if(!this.captcha_token_hand){
+                return;
+            }
+
             const report = `Фамилия: ${this.autoReg.last_name}\n
                             Имя: ${this.autoReg.first_name}\n
                             Отчество: ${this.autoReg.middle_name}\n
@@ -266,27 +289,17 @@ export default {
                             Почта пользователя: ${this.autoReg.email}`;
 
 
-            userService.sendEducationReport(report, reportConst.auto_reg).then(
+            userService.sendEducationReport(report, reportConst.auto_reg, this.captcha_token_hand).then(
                 response => {
                     if (response.status) {
                         this.$store.dispatch('modal/openModal', this.regText.auto_reg_request_ok);
                         this.$router.push("/login");
                         
                     } else {
-                        // const attr = `<h5 class="text-center py-5">Не удалось отправить заявку на регистрацию. Возможны неполадки на сервере, попробуй позднее.</h5>`
                         this.$store.dispatch('modal/openModal', this.regText.auto_reg_request_fail);
                     }
 
             })
-
-
-
-            // if('last_name' in this.autoReg && 'first_name' in this.autoReg && 'middle_name' in this.autoReg &&
-            // 'phone_number' in this.autoReg && 'sex' in this.autoReg && 'TypeInst' in this.autoReg &&
-            // 'Inst' in this.autoReg && 'Facult' in this.autoReg && 'Spec' in this.autoReg &&
-            // 'year' in this.autoReg && 'email' in this.autoReg && 'confirm_personal_data' in this.autoReg) {
-
-            // }
         },
         getDataLocalStorage(){
             const data = JSON.parse(localStorage.getItem('register'));
@@ -360,81 +373,86 @@ export default {
             Object.assign(this.userData, this.$refs.FourStepComponent.getData());
             this.setDataLocalStorage()
 
-            if(this.checkEmpty('email') &
-                this.checkEmpty('password') & 
-                this.checkCheckBox('confirm_personal_data')) {
-                    if(this.userData.password !== this.userData.passwordConfirm){
-                        this.$store.dispatch('alert/sendMessage', { message: this.regText.dont_confirm_pass, type: 'Danger' })
-                        this.isCorrect.password = false
-                        this.isCorrect.passwordConfirm = false
-                        return;
-                    }
-
-                    let report = ''
-
-                    if(!this.selectedInst){
-                        this.userData.currentInst = 1;
-                        this.userData.currentFacult = '';
-                        this.userData.currentSpec = '';
-
-                        report = `Тип: ${this.utility.listTypeInst.find(x => x.id === this.userData.currentTypeInst_third).name}\n
-                                    Учебное заведение: ${this.userData.inst_name}\n
-                                    Факультет: ${this.userData.faculty_name}\n
-                                    Специальность: ${this.userData.spec_name}\n
-                                    Год обучения: ${this.userData.year_third}\n
-                                    Почта пользователя: ${this.userData.email}`;
-                    }
-
-                    const user = this.userData;
-                    this.$store.dispatch('auth/register', user).then(response => {
-                        if (response.status) {
-                            this.$store.dispatch('alert/sendMessage', { message: response.message, type: 'Success' })
-                            if (!this.selectedInst) {
-                                userService.sendEducationReport(report, reportConst.new_institution).then(
-                                    response => {
-                                        if (response.status) { 
-                                            this.$store.dispatch('modal/openModal', this.regText.edu_report_ok);
-                                        } else {
-                                            // const attr = `<h5 class="text-center py-5">Не удалось отправить заявку на добавление учебного заведения. После авторизации перейди в личный кабинет -> "Добавить учебное заведение"</h5>`
-                                            this.$store.dispatch('modal/openModal', this.regText.edu_report_fail);
-                                        }
-                                        const unwatch = this.$store.watch(
-                                            (state) => state.modal.isOpen,
-                                            (isOpen) => {
-                                                if (!isOpen) {
-                                                    this.$store.dispatch('modal/openModal', this.regText.register_ok);
-                                                    localStorage.removeItem('register')
-                                                    this.$router.push("/login");
-                                                    unwatch();
-                                                }
-                                            }
-                                        );
-
-                                })
-                            } else {
-                                this.$store.dispatch('modal/openModal', this.regText.register_ok);
-                                localStorage.removeItem('register')
-                                this.$router.push("/login");
-                            }
-                        }
-                    }).catch(error => {
-                        if(!error.status){
-                            let attr = this.regText.header_reg_fail;
-                            for (let key in error.message){
-                                attr += `<li>${key}<ul>`
-                                for(let el in error.message[key]){
-                                    attr += `<li>${error.message[key][el]}</li>`
-                                }
-                                attr += '</ul></li>'
-                            }
-                            attr += '</ul>'
-                            this.$store.dispatch('modal/openModal', attr);
-                        } else {
-                            const attr = `<h5 class="text-center py-5">${error.message}</h5>`
-                            this.$store.dispatch('modal/openModal', attr);
-                        }
-                    })
+            if(
+                !(this.checkEmpty('email') & this.checkEmpty('password') & 
+                this.checkCheckBox('confirm_personal_data'))
+            ) {
+                return;
             }
+
+            if(this.userData.password !== this.userData.passwordConfirm){
+                this.$store.dispatch('alert/sendMessage', { message: this.regText.dont_confirm_pass, type: 'Danger' })
+                this.isCorrect.password = false
+                this.isCorrect.passwordConfirm = false
+                return;
+            }
+
+            if(!this.captcha_token){
+                return;
+            }
+
+            let report = ''
+
+            if(!this.selectedInst){
+                this.userData.currentInst = 1;
+                this.userData.currentFacult = '';
+                this.userData.currentSpec = '';
+
+                report = `Тип: ${this.utility.listTypeInst.find(x => x.id === this.userData.currentTypeInst_third).name}\n
+                            Учебное заведение: ${this.userData.inst_name}\n
+                            Факультет: ${this.userData.faculty_name}\n
+                            Специальность: ${this.userData.spec_name}\n
+                            Год обучения: ${this.userData.year_third}\n
+                            Почта пользователя: ${this.userData.email}`;
+            }
+
+            const user = this.userData;
+            const token = this.captcha_token
+            this.$store.dispatch('auth/register', {user, token}).then(response => {
+                this.$store.dispatch('alert/sendMessage', { message: response.message, type: 'Success' })
+                if (!this.selectedInst) {
+                    userService.sendEducationReport(report, reportConst.new_institution, token).then(
+                        response => {
+                            if (response.status) { 
+                                this.$store.dispatch('modal/openModal', this.regText.edu_report_ok);
+                            } else {
+                                this.$store.dispatch('modal/openModal', this.regText.edu_report_fail);
+                            }
+                            const unwatch = this.$store.watch(
+                                (state) => state.modal.isOpen,
+                                (isOpen) => {
+                                    if (!isOpen) {
+                                        this.$store.dispatch('modal/openModal', this.regText.register_ok);
+                                        localStorage.removeItem('register')
+                                        this.$router.push("/login");
+                                        unwatch();
+                                    }
+                                }
+                            );
+
+                    })
+                } else {
+                    this.$store.dispatch('modal/openModal', this.regText.register_ok);
+                    localStorage.removeItem('register')
+                    this.$router.push("/login");
+                }
+            }).catch(error => {
+                if(!error.status){
+                    let attr = this.regText.header_reg_fail;
+                        for (let key in error.message){
+                            attr += `<li>${key}<ul>`
+                            for(let el in error.message[key]){
+                                attr += `<li>${error.message[key][el]}</li>`
+                            }
+                            attr += '</ul></li>'
+                        }
+                        attr += '</ul>'
+                    this.$store.dispatch('modal/openModal', attr);
+                } else {
+                    const attr = `<h5 class="text-center py-5">${error.message}</h5>`
+                    this.$store.dispatch('modal/openModal', attr);
+                }
+            })
         },
         checkEmpty(key) {
             const isValid = key in this.userData && this.userData[key] && !!this.userData[key].length;

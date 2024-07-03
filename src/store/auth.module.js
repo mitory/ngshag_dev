@@ -42,12 +42,11 @@ export const auth = {
             );
         },
         logout({ commit }, redirect = false) {
-            console.log(redirect)
             authService.logout(redirect);
             commit('logout');
         },
-        register({ commit }, user) {
-            return authService.register(user).then(
+        register({ commit }, {user, token}) {
+            return authService.register(user, token).then(
                 response => {
                     commit('registerSuccess');
                     return response;

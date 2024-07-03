@@ -15,6 +15,12 @@
                 <div class="answer" :title=regText.password_ruls @click="tooltipVisible = !tooltipVisible;" :class="{ 'ans-active': tooltipVisible  }">
                     ?
                 </div>
+                <div class="d-flex align-items-start" style="margin-top: 2px">
+                    <img class="cursor"
+                        src="../../assets/icons/settings.svg" 
+                        @click="genPassword" 
+                        title="Сгенерировать пароль" alt="Сгенерировать пароль" style="width: 20px" />
+                </div>
             </div>
             <input v-model="userDataFour.password"
                 :type="utility.isShowPass ? 'text' : 'password'"
@@ -54,6 +60,7 @@
 </template>
 
 <script>
+import { publicService } from '../../services/public.service'
 import { regText } from '../../texts/reg.text'
 
 export default {
@@ -91,6 +98,14 @@ export default {
         
     },
     methods: {
+        genPassword(){
+            publicService.genPass().then(response => {
+                this.userDataFour.password = response;
+                this.utility.isShowPass = true;
+            }).catch( () => {
+                this.$store.dispatch('alert/sendMessage', { message: 'Возникла ошибка при генерации пароля', type: 'Danger' })
+            })
+        },
         getData() {
             return this.userDataFour
         },

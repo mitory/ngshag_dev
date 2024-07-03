@@ -1,7 +1,7 @@
 т.DS_Store
 node_modules
 #/dist
-
+#post-build.sh
 
 # local env files
 .env.local

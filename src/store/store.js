@@ -4,10 +4,12 @@ import { alert } from './alert.module'
 import { modal } from './modal.module'
 import { modalCreateTeam } from './modalCreateTeam.module'
 import { modalJoinTeam } from './modalJoinTeam.module'
+import { notify } from './notify.module'
 
 const store = createStore({
     modules: {
-        auth, alert, modal, modalCreateTeam, modalJoinTeam
+        auth, alert, modal, modalCreateTeam, 
+        modalJoinTeam, notify
     },
 });
 

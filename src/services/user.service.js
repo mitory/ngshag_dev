@@ -68,11 +68,12 @@ function getUserNominations(event_id){
     })
 }
 
-function sendEducationReport(source, category) {
+function sendEducationReport(source, category, token) {
     return new Promise((resolve) => {
         axios.post(API_URL + `education_report/`, {
             source: source,
-            category: category
+            category: category,
+            recaptchaToken: token
         }, {
             headers: authHeader()
         }).then(() => {
@@ -404,11 +405,12 @@ async function putTaskFile(formData) {
     })
 }
 
-async function changePassword(old_pass, new_pass) {
+async function changePassword(old_pass, new_pass, token) {
     return new Promise((resolve, reject) => {
         axios.put(API_URL + `change_password/`, {
             current_password: old_pass,
-            new_password: new_pass
+            new_password: new_pass,
+            recaptchaToken: token
         }, {
             headers: authHeader(),
         }).then(response => {

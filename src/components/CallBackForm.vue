@@ -22,6 +22,8 @@
                         </textarea>
                     </div>
 
+                    <RecaptchaGoodle class="mb-2" @verified="onRecaptchaVerified" @expired="onRecaptchaExpired" :recaptchaId="'recaptcha-3'"/>
+
                     <div class="d-flex justify-content-center mb-2">
                         <button type="submit" class="btn btn-primary">{{ callBackText.call_back_button }}</button>
                     </div>
@@ -32,6 +34,8 @@
 </template>
 
 <script>
+import RecaptchaGoodle from './Recaptcha.vue';
+
 import { generalText } from '../texts/general.text';
 import { callBackText } from '../texts/login.text'
 import { reportConst } from '../consts/report.const'
@@ -52,11 +56,12 @@ export default {
             isCorrect: {
                 email: true,
                 content: true
-            }
+            },
+            captcha_token: false
         }
     },
     components: {
-        BackLink
+        BackLink, RecaptchaGoodle
     },
     computed: {
         loggedIn() {
@@ -68,6 +73,12 @@ export default {
         this.callBackText = callBackText;
     },
     methods: {
+        onRecaptchaExpired() {
+            this.captcha_token = false;
+        },
+        onRecaptchaVerified(response) {
+            this.captcha_token = response;
+        },
         sendCallBack(){
             if(!this.loggedIn){
                 if (!this.isCorrectEmail() || this.isContentEmpty()) {
@@ -96,7 +107,7 @@ export default {
             }
             report += `сообщение: ${this.content}`;
             
-            userService.sendEducationReport(report, reportConst.call_back).then(
+            userService.sendEducationReport(report, reportConst.call_back, this.captcha_token).then(
                 response => {
                     if (response.status) { 
                         this.$store.dispatch('modal/openModal', callBackText.call_back_susses);

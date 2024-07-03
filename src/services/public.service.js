@@ -6,8 +6,20 @@ const API_URL = config.apiURL;
 
 export const publicService = {
     getActualEventsList, getEvent, sendSourse, getSendEmailForChangePass, getNominations, getNews,
-    getMainMessge, getPageContent, getNominationsFromEvent, getSchedule, getEducationType, checkEmail
+    getMainMessge, getPageContent, getNominationsFromEvent, getSchedule, getEducationType, checkEmail,
+    genPass
 };
+
+async function genPass(){
+    try {
+        const response = await axios.get(API_URL + 'gen_pass/', {
+            headers: { 'ngrok-skip-browser-warning': '69420' }
+        });
+        return response.data.password;
+    } catch (err) {
+        return false;
+    }
+}
 
 //УБРАТЬ
 async function getEducationType() {
@@ -103,6 +115,7 @@ function checkEmail(email, state_autorize) {
 }
 
 async function getNews(page_size = 1, page = 1) {
+    console.log(API_URL)
     try {
         const response = await axios.get(API_URL + 'news/' + '?page=' + page + '&page_size=' + page_size, {
             headers: { 'ngrok-skip-browser-warning': '69420' }

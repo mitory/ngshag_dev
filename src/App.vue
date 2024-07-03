@@ -34,16 +34,41 @@ export default {
   computed: {
     loggedIn() {
       return this.$store.state.auth.status.loggedIn
+    },
+    is_start(){
+      return this.$store.state.notify.status
     }
   },
   created() {
-
+    if(!this.is_start){
+      this.$store.dispatch("notify/start")
+    }
   },
 }
 </script>
 
 <style>
+*::-webkit-scrollbar {
+    width: 10px; 
+}
 
+*::-webkit-scrollbar-track {
+    background: transparent; 
+    border-radius: 20px; 
+}
+
+*::-webkit-scrollbar-thumb {
+    background: var(--color-second-blue); 
+    border-radius: 0; 
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background: var(--color-main-blue); 
+}
+body {
+    scrollbar-width: thin; /* делаем скроллбар тоньше */
+    scrollbar-color: var(--color-white) transparent; /* цвет бегунка и фона */
+}
   :root {
       --swiper-theme-color: white;
       --color-main-blue: #071434;
@@ -160,6 +185,9 @@ export default {
   }
   a.text-white {
     color: var(--color-white) !important;
+  }
+  .bg_white {
+    background: var(--color-white)
   }
   .hover-btn:hover {
     color: var(--color-main-blue);

@@ -121,7 +121,7 @@ function logout(redirect = false) {
 //     });
 // }
 
-async function register(user) {
+async function register(user, token) {
     return new Promise((resolve, reject) => {
         axios.post(API_URL + 'register/', {
             email: user.email,
@@ -136,6 +136,7 @@ async function register(user) {
             specialty: user.currentSpec,
             phone_number: user.phone_number,
             year: user.year,
+            recaptchaToken: token
         }).then(() => {
             resolve({ status: true, message: 'Регистрация прошла успешно' });
         }).catch(error => {

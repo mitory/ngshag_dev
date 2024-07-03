@@ -20,7 +20,7 @@ export const alert = {
     actions: {
         sendMessage({ commit }, { message, type }) {
             commit('showMessage', { message, type })
-            setTimeout(() => { commit('hiddenMessage') }, 2000);
+            setTimeout(() => { commit('hiddenMessage') }, 5000);
         }
     }
 };
