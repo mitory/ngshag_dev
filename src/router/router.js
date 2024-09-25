@@ -1,22 +1,34 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import LoginPage from '../components/LoginPage'
-import ProfileUser from '../components/ProfileUser'
-import MainPage from '../components/MainPage'
-import RegPage from '../components/RegPage'
-import EventPage from '../components/EventPage'
-import TeamPage from '../components/TeamPage'
-import LK from '../components/LK'
-import UserTeams from '../components/UserTeams'
-import SetUserSkills from '../components/SetUserSkills'
-import SettingPage from '../components/SettingPage'
-import PasswordChange from '../components/PasswordChange'
-import ForgotPasswordPage from '../components/ForgotPasswordPage'
-import UserTaskList from '../components/UserTaskList'
-import UserTask from '../components/UserTask'
-import NewsPage from "../components/NewsPage";
-import TemplatePage from '../components/TemplatePage'
-import CallBackForm from '../components/CallBackForm'
-import UserNotify from '../components/UserNotify'
+import { createRouter, createWebHistory } from 'vue-router';
+import MainPage from '../components/MainPage';
+
+//General
+import TemplatePage from '../components/General/TemplatePage';
+import NewsPage from "../components/General/NewsPage";
+
+//CoreSystemComponentsForUser
+import LoginPage from '../components/CoreSystemComponentsForUser/LoginPage';
+import RegPage from '../components/CoreSystemComponentsForUser/RegPage';
+import SettingPage from '../components/CoreSystemComponentsForUser/SettingPage';
+import ForgotPasswordPage from '../components/CoreSystemComponentsForUser/ForgotPasswordPage';
+import CallBackForm from '../components/CoreSystemComponentsForUser/CallBackForm';
+
+//UserPersonalCabinet
+import LK from '../components/UserPersonalCabinet/LK';
+import ProfileUser from '../components/UserPersonalCabinet/ProfileUser';
+import SetUserSkills from '../components/UserPersonalCabinet/SetUserSkills';
+import PasswordChange from '../components/UserPersonalCabinet/PasswordChange';
+
+//Event
+import EventPage from '../components/Event/EventPage';
+import TeamPage from '../components/Event/TeamPage';
+import UserTeams from '../components/Event/UserTeams';
+import UserTaskList from '../components/Event/UserTaskList';
+import UserTask from '../components/Event/UserTask';
+
+//Project
+// import ProjectsPage from '../components/Projects/ProjectsPage';
+// import CreateProject from '../components/Projects/CreateProject';
+
 
 export const router = createRouter({
     routes: [
@@ -34,10 +46,14 @@ export const router = createRouter({
             path: '/login',
             component: LoginPage
         },
-        {
-            path: '/notify',
-            component: UserNotify
-        },
+        // {
+        //     path: '/projects',
+        //     component: ProjectsPage
+        // },
+        // {
+        //     path: '/create-project',
+        //     component: CreateProject
+        // },
         {
             path: '/forgot-password',
             component: ForgotPasswordPage
@@ -116,10 +132,10 @@ router.beforeEach((to, from, next) => {
     const publicRoutes = [
         '/page/'
     ];
-    // const publicStartPath = ['/event/'];
+
     const authRequired = publicPages.includes(to.path) || publicRoutes.find(el => to.path.startsWith(el));
-    const loggedIn = localStorage.getItem('user');
-    // && publicStartPath.filter(str => to.path.startsWith(str)).length == 0
+    const loggedIn = localStorage.getItem('access');
+
     if (!to.hash) {
         window.scrollTo(0, 0);
     }

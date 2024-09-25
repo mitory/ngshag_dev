@@ -1,11 +1,11 @@
 
-const URL = '01b0-176-114-215-204.ngrok-free.app';
+const URL = 'nwstep.ru';
+// const URL = 'b159-176-114-215-204.ngrok-free.app';
 
 const config = {
-    apiURL: `https://${URL}/api/`,
-    // apiURL: '' + '/api/',
+    apiURL: `/api/`,
+    //apiURL: `https://${URL}/api/`,
     wsURL: `wss://${URL}/ws/`
 }
 //nwstep.ru
-//http://127.0.0.1:8000
 export default config;

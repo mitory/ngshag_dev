@@ -5,24 +5,36 @@
       <router-view></router-view>
     </div>
     <FooterInfo />
-    <AlertMessage :class="{ 'd-block': this.$store.state.alert.is_show, 'd-none': !this.$store.state.alert.is_show }" />
-    <ModalWindow :class="{ 'd-block': this.$store.state.modal.isOpen, 'd-none': !this.$store.state.modal.isOpen }"/>
-    <CreateTeam :class="{ 'd-block': this.$store.state.modalCreateTeam.isOpen, 'd-none': !this.$store.state.modalCreateTeam.isOpen }"/>
-    <JoinTeam :class="{ 'd-block': this.$store.state.modalJoinTeam.isOpen, 'd-none': !this.$store.state.modalJoinTeam.isOpen }"/>
+    <!-- <AlertMessage v-show="this.$store.state.alert.is_show"/>
+    <ModalWindow v-show="this.$store.state.modal.isOpen"/>
+    <CreateTeam  v-show="this.$store.state.modalCreateTeam.isOpen" />
+    <JoinTeam v-show="this.$store.state.modalJoinTeam.isOpen"/> -->
+    <AlertMessage :class="{'d-none': !this.$store.state.alert.is_show, 'd-block': this.$store.state.alert.is_show}"/>
+    <ModalWindow :class="{'d-none': !this.$store.state.modal.isOpen, 'd-block': this.$store.state.modal.isOpen}"/>
+    <CreateTeam  :class="{'d-none': !this.$store.state.modalCreateTeam.isOpen, 'd-block': this.$store.state.modalCreateTeam.isOpen}" />
+    <JoinTeam :class="{'d-none': !this.$store.state.modalJoinTeam.isOpen, 'd-block': this.$store.state.modalJoinTeam.isOpen}"/>
+    <div class="cookie-modal templ-item__bg" v-if="is_show_accept_cookies">
+      <p class="m-0">Мы используем cookies.</p>
+      <button class="btn btn-primary m-0" @click="saveAcceptCookies()">Принять</button>
+    </div>
+    <div id="loading-screen" v-show="this.$store.state.loading.isShow">
+      <div class="spinner"></div>
+    </div>
   </div>
 </template>
 
 <script>
-import HeaderButtons from '../src/components/HeaderButtons.vue';
-import FooterInfo from '../src/components/FooterInfo.vue';
-import AlertMessage from '../src/components/AlertMessage.vue';
-import ModalWindow from '../src/components/Modals/ModalWindow.vue';
-import CreateTeam from '../src/components/Modals/CreateTeam.vue';
-import JoinTeam from '../src/components/Modals/JoinTeam.vue';
+import HeaderButtons from './components/General/HeaderButtons.vue';
+import FooterInfo from './components/General/FooterInfo.vue';
+import AlertMessage from './components/SigleComponents/AlertMessage.vue';
+import ModalWindow from './components/SigleComponents/ModalWindow.vue';
+import CreateTeam from './components/Event/CreateTeam.vue';
+import JoinTeam from './components/Event/JoinTeam.vue';
 
 export default {
   data() {
     return {
+      is_show_accept_cookies: false
     }
   },
   components: {
@@ -40,14 +52,86 @@ export default {
     }
   },
   created() {
-    if(!this.is_start){
+    this.$store.dispatch("auth/setup");
+    if(this.loggedIn && !this.is_start){
       this.$store.dispatch("notify/start")
     }
+    if(!JSON.parse(localStorage.getItem('accept-cookies-user'))) {
+      this.is_show_accept_cookies = true;
+    }
   },
+  methods: {
+    saveAcceptCookies() {
+      localStorage.setItem('accept-cookies-user', JSON.stringify(true));
+      this.is_show_accept_cookies = false;
+    }
+  }
 }
 </script>
 
 <style>
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* background: rgba(255, 255, 255, 0.8); */
+    backdrop-filter: blur(50px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 150;
+}
+
+.spinner {
+    border: 5px solid #fff;
+    border-top: 5px solid var(--color-second-blue);
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 0.5s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.cookie-modal {
+  height: 60px;
+  width: 500px;
+  position: fixed;
+  left: calc(50% - 250px);
+  bottom: 20px;
+  color: #fff;
+  padding: 5px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  font-size: 20px;
+  z-index: 100;
+}
+@media (max-width: 730px) {
+  .cookie-modal{
+    left: calc(50% - 200px);
+    height: 60px;
+    width: 400px;
+    text-align: center;
+ }
+}
+@media (max-width: 540px) {
+  .cookie-modal{
+    left: calc(50% - 175px);
+    width: 350px;
+ }
+}
+@media (max-width: 400px) {
+  .cookie-modal{
+    left: calc(50% - 150px);
+    width: 300px;
+ }
+}
 *::-webkit-scrollbar {
     width: 10px; 
 }
@@ -94,15 +178,15 @@ body {
   .btn.btn-primary {
     background: var(--color-white);
   }
-
-  .btn.btn-light {
-    background: var(--color-gray);
-  }
-
   .btn.btn-primary:hover {
     background: var(--color-main-blue);
     border: 2px solid rgba(255, 255, 255, .1);
   }
+  .btn.btn-light {
+    background: var(--color-gray);
+  }
+
+  
 
   .btn.btn-primary:active, .btn.btn-primary:focus, .btn.btn-primary:visited {
     background: var(--color-main-blue);

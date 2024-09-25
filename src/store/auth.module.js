@@ -1,56 +1,45 @@
 import { authService } from '../services/auth.service';
 
-const user = JSON.parse(localStorage.getItem('user'));
-const initialState = user
-    ? { status: { loggedIn: true }, user }
-    : { status: { loggedIn: false }, user: null };
-
 export const auth = {
     namespaced: true,
-    state: initialState,
-    mutations: {
-        loginSuccess(state, user) {
-            state.status.loggedIn = true;
-            state.user = user;
+    state: {
+            status: {
+                loggedIn: false
+            }
         },
-        loginFailure(state) {
-            state.status.loggedIn = false;
-            state.user = null;
+    mutations: {
+        loginSuccess(state) {
+            state.status.loggedIn = true;
         },
         logout(state) {
             state.status.loggedIn = false;
-            state.user = null;
         },
-        registerSuccess(state) {
-            state.status.loggedIn = false;
-        },
-        registerFailure(state) {
-            state.status.loggedIn = false;
-        }
     },
     actions: {
+        setup({ commit }) {
+            const access = JSON.parse(localStorage.getItem('access'));
+            if(access) {
+                commit('loginSuccess');
+            }
+        },
         login({ commit }, user) {
             return authService.login(user).then(
-                user => {
-                    commit('loginSuccess', user);
+                response => {
+                    localStorage.setItem('access', JSON.stringify(response));
+                    commit('loginSuccess');
                 },
                 error => {
-                    commit('loginFailure');
-                    authService.logout();
+                    console.log(error)
+                    commit('logout');
                     throw error
                 }
             );
         },
         logout({ commit }, redirect = false) {
-            authService.logout(redirect);
+            localStorage.removeItem('user_data');
+            localStorage.removeItem('access');
             commit('logout');
+            authService.logout(redirect);
         },
-        register({ commit }, {user, token}) {
-            return authService.register(user, token).then(
-                response => {
-                    commit('registerSuccess');
-                    return response;
-                })
-        }
     }
 };

@@ -44,8 +44,13 @@ export const notify = {
             try {
                 const old_notifications = await notifyService.getNotify();
                 
-                const user = JSON.parse(localStorage.getItem('user'));
-                const { notifications } = notifyService.useNotifications(user.access);
+                const access = JSON.parse(localStorage.getItem('access'));
+
+                if(!access) {
+                    commit('failur');
+                    return;
+                }
+                const { notifications } = notifyService.useNotifications(access);
                 
                 commit('start', {
                     status: true, 
