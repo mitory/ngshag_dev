@@ -1,10 +1,18 @@
 <template>
-  <HeaderButtons></HeaderButtons>
-  <router-view></router-view>
+  <div class="d-flex flex-column justify-content-between" style="min-height: 100vh;">
+    <div>
+      <HeaderButtons></HeaderButtons>
+      <router-view></router-view>
+    </div>
+    <FooterInfo />
+    <AlertMessage :class="{ 'd-block': this.$store.state.alert.is_show, 'd-none': !this.$store.state.alert.is_show }" />
+  </div>
 </template>
 
 <script>
 import HeaderButtons from '../src/components/HeaderButtons.vue'
+import FooterInfo from "../src/components/FooterInfo.vue";
+import AlertMessage from '../src/components/AlertMessage.vue'
 
 export default {
   data() {
@@ -12,7 +20,9 @@ export default {
     }
   },
   components: {
-    HeaderButtons
+    FooterInfo,
+    HeaderButtons,
+    AlertMessage
   },
   computed: {
     loggedIn() {
@@ -21,17 +31,22 @@ export default {
   },
   created() {
 
-    // if (!this.$store.state.auth.status.loggedIn) {
-    //   this.$router.push("/reg");
-    // }
-
   },
 }
 </script>
 
 <style>
-a {
+.cursor:hover {
+  cursor: pointer;
+}
+
+a,
+.text-white {
   color: white;
+}
+
+.task__title:first-letter {
+  text-transform: uppercase;
 }
 
 .slide-fade-enter-active {
@@ -48,13 +63,13 @@ a {
 }
 
 .typewriter p {
-  color: black;
+  color: white;
   font-family: monospace;
   overflow: hidden;
   white-space: nowrap;
   letter-spacing: .15em;
   animation:
-    typing 3.5s steps(30, end)
+    typing 2s steps(30, end)
 }
 
 @keyframes typing {
@@ -67,33 +82,27 @@ a {
   }
 }
 
-/* 2 version */
-
-/* .type {
-  font-family: monospace;
-  color: #000;
-  background:
-    linear-gradient(-90deg, #000 5px, white 0) 10px 0,
-    linear-gradient(white 0 0) 0 0;
-  background-size: calc(var(--n)*1ch) 200%;
-  -webkit-background-clip: padding-box, text;
-  background-clip: padding-box, text;
-  background-repeat: no-repeat;
-  animation:
-    b .7s infinite steps(1),
-    t calc(var(--n)*.1s) steps(var(--n)) forwards;
-
+.pass-eye {
+  position: relative;
 }
 
-@keyframes t {
-  from {
-    background-size: 0 200%
-  }
+.pass-eye__btn {
+  cursor: pointer;
+  position: absolute;
+  top: 55%;
+  right: 6px;
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  opacity: 0.8;
+  background: url('./assets/icons/password_eye/eye-off.svg') 0 0 / cover no-repeat;
 }
 
-@keyframes b {
-  50% {
-    background-position: 0 -100%, 0 0
-  }
-} */
+.pass-eye__btn.active {
+  background: url('./assets/icons/password_eye/eye-show.svg') 0 0 / cover no-repeat;
+}
+
+.pass-eye__btn.spacing-minus {
+  top: 40%;
+}
 </style>

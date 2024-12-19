@@ -1,5 +1,5 @@
 export const validateService = {
-    checkNamesInput, checkIsEmail, checkIsOnlyRussianLetter, checkIsEmptyStr, checkAgeBetween, checkPhoneNumber
+    checkNamesInput, checkIsEmail, checkIsOnlyRussianLetter, checkIsEmptyStr, checkAgeBetween, checkPhoneNumber, checkIsOnlyNumbers
 };
 
 function checkNamesInput(field) {
@@ -17,7 +17,11 @@ function checkIsEmail(str) {
 }
 
 function checkIsOnlyRussianLetter(str) {
-    return /^[а-яА-Я]+(?:-[а-яА-Я]+)*$/.test(str);
+    return /^[а-яёА-ЯЁ]+(?:-[а-яёА-ЯЁ]+)*$/.test(str);
+}
+
+function checkIsOnlyNumbers(str) {
+    return /[0-9]/.test(str)
 }
 
 function checkIsEmptyStr(str) {
@@ -32,6 +36,5 @@ function checkAgeBetween(field, start, end) {
         otherDate.getMonth() == birthDate.getMonth() && otherDate.getDate() < birthDate.getDate()) {
         years--;
     }
-    console.log('Лет: ' + years)
     return years >= start && years <= end
 }

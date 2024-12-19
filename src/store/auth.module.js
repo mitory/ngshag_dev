@@ -35,29 +35,24 @@ export const auth = {
                     commit('loginSuccess', user);
                 },
                 error => {
-                    alert(error)
                     commit('loginFailure');
                     authService.logout();
-                    location.reload(true);
+                    throw error
                 }
             );
         },
-        logout({ commit }) {
-            authService.logout();
+        logout({ commit }, redirect = false) {
+            authService.logout(redirect);
             commit('logout');
         },
         register({ commit }, user) {
             return authService.register(user).then(
                 response => {
                     commit('registerSuccess');
-                    console.log(response)
                     return response;
-                },
-                error => {
+                }).catch(() => {
                     commit('registerFailure');
-                    console.log(error)
-                }
-            );
+                })
         }
     }
 };
